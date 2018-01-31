@@ -1,5 +1,21 @@
 library(shiny)
+library(shinydashboard)
 source('ui.R')
+
+ui <- dashboardPage(
+  skin='red',
+  dashboardHeader(title = "SMU Data Science"),
+  sidebar,
+  body
+)
+
+
+###############################
+# Server Side
+###############################
+
+palette(c("cyan4", "coral2", "darkorchid4", "darkseagreen4",
+          "navy", "darkgoldenrod1", "#A65628", "#F781BF", "#999999"))
 
 server <- function(input, output) {
   
@@ -19,4 +35,5 @@ server <- function(input, output) {
   
 }
 
-shinyApp(ui = ui, server = server)
+
+shinyApp(ui, server)
