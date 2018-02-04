@@ -29,6 +29,9 @@ split <- sample.split(train$Survived, SplitRatio = 0.75)
 # Training and test data
 subtrain <- subset(train, split == TRUE)
 subtest <- subset(train, split == FALSE)
+
+# NAs
+sum(is.na(subtrain)) # 0  but still omit in case
 subtrain <- na.omit(subtrain)
 
 
@@ -128,11 +131,21 @@ table(Train$Survived, predictTrain >= 0.5)
 # 0   405   74
 # 1    89  215
 
+#ROCR curve
+ROCRpred <- prediction(predictTrain, Train$Survived)
+ROCRperf <- performance(ROCRpred, 'tpr','fpr')
+plot(ROCRperf, colorize = TRUE, text.adj = c(-0.2,1.7))
+
 predictTrain = predict(TitanicLog3, type = "response")
 table(Train$Survived, predictTrain >= 0.5)
 #   FALSE TRUE
 # 0   400   79
 # 1    91  213
+
+#ROCR curve
+ROCRpred <- prediction(predictTrain, Train$Survived)
+ROCRperf <- performance(ROCRpred, 'tpr','fpr')
+plot(ROCRperf, colorize = TRUE, text.adj = c(-0.2,1.7))
 
 
 accuracy = (244 + 458) / nrow(Train)
