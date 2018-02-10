@@ -7,7 +7,7 @@ library(GGally)
 set.seed(1)
 
 
-simulation_1 <- function (n_cols,n_rows,mu_range,std_range){
+simulation_1 <- function (n_cols,n_rows,mu_range,std_range,n_noise){
   
   # Parameters:
   # ---------------
@@ -54,6 +54,12 @@ simulation_1 <- function (n_cols,n_rows,mu_range,std_range){
       df <- addColumns(add,df)
   }
   
+  # Noise Variables:
+  for (i in 1:n_noise+1){
+    add <- defDataAdd(varname=paste('noise',i), dist = "normal", formula = "10*var.1 + 30*var.1", variance = 3)
+    df <- addColumns(add,df)
+  }
+  
   # Add Class Labels:
   labels <- sample(c('yes','no'),size=n_rows,p=c(yes_prob,no_prob),replace=TRUE)
   df <- cbind(df,labels)
@@ -79,25 +85,28 @@ plot_data <- function(data,sim_case){
   # ---------------
   # Scatter Matrix of Simulated Dataset
   
-  p <- ggpairs(data1[,2:(ncol(data1)-1)],lower=list(continuous=wrap("smooth", colour="navy")),
+  p <- ggpairs(data1[,2:(ncol(data)-1)],lower=list(continuous=wrap("smooth", colour="navy")),
           diag=list(continuous=wrap("barDiag", fill="darkcyan")))
 
-  p + labs(title= paste("Simulated Dataset Case: ",sim_case)) + theme(plot.title = element_text(size=12,face="bold"))
-  return(p)
+  plot <- p + labs(title= paste("Simulated Dataset Case:",sim_case)) + theme(plot.title = element_text(size=14,face="bold")) + 
+    theme(plot.title = element_text(hjust = 0.5))
+
+  return(plot)
 }
 
 ###################
 
 # Input Arguments
-mu_range <- c(10,20,30,50)
-std_range <- c(.5,1.5,3,5,20)
-n_cols <- 10
+mu_range <- c(0.50,20)
+std_range <- c(2,10)
+n_cols <- 3
 n_rows <- 1000
+n_noise <- 2 
 yes_prob <- 0.75
 no_prob <- 0.25
 
 # Run Simulation 
-data1 <- simulation_1(n_cols,n_rows,mu_range,std_range)
+data1 <- simulation_1(n_cols,n_rows,mu_range,std_range,n_noise)
 
 # Visualize Dataset
 plot_data(data1,'1')
