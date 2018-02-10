@@ -34,7 +34,8 @@ rf_tune <- function(train){
   # Train Random Forest Model
   for(n_tree in seq(50,400,50)){
     
-    fit <- randomForest(train[,2:24], as.factor(train$Survived), ntree=n_tree, importance=TRUE)
+    target = train[,'Survived']
+    fit <- randomForest(train[,2:24], target, ntree=n_tree, importance=TRUE)
     plot(fit$err.rate[,1],type='l',xlab='No. Trees',ylab='Error Rate',main='RandomForest: Out of Bag Error Rate',col='blue',lwd=3)
     legend('topright',legend=paste0('No. Trees: ',n_tree),box.lty=0)
   }
@@ -46,7 +47,7 @@ rf_tune(train)
 
 rf_main <-function(train,n_tree){
         
-        
+        # Random Forest Model 
         fit <- randomForest(train[,2:24], as.factor(train$Survived), ntree=n_tree, importance=TRUE)
         print(fit)
         
