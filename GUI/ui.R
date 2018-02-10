@@ -18,35 +18,39 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
     tabItem(tabName = "dash",
-            h2("Capstone Project 2018")
+            titlePanel("Capstone Project"),
+            HTML('<center><img src="smu.jpg" width=500 height=300></center>')
     ),
     tabItem(tabName = "lit_review",
             h2("Literature Review")
     ),
     tabItem(tabName = "data",
-            h2("Data Simulation")
-    ),
-    tabItem(tabName = "model",
-            h2("K-Means Clustering"),
-            fluidRow(
-              box(
-                  status='primary',
-                  plotOutput('plot1',height=250)),
-              box(
-                title='Inputs',
-                status = 'warning',
-                solidHeader = TRUE,
-                sidebarPanel(
-                  selectInput(inputId = 'xcol', 'X-Variable', names(iris)),
-                  selectInput(inputId = 'ycol', 'Y-Variable', names(iris),
-                              selected = names(iris)[[2]]),
-                  numericInput(inputId = 'clusters', 'Total Clusters', 3, min = 1, max = 9)
+            titlePanel("Select or Simulate Dataset"),
+            fluidPage(
+              sidebarLayout(
+                # Load Data
+                sidebarPanel(width=6,
+                             fileInput("file1", "Choose CSV File",
+                                       accept = c(
+                                         "text/csv",
+                                         "text/comma-separated-values,text/plain", ".csv")), 
+                             tags$hr(),
+                             
+                             # Add checkbox if header exists
+                             checkboxInput("header", "Dataset has Header", TRUE),
+                             
+                             # Type of file Separator
+                             radioButtons("sep", "Separator",
+                                          choices = c(Comma = ",",
+                                                      Semicolon = ";",
+                                                      Tab = "\t"),
+                                          selected = ",")
+                              ),
+    
+                             # Main view to display results
+                             mainPanel(tableOutput('contents'))
                 )
-              )
             )
-    ),
-    tabItem(tabName = "plots",
-            h2("Model Evaluation on Training/Testing Sets")
-    )
-  )
+        )
+   )
 )
