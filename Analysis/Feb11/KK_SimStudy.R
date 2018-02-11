@@ -15,15 +15,21 @@ def <- defDataAdd(def, varname="x9", formula = "10", variance = "3")
 def <- defDataAdd(def, varname="x10", dist="uniform", formula="-5;5")
 def <- defDataAdd(def, varname="x11", dist="poisson", formula="abs(x4)")
 def <- defDataAdd(def, varname = "x12", dist = "categorical", formula = ".33;.33")
-def <- defData(def, varname = "res", dist = "binary", formula = "-400 + x8 + (x4 * x4) > 0 & x12 == 2", link = "logit")
+def <- defData(def, varname = "res", dist = "binary", formula = "-400 + x8 + (x4) > 0 & x12 == 2", link = "logit")
 
 def
 
-data <- genData(100, def)
+data <- genData(1000, def)
 summary(data)
 model <- lm(res ~., data = data)
 summary(model)
 #anova(model)
+predict <- predict(model, type = 'response')
+table(data$res, predict >= 0.5)
+
+# Save data to excel
+library(xlsx)
+write.xlsx(mydata, "/Users/kkirasich/Documents/GitHub/Capstone/Analysis/Feb11/kkdata.xlsx")
 
 # Trace's plot function
 library(ggplot2)
@@ -48,6 +54,32 @@ plot_data <- function(data,sim_case){
 
 plot_data(data,'K data')
 
+
+# Train/ Test set .25, .75
+library(caTools)
+set.seed(88)
+split <- sample.split(data$res, SplitRatio = 0.75)
+train <- subset(data, split == TRUE)
+test <- subset(data, split == FALSE)
+
+# Logistic regression model
+model <- lm (res~ x11 + x4 + x8 + x12, data = train, family = binomial)
+summary(model)
+
+# Predictions
+predict <- predict(model, type = 'response')
+
+# Confusion matrix
+table(train$res, predict >= 0.5)
+#    FALSE TRUE
+# 0    54  253
+# 1    41  402
+
+# ROCR Curve
+library(ROCR)
+ROCRpred <- prediction(predict, train$res)
+ROCRperf <- performance(ROCRpred, 'tpr','fpr')
+plot(ROCRperf, colorize = TRUE, text.adj = c(-0.2,1.7))
 
 
 # # Define conditions
