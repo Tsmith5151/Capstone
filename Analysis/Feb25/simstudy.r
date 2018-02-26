@@ -4,11 +4,10 @@ library(stringr)
 # Extra stuff to add
 # categorical variables
 # Vectors for variances/ mean
-# Stepwise for log reg
 # Random forest
 # UI
 
-simulateData <- function (n_noise,n_explanatory, n_categorical){
+simulateData <- function (n_noise,n_explanatory, n_datapoints, n_categorical){
   simformula <- ""
   if(n_noise > 0){
     def <- defData(varname="n1", dist="normal", formula = "0", variance = .1, link = "identity")
@@ -24,32 +23,32 @@ simulateData <- function (n_noise,n_explanatory, n_categorical){
     print("No noise variables")
   }
   if(n_explanatory > 0) {
+    simformula <- ".1"
     for (i in 1:n_explanatory) {
       simvarname <- paste(c("EV",i), collapse = " ")
       simvarname <- str_replace(simvarname, fixed(" "), "")
       def <- defDataAdd(def,varname = simvarname, dist="normal", formula = "0", variance = .1, link = "identity")
       weight <- 0.1 * i
-      if(i > 1) {
-        simformula <- paste(c(simformula," + "), collapse = " ")
-      }
+      simformula <- paste(c(simformula," + "), collapse = " ")
       simformula <- paste(c(simformula,weight), collapse = " ")
-      simformula <- paste(c(simformula," * "), collapse = " ")
+      simformula <- paste(c(simformula,"*"), collapse = " ")
       simformula <- paste(c(simformula,simvarname), collapse = " ")
     }
     def <- defData(def, varname = "response", dist = "binary", formula = simformula, link = "logit")
     print(simformula)
+    print(def)
   }
   else {
     print("No explanatory variables")
   }
   
-  simdata <- genData(1000, def)
+  simdata <- genData(n_datapoints, def)
   #summary(simdata)
   return(simdata)
   
 }
 runLogistic <- function(data) {
-  model = lm(response ~., family = "binomial", data = data)
+  model = glm(response ~., family = "binomial", data = data)
   step(model)
   #summary(model)
   #anova(model)
@@ -58,6 +57,6 @@ runLogistic <- function(data) {
 }
 
 
-simdata <- simulateData(10,5)
+simdata <- simulateData(10,5,10000)
 runLogistic(simdata)
 
