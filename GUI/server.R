@@ -6,7 +6,23 @@ library(ROCR)
 library(caTools)
 set.seed(1)
 
-sim_data <- function(n_obs,n_noise,ndist,nvar,n_ev){
+
+linear_eq <- function(n_ev,weights,y_int){
+  
+  # Explanatory Variables
+  ev <- c()
+  for (i in (1:n_ev)){
+    ev[[i]] <- (paste0(weights,'*EV',i,sample(c('-','+'),1)))
+  }
+  
+  # Build Equation
+  x <- (paste(unlist(ev), collapse=' '))
+  formula <- paste0(y_int,' + ',x)
+  return(substring(formula,1,nchar(formula)-1))
+  
+}
+
+sim_data <- function(n_obs,n_noise,ndist,nvar,n_ev,weights,y_int){
   
   data <- c()
   # Noise Variables
@@ -18,26 +34,13 @@ sim_data <- function(n_obs,n_noise,ndist,nvar,n_ev){
   for (i in 1:n_ev){
     data<- defData(data,varname=paste0('EV',i), dist="normal", formula = "0", variance = .1, link = "identity")
   }
-  
-  # EV Names
-  ev <- c()
-  weights <- round(runif(n_noise+n_ev,0,1),1)
-  for (i in (1:n_ev)){
-    ev[[i]] <- (paste0(weights[[i]],'*EV',i,sample(c('-','+'),1)))
-  }
-  
-  # Build Response Variable
-  x <- (paste(unlist(ev), collapse=''))
-  
-  y_int = 0.10
-  formula <- paste0(y_int,'+',x)
-  
-  data <- defDataAdd(data,varname="y", dist="binary", formula=substring(formula,1,nchar(formula)-1), link = "logit")
+
+  data <- defDataAdd(data,varname="y", dist="binary", formula=linear_eq(n_ev,weights,y_int), link = "logit")
   
   # Build Simulated Data 
   data <- as.data.frame.matrix(genData(n_obs,data))
   
-  return(data[,2:(ncol(data)-1)])
+  return(data[,2:(ncol(data))])
 }
 
 
@@ -50,11 +53,6 @@ plot_data <- function(data){
   # Returns:
   # ---------------
   # Scatter Matrix of Simulated Dataset
-  
-  # Only plot continous variables
-  data <-data[,2:(ncol(data)-1)]
-  cols <- sapply(data,is.integer)
-  data <- data[,!cols]
   
   p <- ggpairs(data,lower=list(continuous=wrap("smooth", colour="navy")),
                diag=list(continuous=wrap("barDiag", fill="darkcyan")))
@@ -70,7 +68,11 @@ server <- function(input, output) {
   
   # Return the requested dataset ----
   simdata <- reactive({
-    sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev)
+    sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
+  })
+  
+  equation <- reactive({
+    linear_eq(input$ev,input$weights,input$yint)
   })
 
   # Show Table
@@ -78,13 +80,17 @@ server <- function(input, output) {
     head(simdata(), n = 10)
   })
   
-  # Summary Table
-  output$summary <- renderTable({
-    summary(simdata())
+  # Print Equation
+  output$equation <- renderPrint({
+    paste0("y = ",equation())
   })
     
   # Show Plot
-  output$plot <- renderPlot({
-    plot_data(simdata())
+  output$plot1 <- renderPlot({
+    data<- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
+    data <-data[,2:(ncol(data)-1)]
+    cols <- sapply(data,is.integer)
+    data <- data[,!cols]
+    ggpairs(data,lower=list(continuous=wrap("smooth", colour="navy")),diag=list(continuous=wrap("barDiag", fill="darkcyan")))
   })
 }
