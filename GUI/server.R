@@ -69,7 +69,7 @@ runLogistic <- function(data) {
 }
 
 server <- function(input, output) {
-  
+
   # Return the requested dataset ----
   simdata <- reactive({
     sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
@@ -107,6 +107,11 @@ server <- function(input, output) {
   # Show logistic regression
   output$lr_summary <- renderPrint({
     summary(lr())
+  })
+  
+  # Show logistic regression steps
+  output$lr_step <- renderPrint({
+    step(lr())
   })
   
   # Create density and trace plots of model.

@@ -1,8 +1,9 @@
 # Define UI for dataset viewer app ----
 ui <- fluidPage(
   
+  theme = "style.css",
   # Title
-  titlePanel("SMU Data Science"),
+  img(src = "logo.png", width = "270px", height = "25px"),
   h3("Simulation Study: Logistic Regression vs Random Forest"),
   
   # Sidebar layout with a input and output definitions ----
@@ -10,7 +11,7 @@ ui <- fluidPage(
     
     # Sidebar Inputs
     sidebarPanel(
-      
+      h4("Simulate your data"),
       # Input: Number of Rows
       numericInput(inputId = "nrows",
                    label = "Number of Rows",
@@ -44,12 +45,16 @@ ui <- fluidPage(
                    label = "Explanatory Variable Coefficients",
                    value = 0.50, min=0, max = 1.0,step=0.10),
       br(),
-      
-      br(),
       # Input: y-intercept
       numericInput(inputId = "yint",
                    label = "Y-Intercept",
-                   value = 0.10, min=0,max = 1.0, step = 0.10)
+                   value = 0.10, min=0,max = 1.0, step = 0.10),
+      
+      br(),
+      h4("Random Forest"),
+      numericInput(inputId = "split",
+                   label = "Train/Test Split",
+                   value = 0.75, min=0,max = 1.0, step = 0.05)
     ),
     
     # Main Panel
@@ -69,10 +74,14 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("plot1")))
                  ), 
         tabPanel("Logistic Regression", 
+                 h4("Model Summary"),
                  fluidRow(column(12,verbatimTextOutput("lr_summary"))),
-                 br(),
+                 # h4("Model Steps"),
+                 # fluidRow(column(12,verbatimTextOutput("lr_step"))),
+                 h4("Model Plot"),
                  fluidRow(column(12,plotOutput("lr_plot"))),
                  br(),
+                 h4("ROC Curve"),
                  fluidRow(column(12,plotOutput("lr_roc_plot")))
                  ),
         tabPanel("Random Forest", tableOutput("rf"))

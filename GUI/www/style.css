@@ -1,0 +1,14 @@
+img {
+margin: 20px 5px;
+}
+
+h4, h5 {
+color: #CA0003;
+}
+h2, h3 {
+margin-top: 10px;
+color: #354ca1;
+}
+.col-sm-12 img {
+	margin-top: -10px;
+}
