@@ -64,7 +64,7 @@ plot_data <- function(data){
 }
 
 runLogistic <- function(data) {
-  model = glm(response ~., family = "binomial", data = data)
+  model = glm(y ~., family = "binomial", data = data)
   return(model)
 }
 
@@ -91,24 +91,23 @@ server <- function(input, output) {
     
   # Show Plot
   output$plot1 <- renderPlot({
-    data<- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
-    data <-data[,2:(ncol(data)-1)]
-    cols <- sapply(data,is.integer)
-    data <- data[,!cols]
-    ggpairs(data,lower=list(continuous=wrap("smooth", colour="navy")),diag=list(continuous=wrap("barDiag", fill="darkcyan")))
+    # data<- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
+    # data <-data[,2:(ncol(data)-1)]
+    # cols <- sapply(data,is.integer)
+    # data <- data[,!cols]
+    # ggpairs(data,lower=list(continuous=wrap("smooth", colour="navy")),diag=list(continuous=wrap("barDiag", fill="darkcyan")))
   })
   
   # Logistic regression
-  # lr <- reactive({
-  #   data <- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
-  #   model <- runLogistic(data)
-  # })
+  lr <- reactive({
+    data <- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
+    model <- runLogistic(data)
+  })
   
   # Show logistic regression
   output$lr <- renderPrint({
-    data <- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
-    model <- runLogistic(data)
-    paste0(summary(model))
+    lr()
+    paste0(summary(lr()$model))
   })
   
 }

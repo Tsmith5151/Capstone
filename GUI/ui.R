@@ -43,6 +43,7 @@ ui <- fluidPage(
       numericInput(inputId = "weights",
                    label = "Explanatory Variable Coefficients",
                    value = 0.50, min=0, max = 1.0,step=0.10),
+      br(),
       
       br(),
       # Input: y-intercept

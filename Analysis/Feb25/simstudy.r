@@ -57,6 +57,6 @@ runLogistic <- function(data) {
 }
 
 
-simdata <- simulateData(10,5,10000)
+simdata <- simulateData(10,5,1000)
 runLogistic(simdata)
 
