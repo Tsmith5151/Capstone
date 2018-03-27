@@ -101,13 +101,30 @@ server <- function(input, output) {
   # Logistic regression
   lr <- reactive({
     data <- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
-    model <- runLogistic(data)
+    runLogistic(data)
   })
   
   # Show logistic regression
-  output$lr <- renderPrint({
-    lr()
-    paste0(summary(lr()$model))
+  output$lr_summary <- renderPrint({
+    #logreg <- glm(y ~., family = "binomial", data = sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint))
+    print(summary(lr()))
   })
   
+  
+  ## Create density and trace plots of model.
+  output$lr_plot <- renderPlot({
+    plot(lr())
+  })
+  
+  ## Perform ROC analysis.
+  roc <- reactive({
+    predict <- predict(lr(), type = 'response')
+    ROCRpred <- prediction(predict, sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)$y)
+    ROCRperf <- performance(ROCRpred, 'tpr','fpr')
+  })
+  
+  ## Create ROC plot.
+  output$roc_plot <- renderPlot({
+    plot(roc(), colorize = TRUE, text.adj = c(-0.2,1.7))
+  })
 }

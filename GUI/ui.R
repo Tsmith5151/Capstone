@@ -69,7 +69,12 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("plot1")))
                  ), 
         tabPanel("Logistic Regression", 
-                 fluidRow(column(12,tableOutput("lr")))),
+                 fluidRow(column(12,tableOutput("lr_summary"))),
+                 br(),
+                 fluidRow(column(12,plotOutput("lr_plot"))),
+                 br(),
+                 fluidRow(column(12,plotOutput("roc_plot")))
+                 ),
         tabPanel("Random Forest", tableOutput("rf"))
     )
   )
