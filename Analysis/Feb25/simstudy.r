@@ -43,7 +43,7 @@ simulateData <- function (n_noise,n_explanatory, n_datapoints, n_categorical){
   }
   
   simdata <- genData(n_datapoints, def)
-  #summary(simdata)
+  summary(simdata)
   return(simdata)
   
 }
