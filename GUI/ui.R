@@ -31,7 +31,7 @@ ui <- fluidPage(
       
       # Input: Noise Variables Variance
       numericInput(inputId = "nvar",
-                   label = "Noise Varance",
+                   label = "Noise Variance",
                    value = 1,min=0,max = 10,step=0.50),
       
       br(),
@@ -41,6 +41,10 @@ ui <- fluidPage(
                    value = 10, min=0, max = 100, step=1),
       
       # Input: Explanatory Variables Weights
+      # Drop down 1,2,3 
+      # If 1 then all get the same weight
+      # If 2 then half get one weight, other half get another weight
+      # If 3 then ...
       numericInput(inputId = "weights",
                    label = "Explanatory Variable Coefficients",
                    value = 0.50, min=0, max = 1.0,step=0.10),
@@ -50,11 +54,17 @@ ui <- fluidPage(
                    label = "Y-Intercept",
                    value = 0.10, min=0,max = 1.0, step = 0.10),
       
-      br(),
-      h4("Random Forest"),
+      br(),      
+      h4("Model Input Parameters"),            
       numericInput(inputId = "split",
                    label = "Train/Test Split",
-                   value = 0.75, min=0,max = 1.0, step = 0.05)
+                   value = 0.70, min=0,max = 1.0, step = 0.05),            
+      br(),      
+      h4("Random Forest Parameters"),      
+      sliderInput(inputId = "ntree",                   
+                  label = "Number of Trees",                   
+                  value = 100, min=50,max = 550, step = 1)
+    
     ),
     
     # Main Panel
@@ -74,10 +84,10 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("plot1")))
                  ), 
         tabPanel("Logistic Regression", 
+                 h4("Model Steps"),
+                 fluidRow(column(12,verbatimTextOutput("lr_step"))),
                  h4("Model Summary"),
                  fluidRow(column(12,verbatimTextOutput("lr_summary"))),
-                 # h4("Model Steps"),
-                 # fluidRow(column(12,verbatimTextOutput("lr_step"))),
                  h4("Model Plot"),
                  fluidRow(column(12,plotOutput("lr_plot"))),
                  br(),

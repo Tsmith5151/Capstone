@@ -64,8 +64,8 @@ plot_data <- function(data){
 }
 
 runLogistic <- function(data) {
-  model = glm(y ~., family = "binomial", data = data)
-  return(model)
+  model = lm(y ~., family = "binomial", data = data)
+  return(step(model))
 }
 
 server <- function(input, output) {
@@ -105,13 +105,13 @@ server <- function(input, output) {
   })
   
   # Show logistic regression
-  output$lr_summary <- renderPrint({
-    summary(lr())
+  output$lr_step <- renderPrint({
+    lr()
   })
   
   # Show logistic regression steps
-  output$lr_step <- renderPrint({
-    step(lr())
+  output$lr_summary <- renderPrint({
+    summary(lr())
   })
   
   # Create density and trace plots of model.
