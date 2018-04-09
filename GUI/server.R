@@ -11,9 +11,33 @@ linear_eq <- function(n_ev,weights,y_int){
   
   # Explanatory Variables
   ev <- c()
-  for (i in (1:n_ev)){
-    ev[[i]] <- (paste0(weights,'*EV',i,sample(c('-','+'),1)))
+  if(weights == 1) {
+    for (i in (1:n_ev)){
+      ev[[i]] <- (paste0('0.5*EV',i,sample(c('-','+'),1)))
+    }
+  } else if(weights == 2) {
+    for (i in (1:n_ev)){
+      if(i <= n_ev / 2) {
+        ev[[i]] <- (paste0('0.3*EV',i,sample(c('-','+'),1)))
+      }
+      else {
+        ev[[i]] <- (paste0('0.7*EV',i,sample(c('-','+'),1)))
+      }
+    }
+  }else {
+    for (i in (1:n_ev)){
+      if(i <= n_ev / 3) {
+        ev[[i]] <- (paste0('0.2*EV',i,sample(c('-','+'),1)))
+      }
+      else if(i <= 2 * n_ev / 3){
+        ev[[i]] <- (paste0('0.5*EV',i,sample(c('-','+'),1)))
+      }
+      else {
+        ev[[i]] <- (paste0('0.8*EV',i,sample(c('-','+'),1)))
+      }
+    }
   }
+  
   
   # Build Equation
   x <- (paste(unlist(ev), collapse=' '))

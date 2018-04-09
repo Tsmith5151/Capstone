@@ -45,9 +45,12 @@ ui <- fluidPage(
       # If 1 then all get the same weight
       # If 2 then half get one weight, other half get another weight
       # If 3 then ...
-      numericInput(inputId = "weights",
+      selectInput(inputId = "weights",
                    label = "Explanatory Variable Coefficients",
-                   value = 0.50, min=0, max = 1.0,step=0.10),
+                  choices = list("Balanced" = "1", 
+                                 "Half large, half small" = "2",
+                                 "Small, medium, and large" = "3"), 
+                  selected = "1"),
       br(),
       # Input: y-intercept
       numericInput(inputId = "yint",
@@ -58,7 +61,10 @@ ui <- fluidPage(
       h4("Model Input Parameters"),            
       numericInput(inputId = "split",
                    label = "Train/Test Split",
-                   value = 0.70, min=0,max = 1.0, step = 0.05),            
+                   value = 0.70, min=0,max = 1.0, step = 0.05),        
+      
+      # LR - stepwise forward/ backward... AIC, 
+      
       br(),      
       h4("Random Forest Parameters"),      
       sliderInput(inputId = "ntree",                   

@@ -49,14 +49,31 @@ simulateData <- function (n_noise,n_explanatory, n_datapoints, n_categorical){
 }
 runLogistic <- function(data) {
   model = glm(response ~., family = "binomial", data = data)
-  step(model)
-  #summary(model)
-  #anova(model)
-  predict <- predict(model, type = 'response')
-  table(data$response, predict >= 0.5)
+  #step(model)
+  return(step(model))
 }
 
 
 simdata <- simulateData(10,5,1000)
-runLogistic(simdata)
+model = runLogistic(simdata)
+
+model
+step(model)
+summary(model)
+anova(model)
+
+split <- sample.split(data$response, SplitRatio = 0.75)
+
+# Training and test data
+train <- subset(data, split == TRUE)
+test <- subset(data, split == FALSE)
+
+
+predict <- predict(model, type = 'response')
+table(data$response, predict >= 0.5)
+
+ROCRpred <- prediction(predict, data$response)
+ROCRperf <- performance(ROCRpred, 'tpr','fpr')
+plot(ROCRperf, colorize = TRUE, text.adj = c(-0.2,1.7))
+
 
