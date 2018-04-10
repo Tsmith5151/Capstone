@@ -105,6 +105,7 @@ ui <- fluidPage(
         tabPanel("Random Forest",
                  h5("TODO: train + test to make it work?"),
                  h4("Random Forest Fit"),
+                 fluidRow(column(12, verbatimTextOutput("rf_split"))),
                  fluidRow(column(12,verbatimTextOutput("rf_fit"))),
                  h4("Feature Importance"),
                  fluidRow(column(12,verbatimTextOutput("rf_importance"))),

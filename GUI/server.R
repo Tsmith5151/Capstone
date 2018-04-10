@@ -97,6 +97,13 @@ runRandomForest <- function(data, n_tree) {
   return(fit)
 }
 
+split_data <- function(data, r_split) {
+  set.seed(123)
+  sample = sample.split(data$y,SplitRatio = r_split)
+  TRAIN <<- subset(data,sample ==TRUE)
+  TEST <<- subset(data, sample==FALSE)
+}
+
 server <- function(input, output) {
 
   # Return the requested dataset ----
@@ -171,11 +178,17 @@ server <- function(input, output) {
   
   # Random forest
   rf <- reactive({
-    runRandomForest(SIM_DATA, input$ntree)
+    runRandomForest(TRAIN, input$ntree)
+  })
+  
+  # Split data
+  output$rf_split <- renderText({
+    paste("Data split at ", input$split, " train, ", 1-input$split, " test")
   })
   
   # Show random forest
   output$rf_fit <- renderPrint({
+    split_data(SIM_DATA, input$split)
     RF_FIT <<- rf()
     print(RF_FIT)
   })
