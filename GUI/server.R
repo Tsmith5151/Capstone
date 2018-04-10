@@ -96,7 +96,7 @@ server <- function(input, output) {
 
   # Return the requested dataset ----
   simdata <- reactive({
-    sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
+    SIM_DATA <<- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
   })
   
   equation <- reactive({
@@ -124,29 +124,37 @@ server <- function(input, output) {
   
   # Logistic regression
   lr <- reactive({
-    data <- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
-    runLogistic(data)
+    #data <- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
+    runLogistic(SIM_DATA)
+    #print("----------------------------------------------------------")
   })
   
   # Show logistic regression
   output$lr_step <- renderPrint({
-    lr()
+    #for (i in 1:10){
+      LR_STEPS <<- lr()
+    #}
   })
   
   # Show logistic regression steps
   output$lr_summary <- renderPrint({
-    summary(lr())
+    summary(LR_STEPS)
+  })
+  
+  # Predict logistic regression
+  output$lr_predict <- renderPrint({
+    LR_PREDICT <<- predict(LR_STEPS, type = 'response')
+    table(SIM_DATA$y, LR_PREDICT >= 0.5)
   })
   
   # Create density and trace plots of model.
   output$lr_plot <- renderPlot({
-    plot(lr())
+    plot(LR_STEPS)
   })
   
   # Perform ROC analysis.
   lr_roc <- reactive({
-    predict <- predict(lr(), type = 'response')
-    ROCRpred <- prediction(predict, sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)$y)
+    ROCRpred <- prediction(LR_PREDICT, SIM_DATA$y)
     ROCRperf <- performance(ROCRpred, 'tpr','fpr')
   })
   

@@ -90,13 +90,14 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("plot1")))
                  ), 
         tabPanel("Logistic Regression", 
-                 h4("Model Steps"),
+                 h4("Model Steps - 10 iterations"),
                  fluidRow(column(12,verbatimTextOutput("lr_step"))),
-                 h4("Model Summary"),
+                 h4("Average Model Summary"),
                  fluidRow(column(12,verbatimTextOutput("lr_summary"))),
+                 h4("Confusion Matrix"),
+                 fluidRow(column(12,verbatimTextOutput("lr_predict"))),
                  h4("Model Plot"),
                  fluidRow(column(12,plotOutput("lr_plot"))),
-                 br(),
                  h4("ROC Curve"),
                  fluidRow(column(12,plotOutput("lr_roc_plot")))
                  ),
