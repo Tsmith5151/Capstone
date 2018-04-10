@@ -90,6 +90,7 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("plot1")))
                  ), 
         tabPanel("Logistic Regression", 
+                 h5("TODO: get iterations working"),
                  h4("Model Steps - 10 iterations"),
                  fluidRow(column(12,verbatimTextOutput("lr_step"))),
                  h4("Average Model Summary"),
@@ -101,7 +102,13 @@ ui <- fluidPage(
                  h4("ROC Curve"),
                  fluidRow(column(12,plotOutput("lr_roc_plot")))
                  ),
-        tabPanel("Random Forest", tableOutput("rf"))
+        tabPanel("Random Forest",
+                 h5("TODO: train + test to make it work?"),
+                 h4("Random Forest Fit"),
+                 fluidRow(column(12,verbatimTextOutput("rf_fit"))),
+                 h4("Feature Importance"),
+                 fluidRow(column(12,verbatimTextOutput("rf_importance"))),
+                 tableOutput("rf"))
     )
   )
 )

@@ -92,6 +92,11 @@ runLogistic <- function(data) {
   return(step(model))
 }
 
+runRandomForest <- function(data, n_tree) {
+  fit <- randomForest(data, as.factor(data$y), ntree=n_tree, importance=TRUE)
+  return(fit)
+}
+
 server <- function(input, output) {
 
   # Return the requested dataset ----
@@ -161,5 +166,22 @@ server <- function(input, output) {
   # Create ROC plot.
   output$lr_roc_plot <- renderPlot({
     plot(lr_roc(), colorize = TRUE, text.adj = c(-0.2,1.7))
+  })
+  
+  
+  # Random forest
+  rf <- reactive({
+    runRandomForest(SIM_DATA, input$ntree)
+  })
+  
+  # Show random forest
+  output$rf_fit <- renderPrint({
+    RF_FIT <<- rf()
+    print(RF_FIT)
+  })
+  
+  # Feature importance
+  output$rf_importance <- renderPrint({
+    print(importance(RF_FIT,type=2))
   })
 }
