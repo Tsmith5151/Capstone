@@ -81,9 +81,16 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
   
   results<- c()
   
+  results_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=4, byrow = TRUE)
+  dimnames(results_matrix) = list( 
+    c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
+    c("Variance","Accuracy", "Adjusted R-squared", "F-statistic")) # column names 
+  
+
   # Iterate over Variance Range
-  for (nvar in seq(from=1.0,to=2.0,by=0.50)){
-    
+  i <- 0
+  for (nvar in seq(from=5.0,to=5.0,by=0.50)){
+    i <- i+1
     print(nvar)
     scores <- c()
     
@@ -93,6 +100,8 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
       # Regenerate Data
       data<-sim_data(nrows,noise,ndist,nvar,ev,weights,yint)
       
+      break
+      
       # Split Train/Testing
       split_data(data,split)
       
@@ -101,15 +110,25 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
       pred <- predict(model.train, TEST, type = 'response')
       conf <- table(TEST$y, pred > 0.5)
       acc <- sum(diag(conf))/sum(conf)
+      summary <- summary(model.train)
+      fstat <- summary$fstatistic[1]
+      adjrsq <- summary$adj.r.squared
       
       #Append Results
       scores<-c(acc,scores)
       
     }
+    print(data)
+    break
     # Get Average Score for Simulation 
-    results[[nvar]] <- mean(scores)
+    results[i] <- mean(scores)
+    results_matrix[i,1] <- nvar
+    results_matrix[i,2] <- mean(scores)
+    results_matrix[i,3] <- mean(fstat)
+    results_matrix[i,4] <- mean(adjrsq)
   }
-  return(results)
+  
+  return(results_matrix)
 }
 
 server <- function(input, output) {
@@ -141,8 +160,17 @@ server <- function(input, output) {
     )
   })
   
+  output$lr_title <- renderText({
+    paste0( "Average of ", input$n_sim, " from 1 to 5 standard deviation:")
+  })
+  
   # Print Equation
-  output$lr_sim <- renderText({
-    paste0(lr())
+  output$lr_sim <- renderTable({
+    LR <<- lr()
+    LR
+  })
+  
+  output$lr_sim_chart <- renderPlot({
+    LR
   })
 }

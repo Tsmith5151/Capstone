@@ -15,13 +15,13 @@ ui <- fluidPage(
       # Input: Number of Rows
       numericInput(inputId = "nrows",
                    label = "Number of Rows",
-                   value = 100,min=0,max = 10000),
+                   value = 10,min=0,max = 10000),
       
       br(),
       # Input: Noise Variables
       numericInput(inputId = "noise",
                    label = "Noise Variables",
-                   value = 2,min=0,max = 100),
+                   value = 5,min=0,max = 100),
       
       # Distribution for Noise Variables
       selectInput("ndist", label ="Noise Variable Distribution", 
@@ -95,7 +95,14 @@ ui <- fluidPage(
                  fluidRow(column(12,tableOutput("table")))
         ), 
         tabPanel("Logistic Regression Simulation", 
-                 fluidRow(column(12,verbatimTextOutput("lr_sim")))
+                 fluidRow(
+                   column(12,
+                          h4(textOutput("lr_title"))
+                   )
+                 ),
+                 fluidRow(column(12,tableOutput("lr_sim"))),
+                 h4("Chart:"),
+                 fluidRow(column(12,plotOutput("lr_sim_chart")))
         ),
         tabPanel("Random Forest Simulation",
                  h4("Random Forest Out of Bag Error")
