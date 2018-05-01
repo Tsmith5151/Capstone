@@ -4,7 +4,7 @@ library(GGally)
 library(randomForest)
 library(ROCR)
 library(caTools)
-library(caret)
+#library(caret)
 set.seed(1)
 
 
@@ -79,12 +79,22 @@ split_data <- function(data, r_split) {
 lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect){
   
   sim_results <- c()
+  results_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
+  dimnames(results_matrix) = list( 
+    c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
+    c("nVar","True Positive Rate", "False Positive Rate", "Recall", "Precision", "F Measure", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   # Iterate over Variance 
+  i <- 0
   for (nvar in seq(from=0.50,to=5.0,by=0.50)){
-   
+    i <- i+1
     # Initialize List and Append Results
-    results <- c()
+    tpr_fpr <- c()
+    precision_recall <- c()
+    f1 <- c()
+    acc <- c()
+    auc <- c()
+    cost <- c()
 
     # Number of Simulations
     for (n in 1:n_sim){
@@ -103,29 +113,55 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
       pred<-prediction(pred, TEST$y)
       
       # TRP/FPR
-      tpr_fpr <- performance(pred, measure = "tpr",x.measure = "fpr")
+      tpr_fpr <- c(tpr_fpr, performance(pred, measure = "tpr",x.measure = "fpr"))
       
       # Precision/Recall
-      #precision_recall <- performance(pred,measure='prec',x.measure='rec')
+      precision_recall <- c(precision_recall, performance(pred,measure='prec',x.measure='rec'))
       
       # F1 Score
-      #f1 <- performance(pred,measure="f")
+      f1 <- c(f1,performance(pred,measure="f"))
       
       #Accuracy
-      #acc <- performance(pred, measure = "acc")
+      acc <- c(acc,performance(pred, measure = "acc"))
       
       # AUC
-      #auc <- performance(pred,measure="auc")
+      auc <- c(auc, performance(pred,measure="auc"))
       
       # Cost
-      #cost <- performance(pred,measure="cost")
+      cost <- c(cost, performance(pred,measure="cost"))
       
     }
+    #print(tpr_fpr[[1]])
+    results_matrix[i,1] <- nvar
+    browser()
+    tpr <- slot(tpr_fpr[[1]], "y.values")
+    results_matrix[i,2] <- mean(tpr[[1]])
+    #tpr_fpr[[3]]@y.values[[1]][21]
     
+    fpr <- slot(tpr_fpr[[1]], "x.values")
+    results_matrix[i,3] <- mean(fpr[[1]])
+    
+    recall <-slot(precision_recall[[1]], "x.values")
+    results_matrix[i,4] <-mean(recall[[1]])
+    
+    precision <-slot(precision_recall[[1]], "y.values")
+    results_matrix[i,5] <-mean(precision[[1]])
+    
+    fmeasure <- slot(f1[[1]], "y.values")
+    results_matrix[i,6] <- mean(fmeasure[[1]])
+    
+    accuracy <- slot(acc[[1]], "y.values")
+    results_matrix[i,7] <- mean(accuracy[[1]])
+    
+    areaundercurve <- slot(auc[[1]], "y.values")
+    results_matrix[i,8] <- mean(areaundercurve[[1]])
+    
+    excost <- slot(cost[[1]], "y.values")
+    results_matrix[i,9] <- mean(excost[[1]])
   }
   
   #df <- as.data.frame((sim_results))
-  return(sim_results)
+  return(results_matrix)
   }
   
 
