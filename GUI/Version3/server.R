@@ -131,40 +131,67 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
       cost <- c(cost, performance(pred,measure="cost"))
       
     }
-    #print(tpr_fpr[[1]])
-    results_matrix[i,1] <- nvar
-    browser()
-    tpr <- slot(tpr_fpr[[1]], "y.values")
-    results_matrix[i,2] <- mean(tpr[[1]])
-    #tpr_fpr[[3]]@y.values[[1]][21]
+    results_matrix <- populateMatrix(results_matrix, i, nvar, tpr_fpr, precision_recall, f1, acc, auc, cost) 
     
-    fpr <- slot(tpr_fpr[[1]], "x.values")
-    results_matrix[i,3] <- mean(fpr[[1]])
-    
-    recall <-slot(precision_recall[[1]], "x.values")
-    results_matrix[i,4] <-mean(recall[[1]])
-    
-    precision <-slot(precision_recall[[1]], "y.values")
-    results_matrix[i,5] <-mean(precision[[1]])
-    
-    fmeasure <- slot(f1[[1]], "y.values")
-    results_matrix[i,6] <- mean(fmeasure[[1]])
-    
-    accuracy <- slot(acc[[1]], "y.values")
-    results_matrix[i,7] <- mean(accuracy[[1]])
-    
-    areaundercurve <- slot(auc[[1]], "y.values")
-    results_matrix[i,8] <- mean(areaundercurve[[1]])
-    
-    excost <- slot(cost[[1]], "y.values")
-    results_matrix[i,9] <- mean(excost[[1]])
   }
   
   #df <- as.data.frame((sim_results))
   return(results_matrix)
   }
   
+populateMatrix <- function (results_matrix, i, nvar, tpr_fpr, precision_recall, f1, acc, auc, cost){
+  results_matrix[i,1] <- nvar
+  
+  tpr <- c()
+  for (j in 1:10) {
+    tpr <- c(tpr, tpr_fpr[[j]]@y.values[[1]][21])
+  }
+  results_matrix[i,2] <- mean(tpr)
 
+  fpr <- c()
+  for (j in 1:10) {
+    fpr <- c(fpr, tpr_fpr[[j]]@x.values[[1]][21])
+  }
+  results_matrix[i,3] <- mean(fpr)
+  
+  recall <- c()
+  for (j in 1:10) {
+    recall <- c(recall, precision_recall[[j]]@x.values[[1]][21])
+  }
+  results_matrix[i,4] <-mean(recall)
+  
+  precision <- c()
+  for (j in 1:10) {
+    precision <- c(precision, precision_recall[[j]]@y.values[[1]][21])
+  }
+  results_matrix[i,5] <-mean(precision)
+  
+  fmeasure <- c()
+  for(j in 1:10) {
+    fmeasure <- c(fmeasure, f1[[j]]@y.values[[1]][23])
+  }
+  results_matrix[i,6] <- mean(fmeasure)
+  
+  accuracy <- c()
+  for(j in 1:10) {
+    accuracy <- c(accuracy, acc[[j]]@y.values[[1]][23])
+  }
+  results_matrix[i,7] <- mean(accuracy)
+  
+  areaundercurve <- c()
+  for(j in 1:10) {
+    areaundercurve <- c(areaundercurve, auc[[j]]@y.values[[1]])
+  }
+  results_matrix[i,8] <- mean(areaundercurve)
+  
+  excost <- c()
+  for(j in 1:10) {
+    excost <- c(excost, cost[[j]]@y.values[[1]][23])
+  }
+  results_matrix[i,9] <- mean(excost)
+  
+  return(results_matrix)
+}
 
 server <- function(input, output) {
   
