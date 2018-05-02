@@ -78,19 +78,21 @@ split_data <- function(data, r_split) {
 # Logistic Regression Model
 lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect){
   
-  sim_results <- c()
+  
   results_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(results_matrix) = list( 
     c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
-    c("nVar","True Positive Rate", "False Positive Rate", "Recall", "Precision", "F Measure", "Accuracy", "AUC", "Explicit Cost")) # column names 
+    c("nVar","TPR", "FPR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   # Iterate over Variance 
   i <- 0
   for (nvar in seq(from=0.50,to=5.0,by=0.50)){
     i <- i+1
     # Initialize List and Append Results
-    tpr_fpr <- c()
-    precision_recall <- c()
+    tpr <- c()
+    fpr <- c()
+    precision <- c()
+    recall <- c()
     f1 <- c()
     acc <- c()
     auc <- c()
@@ -112,83 +114,72 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
       pred <- predict(model.train,TEST[, !names(TEST) %in% c("y")] ,type = 'response')
       pred<-prediction(pred, TEST$y)
       
-      # TRP/FPR
-      tpr_fpr <- c(tpr_fpr, performance(pred, measure = "tpr",x.measure = "fpr"))
+      # TRP
+      browser()
+      tp <- performance(pred, measure = "tpr")
+      tp_df = as.data.frame(tp@y.values[[1]])
+      tpr <- c(tpr, tp)
+      
+      # FPR
+      #fp <- performance(pred, measure = "fpr")
+      #fpr <- c(fpr, fp)
       
       # Precision/Recall
-      precision_recall <- c(precision_recall, performance(pred,measure='prec',x.measure='rec'))
+      #p <- performance(pred,measure='prec')
+      #precision <- c(precision, p)
+      
+      # Recall
+      #rc <- performance(pred, measure='rec')
+      #recall <- c(recall, rc)
       
       # F1 Score
-      f1 <- c(f1,performance(pred,measure="f"))
-      
+      f <- performance(pred,measure="f")
+      x = as.data.frame(f@y.values[[1]])
+      f <- max(tail(x,-1))
+      f1 <- c(f1,f)
+
       #Accuracy
-      acc <- c(acc,performance(pred, measure = "acc"))
-      
+      a <- performance(pred, measure = "acc")
+      x = as.data.frame(a@y.values[[1]])
+      a <- max(x)
+      acc <- c(acc,a)
+
       # AUC
-      auc <- c(auc, performance(pred,measure="auc"))
+      a <- performance(pred,measure="auc")
+      a <- a@y.values[[1]]
+      auc <- c(auc, a)
       
       # Cost
-      cost <- c(cost, performance(pred,measure="cost"))
+      c <- performance(pred,measure="cost")
+      c <- min(c@y.values[[1]])
+      cost <- c(cost, c)
       
     }
-    results_matrix <- populateMatrix(results_matrix, i, nvar, tpr_fpr, precision_recall, f1, acc, auc, cost) 
+    results_matrix <- populateMatrix(results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost) 
     
   }
-  
   #df <- as.data.frame((sim_results))
   return(results_matrix)
   }
   
-populateMatrix <- function (results_matrix, i, nvar, tpr_fpr, precision_recall, f1, acc, auc, cost){
+populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost){
   results_matrix[i,1] <- nvar
   
-  tpr <- c()
-  for (j in 1:10) {
-    tpr <- c(tpr, tpr_fpr[[j]]@y.values[[1]][21])
-  }
   results_matrix[i,2] <- mean(tpr)
 
-  fpr <- c()
-  for (j in 1:10) {
-    fpr <- c(fpr, tpr_fpr[[j]]@x.values[[1]][21])
-  }
   results_matrix[i,3] <- mean(fpr)
   
-  recall <- c()
-  for (j in 1:10) {
-    recall <- c(recall, precision_recall[[j]]@x.values[[1]][21])
-  }
   results_matrix[i,4] <-mean(recall)
   
-  precision <- c()
-  for (j in 1:10) {
-    precision <- c(precision, precision_recall[[j]]@y.values[[1]][21])
-  }
   results_matrix[i,5] <-mean(precision)
   
-  fmeasure <- c()
-  for(j in 1:10) {
-    fmeasure <- c(fmeasure, f1[[j]]@y.values[[1]][23])
-  }
-  results_matrix[i,6] <- mean(fmeasure)
+  results_matrix[i,6] <- mean(f1)
   
-  accuracy <- c()
-  for(j in 1:10) {
-    accuracy <- c(accuracy, acc[[j]]@y.values[[1]][23])
-  }
-  results_matrix[i,7] <- mean(accuracy)
+  results_matrix[i,7] <- mean(acc)
+
+  results_matrix[i,8] <- mean(auc)
   
-  areaundercurve <- c()
-  for(j in 1:10) {
-    areaundercurve <- c(areaundercurve, auc[[j]]@y.values[[1]])
-  }
-  results_matrix[i,8] <- mean(areaundercurve)
-  
-  excost <- c()
-  for(j in 1:10) {
-    excost <- c(excost, cost[[j]]@y.values[[1]][23])
-  }
-  results_matrix[i,9] <- mean(excost)
+  results_matrix[i,9] <- mean(cost)
   
   return(results_matrix)
 }
