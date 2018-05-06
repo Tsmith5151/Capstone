@@ -3,7 +3,7 @@ ui <- fluidPage(
   
   theme = "style.css",
   # Title
-  img(src = "../logo.png", width = "270px", height = "25px"),
+  img(src = "logo.png", width = "270px", height = "25px"),
   h3("Comparison of Classification Performance of Random Forest and Logistic Regression"),
   hr(),
   # Sidebar layout with a input and output definitions ----
