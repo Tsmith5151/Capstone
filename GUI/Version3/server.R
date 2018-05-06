@@ -315,7 +315,6 @@ server <- function(input, output) {
   # Print RF Matrix
   output$rf_sim <- renderTable({
     LR_RF[2]
-<<<<<<< HEAD
   })
   
   # Logistic Regression Plot
@@ -323,8 +322,6 @@ server <- function(input, output) {
     lr <- as.data.frame(LR_RF[1])
     plot(lr[,'nVar'],lr[,'TPR'],xlab='Variance',ylab='TPR',main='Logistic Regression: Variance vs TPR',
          col='blue',type='l',lwd=2,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
-=======
->>>>>>> c55ba1090703e87a8ed93e9c70a849711edd71b3
   })
   
   # RandomForest Plot
