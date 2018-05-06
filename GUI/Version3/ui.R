@@ -75,9 +75,7 @@ ui <- fluidPage(
                   value = 10, min=1,max = 1000, step = 1),
       
       br(),
-      submitButton("Simulate Data", icon("refresh")),
-      br(),
-      submitButton("refreshdata", "Refresh Data")
+      submitButton("Simulate Data", icon("refresh"))
     ),
     
     # Main Panel
@@ -108,9 +106,11 @@ ui <- fluidPage(
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("lr_sim_chart"))),
+                 fluidRow(column(12,plotOutput("case1_chart1"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("rf_sim_chart")))
+                 fluidRow(column(12,plotOutput("case1_chart2"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case1_chart3")))
         )
       )
     )

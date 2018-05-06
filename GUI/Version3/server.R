@@ -115,7 +115,7 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
   
   # Iterate over Variance 
   i <- 0
-  for (nvar in seq(from=0.50,to=50.0,by=0.50)){
+  for (nvar in seq(from=0.50,to=5.0,by=0.50)){
     i <- i+1
     # Initialize List and Append Results
     lr_tpr <- c()
@@ -258,6 +258,21 @@ populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall
   results_matrix[i,9] <- mean(cost)
   
   return(results_matrix)
+  
+}
+
+get_case1_plots <- function(lr,rf,xvar,yvar){
+  
+  # Logistic Regression
+  plot(lr[,xvar],lr[,yvar],xlab=xvar,ylab=yvar,main=paste0('Simulation Results: ',xvar,' vs ',yvar),
+       col='blue',type='b',pch=19,lwd=2,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5,ylim=c(0.50,1))
+  
+  # Random Forest
+  lines(rf[,xvar],rf[,yvar],col='red',type='b',pch=18,lwd=2)
+  
+  # Legend
+  legend("bottomright", legend=c("LR", "RF"),
+         col=c("red", "blue"), lty=1:2, cex=0.8,text.font=4,box.lty=0)
 }
 
 server <- function(input, output) {
@@ -317,18 +332,22 @@ server <- function(input, output) {
     LR_RF[2]
   })
   
-  # Logistic Regression Plot
-  output$lr_sim_chart <- renderPlot({
-    lr <- as.data.frame(LR_RF[1])
-    plot(lr[,'nVar'],lr[,'TPR'],xlab='Variance',ylab='TPR',main='Logistic Regression: Variance vs TPR',
-         col='blue',type='l',lwd=2,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+  # CASE1 Plots
+  output$case1_chart1 <- renderPlot({
+    LR1 <<- as.data.frame(LR_RF[1])
+    RF1 <<- as.data.frame(LR_RF[2])
+    get_case1_plots(LR1,RF1,'nVar','TPR')
   })
   
-  # RandomForest Plot
-  output$rf_sim_chart <- renderPlot({
-    rf <- as.data.frame(LR_RF[2])
-    plot(rf[,'nVar'],rf[,'TPR'],xlab='Variance',ylab='TPR',main='Random Forest: Variance vs TPR',
-         col='blue',type='l',lwd=2,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+  # CASE1 Plots
+  output$case1_chart2 <- renderPlot({
+    get_case1_plots(LR1,RF1,'nVar','Accuracy')
   })
+  
+  # CASE1 Plots
+  output$case1_chart3 <- renderPlot({
+    get_case1_plots(LR1,RF1,'nVar','F1')
+  })
+  
 }
 
