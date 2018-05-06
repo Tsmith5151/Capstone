@@ -280,8 +280,8 @@ server <- function(input, output) {
     paste0("y = ",equation())
   })
   
-  # Logistic Simulation
-  lr <- reactive({
+  # Logistic and Random forest simulation
+  lr_rf <- reactive({
     withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
                  run_model <- simulation_lr_rf(input$n_sim,
                                                input$split,
@@ -307,13 +307,13 @@ server <- function(input, output) {
   
   # Print LR Matrix
   output$lr_sim <- renderTable({
-    LR <<- lr()
-    LR[1]
+    LR_RF <<- lr_rf()
+    LR_RF[1]
   })
   
   # Print RF Matrix
   output$rf_sim <- renderTable({
-    LR[2]
+    LR_RF[2]
   })
   
   #output$lr_sim_chart <- renderPlot({
