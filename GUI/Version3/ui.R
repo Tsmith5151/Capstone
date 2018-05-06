@@ -5,19 +5,17 @@ ui <- fluidPage(
   # Title
   img(src = "../logo.png", width = "270px", height = "25px"),
   h3("Comparison of Classification Performance of Random Forest and Logistic Regression"),
-  
+  hr(),
   # Sidebar layout with a input and output definitions ----
   sidebarLayout(
     
     # Sidebar Inputs
     sidebarPanel(
-      h4("Simulate your data"),
       # Input: Number of Rows
       numericInput(inputId = "nrows",
                    label = "Number of Rows",
                    value = 100,min=100,max = 10000),
       
-      br(),
       # Input: Noise Variables
       numericInput(inputId = "noise",
                    label = "Noise Variables",
@@ -34,7 +32,6 @@ ui <- fluidPage(
                    label = "Noise Variance",
                    value = 1,min=0,max = 10,step=0.50),
       
-      br(),
       # Input: Explanatory Variables
       numericInput(inputId = "ev",
                    label = "Explanatory Variable",
@@ -47,19 +44,17 @@ ui <- fluidPage(
                                  "Small/Large: 0.30, 0.70" = "2",
                                  "Small/Medium/Large: 0.20, 0.50, 0.80" = "3"), 
                   selected = "1"),
-      br(),
       # Input: y-intercept
       numericInput(inputId = "yint",
                    label = "Y-Intercept",
                    value = 0.10, min=0,max = 1.0, step = 0.10),
-      
-      br(),      
+      hr(),
       h4("Model Input Parameters"),            
       numericInput(inputId = "split",
                    label = "Train/Test Split",
                    value = 0.70, min=0,max = 1.0, step = 0.05),        
       
-      br(), 
+      hr(), 
       h4("Variable Selection Model"),            
       selectInput(inputId = "varselect",
                   label = "Stepwise Selection Model",
@@ -67,17 +62,22 @@ ui <- fluidPage(
                                  "forward" = "forward",
                                  "forward & backward" = "both"), 
                   selected = "forward"),      
-      br(), 
+      hr(), 
       h4("Random Forest Parameters"),      
       sliderInput(inputId = "ntree",                   
                   label = "Number of Trees",                   
                   value = 100, min=50,max = 550, step = 1),
       
-      br(),      
+      hr(),      
       h4("Simulation: Number of Iterations"),      
       sliderInput(inputId = "n_sim",                   
                   label = "Number of Simulations",                   
-                  value = 10, min=1,max = 1000, step = 1)
+                  value = 10, min=1,max = 1000, step = 1),
+      
+      br(),
+      submitButton("Simulate Data", icon("refresh")),
+      br(),
+      submitButton("refreshdata", "Refresh Data")
     ),
     
     # Main Panel
