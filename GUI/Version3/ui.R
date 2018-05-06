@@ -94,7 +94,7 @@ ui <- fluidPage(
                  br(),
                  fluidRow(column(12,tableOutput("table")))
         ), 
-        tabPanel("Case 1:", 
+        tabPanel("Case Study 1", 
                  fluidRow(
                    column(12,
                           h4(textOutput("lr_title"))
@@ -108,7 +108,9 @@ ui <- fluidPage(
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("lr_sim_chart")))
+                 fluidRow(column(12,plotOutput("lr_sim_chart"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("rf_sim_chart")))
         )
       )
     )

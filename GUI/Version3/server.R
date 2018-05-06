@@ -38,7 +38,7 @@ linear_eq <- function(n_ev,weights,y_int){
       }
     }
   }
-
+  
   # Build Equation
   x <- (paste(unlist(ev), collapse=' '))
   formula <- paste0(y_int,' + ',x)
@@ -102,6 +102,7 @@ do_logisticregression <- function(train,test,varselect){
 
 # Logistic Regression and Random Forest Simulation
 simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
+  
   lr_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(lr_matrix) = list( 
     c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
@@ -114,7 +115,7 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
   
   # Iterate over Variance 
   i <- 0
-  for (nvar in seq(from=0.50,to=5.0,by=0.50)){
+  for (nvar in seq(from=0.50,to=50.0,by=0.50)){
     i <- i+1
     # Initialize List and Append Results
     lr_tpr <- c()
@@ -133,13 +134,13 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
     rf_auc <- c()
     lr_cost <- c()
     rf_cost <- c()
-
+    
     # Number of Simulations
     for (n in 1:n_sim){
       
       # Regenerate Data
       data<-sim_data(nrows,noise,ndist,nvar,ev,weights,yint)
-
+      
       # Split Train/Testing
       split_data(data,split)
       
@@ -209,7 +210,7 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       a <- performance(rf_pred, measure = "acc")
       a <- max(a@y.values[[1]])
       rf_acc <- c(rf_acc,a)
-
+      
       # AUC
       a <- performance(lr_pred,measure="auc")
       a <- a@y.values[[1]]
@@ -235,13 +236,13 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
   #df <- as.data.frame((sim_results))
   result=list(lr_matrix, rf_matrix) 
   return(result)
-  }
-  
+}
+
 populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost){
   results_matrix[i,1] <- nvar
   
   results_matrix[i,2] <- mean(tpr)
-
+  
   results_matrix[i,3] <- mean(fpr)
   
   results_matrix[i,4] <-mean(recall)
@@ -251,7 +252,7 @@ populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall
   results_matrix[i,6] <- mean(f1)
   
   results_matrix[i,7] <- mean(acc)
-
+  
   results_matrix[i,8] <- mean(auc)
   
   results_matrix[i,9] <- mean(cost)
@@ -272,7 +273,7 @@ server <- function(input, output) {
   
   # Show Table
   output$table <- renderTable({
-    head(simdata(), n = 30)
+    head(simdata(), n = 20)
   })
   
   # Print Equation
@@ -280,8 +281,8 @@ server <- function(input, output) {
     paste0("y = ",equation())
   })
   
-  # Logistic Simulation
-  lr <- reactive({
+  # Logistic and Random forest simulation
+  lr_rf <- reactive({
     withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
                  run_model <- simulation_lr_rf(input$n_sim,
                                                input$split,
@@ -293,7 +294,7 @@ server <- function(input, output) {
                                                input$yint,
                                                input$varselect, # Logistic Regression
                                                input$ntree # Random Forest
-                                               )
+                 )
     )
   })
   
@@ -307,17 +308,27 @@ server <- function(input, output) {
   
   # Print LR Matrix
   output$lr_sim <- renderTable({
-    LR <<- lr()
-    LR[1]
+    LR_RF <<- lr_rf()
+    LR_RF[1]
   })
   
   # Print RF Matrix
   output$rf_sim <- renderTable({
-    LR[2]
+    LR_RF[2]
   })
   
-  #output$lr_sim_chart <- renderPlot({
-    #plot(LR[,'Variance'],LR[,'Accuracy'],xlab='Variance',ylab='Accuracy',main='Variance vs Hold out Accuracy',
-         #col='blue',type='l',lwd=2,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
-  #})
+  # Logistic Regression Plot
+  output$lr_sim_chart <- renderPlot({
+    lr <- as.data.frame(LR_RF[1])
+    plot(lr[,'nVar'],lr[,'TPR'],xlab='Variance',ylab='TPR',main='Logistic Regression: Variance vs TPR',
+         col='blue',type='l',lwd=2,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+  })
+  
+  # RandomForest Plot
+  output$rf_sim_chart <- renderPlot({
+    rf <- as.data.frame(LR_RF[2])
+    plot(rf[,'nVar'],rf[,'TPR'],xlab='Variance',ylab='TPR',main='Random Forest: Variance vs TPR',
+         col='blue',type='l',lwd=2,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
+  })
 }
+
