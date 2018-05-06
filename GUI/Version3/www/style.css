@@ -17,7 +17,14 @@ body {
 img {
 	margin: 20px 5px;
 }
-
+ul.nav.nav-tabs {
+	font-size: 16px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+	background-color: #f9f9f9;
+	font-weight: bold;
+	color: #000; 
+}
 h4, h5 {
 	color: #CA0003;
 }
