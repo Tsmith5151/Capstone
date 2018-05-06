@@ -13,7 +13,6 @@ body {
 	height:500px;
 }
 .shiny-bound-output {
-	background: #FFF;
 }
 img {
 	margin: 20px 5px;
@@ -29,4 +28,32 @@ h2, h3 {
 .col-sm-12 img {
 border: solid 1px #333;
 	margin-top: -10px;
+}
+a {
+	color: #354ca1;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #345ca1;
+    border-color: #345ca1;
+}
+.irs-from, .irs-to, .irs-single {
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.333;
+    text-shadow: none;
+    padding: 1px 3px;
+    background: #345ca1;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+.irs-bar-edge, .irs-bar {
+    height: 8px;
+    top: 25px;
+    width: 14px;
+    border: 1px solid #345ca1;
+    border-right: 0;
+    background: #345ca1;
+    border-radius: 16px 0 0 16px;
+    -moz-border-radius: 16px 0 0 16px;
 }
