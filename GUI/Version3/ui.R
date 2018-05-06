@@ -101,6 +101,12 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("lr_sim"))),
+                 fluidRow(
+                   column(12,
+                          h4(textOutput("rf_title"))
+                   )
+                 ),
+                 fluidRow(column(12,align="center",tableOutput("rf_sim"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("lr_sim_chart")))
         )

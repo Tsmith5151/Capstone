@@ -82,8 +82,9 @@ do_randomforest <- function(train,test,n_tree){
   model.train <- randomForest(as.factor(y)~.,train,ntree=n_tree)
   
   # Prediction
-  pred<-as.data.frame(predict(model.train, test[, !names(test) %in% c("y")]))
-  #pred <- prediction(as.list(pred[,1]),test$y)
+  pred<-predict(model.train, test[, !names(test) %in% c("y")], type = 'response')
+  pred <- prediction(as.numeric(pred), as.numeric(test$y))
+  return(pred)
 }
 
 # Logistic Regression
@@ -93,7 +94,7 @@ do_logisticregression <- function(train,test,varselect){
   model.train = step(lm(y ~., family = "binomial", data = train), direction = varselect)
   
   # Prediction
-  pred <- predict(model.train,test[, !names(test) %in% c("y")] ,type = 'response')
+  pred <- predict(model.train, test[, !names(test) %in% c("y")], type = 'response')
   pred <- prediction(pred, test$y)
   return(pred)
 }
@@ -101,9 +102,13 @@ do_logisticregression <- function(train,test,varselect){
 
 # Logistic Regression and Random Forest Simulation
 simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
+  lr_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
+  dimnames(lr_matrix) = list( 
+    c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
+    c("nVar","TPR", "FPR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
-  results_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
-  dimnames(results_matrix) = list( 
+  rf_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
+  dimnames(rf_matrix) = list( 
     c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
     c("nVar","TPR", "FPR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
@@ -112,14 +117,22 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
   for (nvar in seq(from=0.50,to=5.0,by=0.50)){
     i <- i+1
     # Initialize List and Append Results
-    tpr <- c()
-    fpr <- c()
-    precision <- c()
-    recall <- c()
-    f1 <- c()
-    acc <- c()
-    auc <- c()
-    cost <- c()
+    lr_tpr <- c()
+    rf_tpr <- c()
+    lr_fpr <- c()
+    rf_fpr <- c()
+    lr_precision <- c()
+    rf_precision <- c()
+    lr_recall <- c()
+    rf_recall <- c()
+    lr_f1 <- c()
+    rf_f1 <- c()
+    lr_acc <- c()
+    rf_acc <- c()
+    lr_auc <- c()
+    rf_auc <- c()
+    lr_cost <- c()
+    rf_cost <- c()
 
     # Number of Simulations
     for (n in 1:n_sim){
@@ -137,50 +150,91 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
       # TRP
-      #tp <- performance(pred, measure = "tpr")
-      #tp_df = as.data.frame(tp@y.values[[1]])
-      #tpr <- c(tpr, tp)
+      tp <- performance(lr_pred, measure = "tpr")
+      tp = mean(tp@y.values[[1]])
+      lr_tpr <- c(lr_tpr, tp)
+      
+      tp <- performance(rf_pred, measure = "tpr")
+      tp = tp@y.values[[1]][2]
+      rf_tpr <- c(rf_tpr, tp)
       
       # FPR
-      #fp <- performance(pred, measure = "fpr")
-      #fpr <- c(fpr, fp)
+      fp <- performance(lr_pred, measure = "fpr")
+      fp = mean(fp@y.values[[1]])
+      lr_fpr <- c(lr_fpr, fp)
+      
+      fp <- performance(rf_pred, measure = "fpr")
+      fp = fp@y.values[[1]][2]
+      rf_fpr <- c(rf_fpr, fp)
       
       # Precision/Recall
-      #p <- performance(pred,measure='prec')
-      #precision <- c(precision, p)
+      p <- performance(lr_pred,measure='prec')
+      x = p@y.values[[1]]
+      x = tail(x,-1)
+      p <- mean(x)
+      lr_precision <- c(lr_precision, p)
+      
+      p <- performance(rf_pred,measure='prec')
+      x = p@y.values[[1]]
+      x = tail(x,-1)
+      p <- mean(x)
+      rf_precision <- c(rf_precision, p)
       
       # Recall
-      #rc <- performance(pred, measure='rec')
-      #recall <- c(recall, rc)
+      rc <- performance(lr_pred, measure='rec')
+      rc = mean(rc@y.values[[1]])
+      lr_recall <- c(lr_recall, rc)
+      
+      rc <- performance(rf_pred, measure='rec')
+      rc = rc@y.values[[1]][2]
+      rf_recall <- c(rf_recall, rc)
       
       # F1 Score
-      #f <- performance(pred,measure="f")
-      #x = as.data.frame(f@y.values[[1]])
-      #f <- max(tail(x,-1))
-      #f1 <- c(f1,f)
-
+      f <- performance(lr_pred,measure="f")
+      x = as.data.frame(f@y.values[[1]])
+      f <- max(tail(x,-1))
+      lr_f1 <- c(lr_f1,f)
+      
+      f <- performance(rf_pred,measure="f")
+      x = as.data.frame(f@y.values[[1]])
+      f <- max(tail(x,-1))
+      rf_f1 <- c(rf_f1,f)
+      
       #Accuracy
-      #a <- performance(pred, measure = "acc")
-      #x = as.data.frame(a@y.values[[1]])
-      #a <- max(x)
-      #acc <- c(acc,a)
+      a <- performance(lr_pred, measure = "acc")
+      x = as.data.frame(a@y.values[[1]])
+      a <- max(x)
+      lr_acc <- c(lr_acc,a)
+      
+      a <- performance(rf_pred, measure = "acc")
+      a <- max(a@y.values[[1]])
+      rf_acc <- c(rf_acc,a)
 
       # AUC
-      #a <- performance(pred,measure="auc")
-      #a <- a@y.values[[1]]
-      #auc <- c(auc, a)
+      a <- performance(lr_pred,measure="auc")
+      a <- a@y.values[[1]]
+      lr_auc <- c(lr_auc, a)
+      
+      a <- performance(rf_pred,measure="auc")
+      a <- a@y.values[[1]]
+      rf_auc <- c(rf_auc, a)
       
       # Cost
-      #c <- performance(pred,measure="cost")
-      #c <- min(c@y.values[[1]])
-      #cost <- c(cost, c)
+      c <- performance(lr_pred,measure="cost")
+      c <- min(c@y.values[[1]])
+      lr_cost <- c(lr_cost, c)
+      
+      c <- performance(rf_pred,measure="cost")
+      c <- min(c@y.values[[1]])
+      rf_cost <- c(rf_cost, c)
       
     }
-    #results_matrix <- populateMatrix(results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost) 
-    
+    lr_matrix <- populateMatrix(lr_matrix, i, nvar, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
+    rf_matrix <- populateMatrix(rf_matrix, i, nvar, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
   }
   #df <- as.data.frame((sim_results))
-  return(results_matrix)
+  result=list(lr_matrix, rf_matrix) 
+  return(result)
   }
   
 populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost){
@@ -244,12 +298,22 @@ server <- function(input, output) {
   })
   
   output$lr_title <- renderText({
-    paste0( "Total Number of Simulations: ", input$n_sim)
+    paste0( "Total Number of Logistic Regression Simulations: ", input$n_sim)
   })
   
-  # Print Equation
+  output$rf_title <- renderText({
+    paste0( "Total Number of Random Forest Simulations: ", input$n_sim)
+  })
+  
+  # Print LR Matrix
   output$lr_sim <- renderTable({
     LR <<- lr()
+    LR[1]
+  })
+  
+  # Print RF Matrix
+  output$rf_sim <- renderTable({
+    LR[2]
   })
   
   #output$lr_sim_chart <- renderPlot({
