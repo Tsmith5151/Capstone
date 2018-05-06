@@ -75,9 +75,32 @@ split_data <- function(data, r_split) {
   TEST <<- subset(data, sample==FALSE)
 }
 
-# Logistic Regression Model
-lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect){
+# Random Forest
+do_randomforest <- function(train,test,n_tree){
   
+  # Fit Model
+  model.train <- randomForest(as.factor(y)~.,train,ntree=n_tree)
+  
+  # Prediction
+  pred<-as.data.frame(predict(model.train, test[, !names(test) %in% c("y")]))
+  #pred <- prediction(as.list(pred[,1]),test$y)
+}
+
+# Logistic Regression
+do_logisticregression <- function(train,test,varselect){
+  
+  # Fit Model
+  model.train = step(lm(y ~., family = "binomial", data = train), direction = varselect)
+  
+  # Prediction
+  pred <- predict(model.train,test[, !names(test) %in% c("y")] ,type = 'response')
+  pred <- prediction(pred, test$y)
+  return(pred)
+}
+
+
+# Logistic Regression and Random Forest Simulation
+simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
   results_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(results_matrix) = list( 
@@ -107,18 +130,16 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
       # Split Train/Testing
       split_data(data,split)
       
-      # LR Model
-      model.train = step(lm(y ~., family = "binomial", data = TRAIN), direction = varselect)
+      # Do RandomForest
+      rf_pred <- do_randomforest(TRAIN,TEST,ntrees)
       
-      # Prediction
-      pred <- predict(model.train,TEST[, !names(TEST) %in% c("y")] ,type = 'response')
-      pred<-prediction(pred, TEST$y)
+      # Do Logistic Regression
+      lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
       # TRP
-      browser()
-      tp <- performance(pred, measure = "tpr")
-      tp_df = as.data.frame(tp@y.values[[1]])
-      tpr <- c(tpr, tp)
+      #tp <- performance(pred, measure = "tpr")
+      #tp_df = as.data.frame(tp@y.values[[1]])
+      #tpr <- c(tpr, tp)
       
       # FPR
       #fp <- performance(pred, measure = "fpr")
@@ -133,29 +154,29 @@ lr_simulation <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,var
       #recall <- c(recall, rc)
       
       # F1 Score
-      f <- performance(pred,measure="f")
-      x = as.data.frame(f@y.values[[1]])
-      f <- max(tail(x,-1))
-      f1 <- c(f1,f)
+      #f <- performance(pred,measure="f")
+      #x = as.data.frame(f@y.values[[1]])
+      #f <- max(tail(x,-1))
+      #f1 <- c(f1,f)
 
       #Accuracy
-      a <- performance(pred, measure = "acc")
-      x = as.data.frame(a@y.values[[1]])
-      a <- max(x)
-      acc <- c(acc,a)
+      #a <- performance(pred, measure = "acc")
+      #x = as.data.frame(a@y.values[[1]])
+      #a <- max(x)
+      #acc <- c(acc,a)
 
       # AUC
-      a <- performance(pred,measure="auc")
-      a <- a@y.values[[1]]
-      auc <- c(auc, a)
+      #a <- performance(pred,measure="auc")
+      #a <- a@y.values[[1]]
+      #auc <- c(auc, a)
       
       # Cost
-      c <- performance(pred,measure="cost")
-      c <- min(c@y.values[[1]])
-      cost <- c(cost, c)
+      #c <- performance(pred,measure="cost")
+      #c <- min(c@y.values[[1]])
+      #cost <- c(cost, c)
       
     }
-    results_matrix <- populateMatrix(results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost) 
+    #results_matrix <- populateMatrix(results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost) 
     
   }
   #df <- as.data.frame((sim_results))
@@ -207,9 +228,18 @@ server <- function(input, output) {
   
   # Logistic Simulation
   lr <- reactive({
-    withProgress(message = 'Simulating Data', value = 0,
-                 run_model <- lr_simulation(input$n_sim,input$split,input$nrows,input$noise,input$ndist,nvar,input$ev,input$weights,
-                                            input$yint,input$varselect)
+    withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
+                 run_model <- simulation_lr_rf(input$n_sim,
+                                               input$split,
+                                               input$nrows,
+                                               input$noise,
+                                               input$ndist,
+                                               nvar,input$ev,
+                                               input$weights,
+                                               input$yint,
+                                               input$varselect, # Logistic Regression
+                                               input$ntree # Random Forest
+                                               )
     )
   })
   

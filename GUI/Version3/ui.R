@@ -94,7 +94,7 @@ ui <- fluidPage(
                  br(),
                  fluidRow(column(12,tableOutput("table")))
         ), 
-        tabPanel("Logistic Regression Simulation", 
+        tabPanel("Case 1:", 
                  fluidRow(
                    column(12,
                           h4(textOutput("lr_title"))
@@ -103,9 +103,6 @@ ui <- fluidPage(
                  fluidRow(column(12,align="center",tableOutput("lr_sim"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("lr_sim_chart")))
-        ),
-        tabPanel("Random Forest Simulation",
-                 h4("Random Forest Out of Bag Error")
         )
       )
     )
