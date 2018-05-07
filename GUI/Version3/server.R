@@ -4,8 +4,22 @@ library(GGally)
 library(randomForest)
 library(ROCR)
 library(caTools)
-#library(caret)
 set.seed(1)
+
+
+# Fix threshold to 0.5
+# TPR, TNR, and Accuracy need same index
+# Index of 23 is 0.499
+
+# Fix colors on legend of charts
+
+# Find a way to display what variables (noise or explanatory) each model picks
+# What percentage of actual variables (Type 1 and type 2 errors)
+
+# Clean up paper by May 13
+# Format, audience, problem statement
+
+# Meet Thursday @ 8pm
 
 
 linear_eq <- function(n_ev,weights,y_int){
@@ -106,12 +120,12 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
   lr_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(lr_matrix) = list( 
     c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
-    c("nVar","TPR", "FPR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
+    c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   rf_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(rf_matrix) = list( 
     c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
-    c("nVar","TPR", "FPR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
+    c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   # Iterate over Variance 
   i <- 0
@@ -160,11 +174,11 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       rf_tpr <- c(rf_tpr, tp)
       
       # FPR
-      fp <- performance(lr_pred, measure = "fpr")
+      fp <- performance(lr_pred, measure = "tnr")
       fp = mean(fp@y.values[[1]])
       lr_fpr <- c(lr_fpr, fp)
       
-      fp <- performance(rf_pred, measure = "fpr")
+      fp <- performance(rf_pred, measure = "tnr")
       fp = fp@y.values[[1]][2]
       rf_fpr <- c(rf_fpr, fp)
       
