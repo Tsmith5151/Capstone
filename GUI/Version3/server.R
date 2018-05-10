@@ -166,7 +166,7 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       
       # TRP
       tp <- performance(lr_pred, measure = "tpr")
-      tp = mean(tp@y.values[[1]])
+      tp = tp@y.values[[1]][23]
       lr_tpr <- c(lr_tpr, tp)
       
       tp <- performance(rf_pred, measure = "tpr")
@@ -175,7 +175,7 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       
       # FPR
       fp <- performance(lr_pred, measure = "tnr")
-      fp = mean(fp@y.values[[1]])
+      fp = fp@y.values[[1]][23]
       lr_fpr <- c(lr_fpr, fp)
       
       fp <- performance(rf_pred, measure = "tnr")
@@ -184,20 +184,16 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       
       # Precision/Recall
       p <- performance(lr_pred,measure='prec')
-      x = p@y.values[[1]]
-      x = tail(x,-1)
-      p <- mean(x)
+      p = p@y.values[[1]][23]
       lr_precision <- c(lr_precision, p)
       
       p <- performance(rf_pred,measure='prec')
-      x = p@y.values[[1]]
-      x = tail(x,-1)
-      p <- mean(x)
+      p = p@y.values[[1]][2]
       rf_precision <- c(rf_precision, p)
       
       # Recall
       rc <- performance(lr_pred, measure='rec')
-      rc = mean(rc@y.values[[1]])
+      rc = rc@y.values[[1]][23]
       lr_recall <- c(lr_recall, rc)
       
       rc <- performance(rf_pred, measure='rec')
@@ -217,12 +213,11 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       
       #Accuracy
       a <- performance(lr_pred, measure = "acc")
-      x = as.data.frame(a@y.values[[1]])
-      a <- max(x)
+      a = a@y.values[[1]][23]
       lr_acc <- c(lr_acc,a)
       
       a <- performance(rf_pred, measure = "acc")
-      a <- max(a@y.values[[1]])
+      a = a@y.values[[1]][2]
       rf_acc <- c(rf_acc,a)
       
       # AUC
@@ -285,7 +280,7 @@ get_case1_plots <- function(lr,rf,xvar,yvar){
   lines(rf[,xvar],rf[,yvar],col='red',type='b',pch=18,lwd=2)
   
   # Legend
-  legend("bottomright", legend=c("LR", "RF"),
+  legend("bottomright", legend=c("RF", "LR"),
          col=c("red", "blue"), lty=1:2, cex=0.8,text.font=4,box.lty=0)
 }
 
