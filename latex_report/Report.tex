@@ -1,13 +1,23 @@
 \documentclass{article}
-\renewcommand{\thesection}{\Roman{section}} 
-\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
+
+%\renewcommand{\thesection}{\Roman{section}} 
+%\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
+
 \usepackage{graphicx}
 \graphicspath{ {images/} }
 
+% Setting Margin for Report
+\usepackage[margin=1.5in]{geometry}
+
+
+%Begin Report
 \begin{document}
 
-\title{Simulation Study: Classification Performance of Random Forest vs Logistic Regression}
+\title{\textbf{Simulation Study: Classification Performance of Random Forest vs Logistic Regression}}
 \author{Jacob Brionez, Kaitlin Kirasich, Bivin Sadler, Trace Smith}
+
+%Need to add Below:
+%Master of Science in Data Science, Southern Methodist University Dallas, TX 75275 USA
 \date{\today}
 
 \begin{document}
@@ -50,9 +60,18 @@ Random forest can also be used to return estimates of what variables are importa
 
 Linear models are composed of one or multiple independent variables that describes a relationship to a dependent response variable. Mapping qualitative or quantitative input features to a target variable that is attempted to being predicted such as financial, biological, or sociological data is known as supervised learning in machine learning terminology if the labels are known.  One of the most common utilized linear statistical models for discriminant analysis is Logistic Regression.
 
+\begin{equation}
+\pi_{i} = \beta_{0} + \beta_{1}X_{1} + .....\beta_{n}X_{n}
+\end{equation}
+
 Simplicity and interoperability of Logistic Regression can occasionally lead to outperforming other sophisticated nonlinear models such as ensemble learners or support vector machines. However, in the event the response variable is drawn from a small sample size, then linear regression models become insufficient and performs poorly for binary responses A number of learning algorithms could be applied to modeling binary classification data types, however the focal point of this work is to examine one linear model, logistic regression. 
  
 Unlike the response variable for Linear Regression which is quantitative, the target variable for Logistic Regression is the posterior probability of being classified in the ith group of a binary or multi-class response (Hastie, 2009). Logistic Regression makes several assumptions such as independence, responses (logits) at every level of a subpopulation of the explanatory variable are normally distributed, and constant variance between the responses and all values of the explanatory variable. Intuitively, a transformation to the response variable is applied to yield a continuous probability distribution over the output classes bounded between 0 and 1; this transformation is called to “logistic” or “sigmoid” function where ‘z’ corresponds to log odds divided by the logit (Ng, 2008).
+
+\begin{equation}
+\sigma(Z) = \frac{1}{1+\exp^{-z}}
+\end{equation}
+
 
 \begin{figure}[h]
 \centering
@@ -60,9 +79,21 @@ Unlike the response variable for Linear Regression which is quantitative, the ta
 \caption{Log of Odds Function}
 \end{figure}
 
-For a binary response, the Logistic Regression model can be expressed by summing over the linear combinations of input features and a corresponding weight plus a bias terms for each instance as shown in Eq.3 and Eq.4.
+For a binary response, the Logistic Regression model can be expressed by summing over the linear combinations of input features and a corresponding weight plus a bias terms for each instance as shown below in equation (3) and (4).
 
-The objective is to find a set of weights such that the negative log likelihood is minimized over the defined training set using optimization techniques such as gradient descent or stochastic gradient descent [3]. Minimizing the negative log likelihood also means maximizing the likelihood or probability the parameter estimate pi of selecting the correct class. The loss function that measures the difference between the ground truth label and the predicted class label is referred to as the cross-entropy (Eq.5). If the prediction is very close to the ground truth label, the loss value will be low. Alternatively, if the prediction is far from the true label, the resulting log loss will be higher.
+\begin{equation}
+p(y^{(i)} = 1 | x^{(i)},w) = 1-  \frac{1}{1+\exp^{(w^{T}x^{(i)}+b)}}
+\end{equation}
+\begin{equation}
+p(y^{(i)} = 0 | x^{(i)},w) = 1-  \frac{1}{1+\exp^{(w^{T}x^{(i)}+b)}}
+\end{equation}
+
+
+The objective is to find a set of weights such that the negative log likelihood is minimized over the defined training set using optimization techniques such as gradient descent or stochastic gradient descent [3]. Minimizing the negative log likelihood also means maximizing the likelihood or probability the parameter estimate pi of selecting the correct class. The loss function that measures the difference between the ground truth label and the predicted class label is referred to as the cross-entropy. If the prediction is very close to the ground truth label, the loss value will be low. Alternatively, if the prediction is far from the true label, the resulting log loss will be higher.
+
+\begin{equation}
+J(\theta) = -{1/m}\sigma p_{i}log(y_{i}) + (1-p_{i})log(1-y_{i})
+\end{equation}
 
 
 \section{Criteria for Comparison}
@@ -87,25 +118,34 @@ We are building a tool to generate the data in an effort to evaluate and compare
 
 The application we built provides users with a clean and simple interface to compare logistic regression and random forest models over a variety of different types of data sets to facilitate data scientists in choosing the best model for their needs.  After using our own tool to compare models, we found that random forest works best for data where …
 
+\newpage
+\begin{thebibliography}{9}
 
-\section{Reference}
-
+\bibitem{einstein} 
 Guerreiro, Manuela; Maroco, João; de Mendonça, Alexandre; Rodrigues, Ana; Santana, Isabel; Silva, Dina. Data mining methods in the prediction of Dementia: A real-data comparison of the accuracy, sensitivity and specificity of linear discriminant analysis, logistic regression, neural networks, support vector machines, classification trees and random forests. BMC Research Notes20114:299. https://doi.org/10.1186/1756-0500-4-299.
 
+\bibitem{einstein} 
 Beğenilmiş, Erdem; Üsküdarlı, Suzan.  Organized Behavior Classification of Tweet Sets using Supervised Learning Methods. eprint arXiv:1711.10720. 11/2017.
 
+\bibitem{einstein} 
 Thanh Lam, Hoang; Thiebaut, Johann-Michael; Sinn, Mathieu; Chen, Bei; Mai, Tiep; Alkan, Oznur.  One button machine for automating feature engineering in relational databases. eprint arXiv:1706.00327. 06/2017.
 
+\bibitem{einstein} 
 Olson, Randal S.; Moore, Jason H.  Identifying and Harnessing the Building Blocks of Machine Learning Pipelines for Sensible Initialization of a Data Science Automation Tool. eprint arXiv:1607.08878. 07/2016. 
 
+\bibitem{einstein} 
 Graham Dunn. (2007) Regression Models for Method Comparison Data. Journal of Biopharmaceutical Statistics 17:4, pages 739-756
 
+\bibitem{einstein} 
 Hastie, T., Tibshirani, R., Friedman, J. (2009). The elements of statistical learning: data mining, inference and prediction. Springer. 
 
+\bibitem{einstein} 
 Andrew Ng. CS229 Lecture Notes. Stanford University. 2012
 
+\bibitem{einstein} 
 Zoran Bursac, C Heath Gauss, David Keith Williams, David W Hosmer: Purposeful Selection of Variables in Logistic Regression. Source Code for Biology and Medicine. 2008
 
+\end{thebibliography}
 
 
 \end{document}
