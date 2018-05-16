@@ -2,12 +2,11 @@
 
 %\renewcommand{\thesection}{\Roman{section}} 
 %\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
-
 \usepackage{graphicx}
 \graphicspath{ {images/} }
 
 % Setting Margin for Report
-\usepackage[margin=1.5in]{geometry}
+\usepackage[margin=1.75in]{geometry}
 
 
 %Begin Report
@@ -16,7 +15,6 @@
 \title{\textbf{Simulation Study: Classification Performance of Random Forest vs Logistic Regression}}
 \author{Jacob Brionez, Kaitlin Kirasich, Bivin Sadler, Trace Smith}
 
-%Need to add Below:
 %Master of Science in Data Science, Southern Methodist University Dallas, TX 75275 USA
 \date{\today}
 
@@ -33,28 +31,22 @@ The success of machine learning models is attributed to identifying predictor va
 
 \section{Problem}
 
-Within the past few years, the use of predictive analytics has become more prevalent in everyday decision making across many industries.  This is because data is becoming easier to collect and cheaper to store. Picking the best algorithm for a model in predictive analytics is often a challenging task for data scientists.  As with most problems, when it comes to picking between two models, in our case random forest and logistic regression, the answer is, “it depends”.  We have investigated the conditions in which one model performs classification tasks better than another.  We have run conditions of varying ratios of explanatory to noise variables, multiple levels of variance, and increments of sample sizes and simulation iterations.  To compare models as “better” than another, we have looked at misclassification rates, AUC, and type 1 and type 2 errors.
+Within the past few years, the use of predictive analytics has become more prevalent in everyday decision making across many industries. Primarily because data of the vast amounts of data being collected, big data processing capabilities, and less expensive to store. Yet, machine learning model selection for predictive analytics use cases is still often a challenging task for Data Scientists. When it comes to selecting a model such as ensemble based learners or traditional linear classifiers on the basis of models that yield optimal performance, models selected to implement in production can vary given the underlying structure of the data.  Thus, investigating conditions in which prompts one learning algorithm to outperform another is one of the motivators for this work.  
 
-There are numerous studies that compare the random forest and logistic regression algorithms, but we found that most research experiments used either a single dataset or multiple datasets from the same source.  In these scenarios, sometimes logistic regression performed better and sometime random forest performed better.  For example, we found an experiment using several neuropsychological tests to predict dementia reported that, with respect to specificity and overall classification accuracy, random forests and linear discriminant analysis rank first among all the classifiers including logistic regression (Guerreiro, 2011).  Contrastingly, in another article analyzing Twitter tweets surrounding the 2016 United States election, it was found that when PCA is applied to tweets, logistic regression provides better results than random forest (Beğenilmiş, 2017).  These types of data and data sources are drastically different from each other and each algorithm performs differently due to the type of data it was using to try to classify. 
+Numerous studies have been published that compare Random Forest and Logistic Regression algorithms, but most research experiments consisted of either a single dataset or multiple datasets from the same source. In these scenarios, sometimes Logistic Regression performed better while in other cases Random Forest performed better.  For example, one experiment used several neuropsychological tests to predict dementia stated that, with respect to specificity and overall classification accuracy, Random Forests and Linear Discriminant Analysis rank first among all the classifiers including logistic regression (Guerreiro, 2011).  Contrastingly, in another article analyzing Twitter tweets surrounding the 2016 United States election, it was found that when PCA is applied to tweets, logistic regression provides better results than random forest (Beğenilmiş, 2017).  These types of data and data sources are drastically different from each other and each algorithm performs differently due to the type of data it was using to try to classify. 
 
-\par
 Criteria for identifying significant input features in a model varies between domains and datasets at hand. Automated feature selection has widely been studied, ranging from computer vision, classification, and regression types of problems. Zoran et al proposed a purposeful selection of covariates algorithm that automates feature selection by iteratively refitting the model by either adding or removing variables to verify if the model contains statistically significant predictors or confounders with a maximum p-value of 0.25 (Zoran, 2008). Traditionally, the significance threshold is 0.05; although there is only a 5\% chance of a Type I error, variables of importance could be misclassified. In this simulation study, the purposeful selection method evaluates significance at the 0.10 level and if the parameter estimate value alters 20\% compared to the full model, then there is evidence the excluded variable was of importance and is therefore added back to the model (Zoran, 2008). The novel method was applied on two different simulated datasets and was compared with stepwise, forward, and backward selection as a benchmark for the conclusion.
- 
-\par
+
 Logistic Regression was the model of choice for the two simulation experiments performed by Zoran et al, consisting of six total explanatory variables and six different sample sizes. The first study consisted of only three significant variables of equal parameter estimates and three non-significant predictors. Secondly, the simulation was altered slightly to contain two significant variables, one confounder which is dependent on X1, and three non-significant variables with parameter estimate of zero, respectively. For both simulation cases, the average retention rate for 1000 iterations correctly identified variables increased with respect to an increase in sample size (Zoran, 2008). 
 
-\par
-Additionally, TPOT is a recently developed tool built in Python and optimizes machine learning pipelines via genetic programming with the goal of maximizing classification accuracy on any supervised classification problems (Olsen, 2016). Similar to what a content management system is to a website where anyone who has no knowledge of web development can edit a website, TPOT does the same for machine learning.  The tool takes in a dataset and picks out the best features to generate an optimized model for prediction and classification (Olsen, 2016).  The other feature engineering tool we found is called One Button Machine, or OneBM, which automates the extraction of useful features from relational databases (Lam, 2017).  We hope to take our simulated data and run it through either TPOT or OneBM and see how well their feature engineering works and if it helps either random forest or logistic regression performance. 
+Additionally, TPOT is a recently developed tool built in Python and optimizes machine learning pipelines via genetic programming with the goal of maximizing classification accuracy on any supervised classification problems (Olsen, 2016). Similar to what a content management system is to a website where anyone who has no knowledge of web development can edit a website, TPOT does the same for machine learning.  The tool takes in a dataset and picks out the best features to generate an optimized model for prediction and classification (Olsen, 2016).  Another feature engineering tool discovered is called One Button Machine, or OneBM, which automates the extraction of useful features from relational databases (Lam, 2017). To validate the model results obtained from the developed application presented in this work, one method would consist of utilizing TPOT or OneBM to compare variable selection and model performance of both Linear Regression and Random Forest.
 
 \section{Machine Learning Models}
 
 \subsection{Random Forest}
 
-Random forest is the first regression and classification algorithm we will use for our project.  Random forest is made up of multiple learning algorithms which we call decisions trees.  These decision trees work together, in ensemble, to classify or predict.  A decision tree or machine learning algorithm by itself is prone to building a model that tends to over-fit the noise in the training set leading to results with a high variance.  This means that the model could accurately predict the same data it was trained on but may not work on datasets without the exact same patterns and variations.  Random forest solves this overfitting of data by averaging multiple decision trees trained on different parts of the training set. The idea is the predictions of a single decision tree may be sensitive to noise, but the average of many trees is not which lowers the variance thus improves accuracy.  However, this idea will only hold as long as the trees are not correlated which is why we train on multiple parts of the training set.
+Random Forest is an ensemble based learner which is comprised of 'n' collection of de-correlated trees (Hastie, 2009). Built off the idea of bootstrap aggregation which with a method for resampling with replacement in order to reduce variance, Random Forest uses multiple trees to average (regression) or computes majority votes (classification) in the terminal leaf nodes when making a prediction. Decision trees themselves are prone to overfitting noise in a training set which ultimately leads to results with high variance. In other words, this means the model could accurately predict the same data it was trained on but may not possess the same performance on datasets without the similar patterns and variations in the training set. As previously stated, Random Forest solves this overfitting of data by averaging multiple decision trees trained on different parts of the training set. 
 
-To average and combine the decision trees, random forest uses bootstrap aggregating, or bagging.  Bagging in random forests works by continually sampling a random subset of features to train our decision trees on.  After training our trees, we make a prediction based on the average of each individual decision tree’s prediction.  Bagging leads to better model performance because it decreases the variance of the model, without increasing the bias.  As we build our forest, random forest generates an internal unbiased estimate of the generalization error.
-
-Random forest can also be used to return estimates of what variables are important in the classification by collecting out of bag measurements which is the error for each data point recorded and averaged over the forest.  
 
 \subsection{Logistic Regression}
 
@@ -73,7 +65,7 @@ Unlike the response variable for Linear Regression which is quantitative, the ta
 \end{equation}
 
 
-\begin{figure}[h]
+\begin{figure}
 \centering
 \includegraphics[scale=1.0]{sigmoid.png}
 \caption{Log of Odds Function}
@@ -92,31 +84,41 @@ p(y^{(i)} = 0 | x^{(i)},w) = 1-  \frac{1}{1+\exp^{(w^{T}x^{(i)}+b)}}
 The objective is to find a set of weights such that the negative log likelihood is minimized over the defined training set using optimization techniques such as gradient descent or stochastic gradient descent [3]. Minimizing the negative log likelihood also means maximizing the likelihood or probability the parameter estimate pi of selecting the correct class. The loss function that measures the difference between the ground truth label and the predicted class label is referred to as the cross-entropy. If the prediction is very close to the ground truth label, the loss value will be low. Alternatively, if the prediction is far from the true label, the resulting log loss will be higher.
 
 \begin{equation}
-J(\theta) = -{1/m}\sigma p_{i}log(y_{i}) + (1-p_{i})log(1-y_{i})
+J(\theta) = -\frac{1}{m}\sum p_{i}log(y_{i}) + (1-p_{i})log(1-y_{i})
 \end{equation}
 
+\section{R Shinny Analytical Tool}
 
-\section{Criteria for Comparison}
+To conduct the statistical analysis, an interactive web application was developed which allows end users to rapidly generate simulated datasets with minimal overhead. Obtaining data from various input streams and performing cleaning transformations can be a lengthy process and create bottlenecks in the process of rapid deploying machine learning models. However, a combination of prior domain knowledge and familiarity of characteristics and patterns within a particular dataset can allow Data Scientists to synthetically generate data that closely resembles a real-world dataset as a proxy for evaluating performances of machine learning models.  Built under the R Shiny framework and utilizing the R programming language, this application allows for Data Scientist to easily simulate dataset and evaluate models without maintaining or configuring servers, security, and hardware as the application is run and maintained in a cloud environment. 
 
-The criteria we use to compare a machine learning algorithm’s model selection performance are type 1 errors, type 2 errors, and AIC.  When comparing the machine learning model’s accuracy we use the misclassification rates and AUC.  
+The application requires several input arguments to be configured prior to generating a dataset of an arbitrary length. Once specifying the number of explanatory variables, weighting factors of the explanatory feature coefficients, number of noise variables, distributions (e.g. gamma or normal), an open source package, \textit{simstudy}, is then called to create a dataset with the corresponding defined parameters. As a constraint for the analysis, the mean is set equal to zero, while the variance is altering in magnitude, ranging between 0.50 and 5.0. Furthermore, given this study is focused on analyzing classification, only binary response variables are considered. The response variable is a function of the log odds for the specified beta coefficients and noise variables. 
 
-Type 1 errors are defined as a false positive finding.  We use this when looking at what variables each model selects.  A type 1 error is when a machine learning algorithm finds a model that includes noise variables thinking it is an explanatory variable.  Type 2 errors are the false negative findings that occur when our machine learning algorithm chooses a model that leaves out a true explanatory variable.
 
-The Akaike information criterion, or AIC, is an estimator of quality in model selection.  We use this when comparing the same type of model under different conditions.  It comes from information theory as estimate of the relative information lost when a given model is used to represent the process that generated the data.  It cannot define the quality of one model, but it can define the quality relative to another model.
+\begin{figure}
+\centering
+\includegraphics[scale=0.30]{simulation.png}
+\caption{R Shinny Application - Data Simulator}
+\end{figure}
 
-After selecting a model from each algorithm and training it, we compare models using misclassification rates.  We look at the true positive rate (sensitivity), true negative rate (specificity), false positive rate, and false negative rate.  True positive rate and sensitivity are calculated as the portion of positives or successes that are correctly identified.  False positive rate is the portion that was incorrectly identified as positive or success but is actually negative.  True negative rate and specificity are defined as the portion of negatives that are correctly identified.  The false negative rate would be the portion of incorrectly identified negatives.  Depending on your application, you may care about incorrectly classifying a positive more than incorrectly classifying a negative.  For example, when dealing with anything medical or health related, one is likely more focused on correctly identifying a positive and minimizing the false negative rate.  When dealing with automated event or airport security, it may be okay to have a higher false negative rate because it may be cheap and non-life threatening to confirm the automated alert.
+
+\section{Criteria for Model Comparison}
+
+The criteria we use to compare a machine learning algorithm’s model selection performance are type 1 errors, type 2 errors, and AIC.  When comparing the machine learning model’s accuracy we use the misclassification rates and AUC.  Type 1 errors are defined as a false positive finding.  We use this when looking at what variables each model selects.  A type 1 error is when a machine learning algorithm finds a model that includes noise variables thinking it is an explanatory variable.  Type 2 errors are the false negative findings that occur when our machine learning algorithm chooses a model that leaves out a true explanatory variable. The Akaike information criterion, or AIC, is an estimator of quality in model selection and is used when comparing the same type of model under different conditions.  It comes from information theory as estimate of the relative information lost when a given model is used to represent the process that generated the data.  It cannot define the quality of one model, but it can define the quality relative to another model.
+
+After selecting a model from each algorithm and training it, misclassification rates between the two models on the testing set are compared. The true positive rate (sensitivity), true negative rate (specificity), false positive rate, and false negative rate are also benchmarked. True positive rate and sensitivity are calculated as the portion of positives or successes that are correctly identified.  False positive rate is the portion that was incorrectly identified as positive or success but is actually negative.  True negative rate and specificity are defined as the portion of negatives that are correctly identified.  The false negative rate would be the portion of incorrectly identified negatives.  Depending on your application, you may care about incorrectly classifying a positive more than incorrectly classifying a negative.  For example, when dealing with anything medical or health related, one is likely more focused on correctly identifying a positive and minimizing the false negative rate.  When dealing with automated event or airport security, it may be okay to have a higher false negative rate because it may be cheap and non-life threatening to confirm the automated alert.
 
 These data points can be graphically represented using the receiver operating characteristic curve or ROC curve.  The ROC curve is a graph with the x axis from 0 to 1 of the false positive rate, and the y axis from 0 to 1 of the true positive rate at various threshold settings.  A perfect predictor would have a false positive rate of 0 and a true positive rate of 1.  When graphed over a series of thresholds, we would want to look at the area under the curve, or AUC.  The higher the AUC, the better our model performs.  
 
 \section{Results}
 
+In this analysis, two controlled case studies were conducted and results contrasted between both classifiers, Random Forest and Logistic Regression. Case Study 1 consisted of simulating a dataset with 10 observations, 5 noise variables, and 10 explanatory variables, respectively. For the explanatory variables, a random sample is drawn from a gaussian distribution with a mean of zero and standard deviation of unity. The parameter estimates for the explanatory and noise variables are weighted such that the response variable is a function of a series of features with equal coefficients of 0.50.  Once generating the data, the effects of training a Random Forest and Logistic Regression model with respect to varying levels of variation in the noise variables was investigated. For this specific simulation study, each model was simulated 10 times with a different dataset simulated of the same input parameters for differing levels of standard deviation for the noise ranging between 0.50 and 5.0.
+
+Thresholding the variance in increments of 0.50, the 100 simulations’ misclassification rates are summarized in Figure X.  A plot of misclassification rates for each model in also shown in Figure X.  Given the small sample size of 100 data points, inconsistency and non-stationary levels of accuracies are observed and thus does not provide conclusive evidence in model recommendation under these conditions. To address these concerns, the number of iterations is increased to100 simulations and the previously described process is repeated. Likewise,  similar to the case of 10 simulations, Logistic Regression performs better when classifying positives events correctly. On the other hand, the overall testing accuracy is still very similar for both models. The hypothesis would expect to see a point in the variance which one model would start to outperform the other. Finally, the same process was repeated, however for 1000 simulations. Similar to before, Logistic Regression did a better job of correctly classifying positives in contrast to Random Forest.  However, there is no conclusive indication of when Random Forest or Logistic Regression will out perform the other in accuracy over varying levels of variance of the noise variables.
 
 \section{Ethics}
-We are building a tool to generate the data in an effort to evaluate and compare the logistic regression and random forest models.  Since all data will be simulated via our tool we do not anticipate any ethical concerns. For future work, we may allow users to upload their own dataset to our tool to run an evaluation.  In this case, we will not store or publish any of the users’ data inside the app.  We will also notify the users that our tool should be used for education purposes only.  Because we are not storing any data, we will not run a security scan on our application but we will use best practices to avoid any known vulnerabilities. If any issues are reported we will also notify users of potential deficiencies as well as correct these deficiencies if possible.
 
-\section{Conclusion}
+As presented in this work, an analytical tool generates synthetic data in an effort to evaluate and compare Logistic Regression and Random Forest models. Therefore, as the data is a product of a simulator, this does not provide any legal violations or security concerns. It should be clearly stated that the users should only consider the tool for educational purposes only as this application is still in the development phase. Any decisions drawn from the tool are not endorsed by the authors of this paper.   
 
-The application we built provides users with a clean and simple interface to compare logistic regression and random forest models over a variety of different types of data sets to facilitate data scientists in choosing the best model for their needs.  After using our own tool to compare models, we found that random forest works best for data where …
 
 \newpage
 \begin{thebibliography}{9}
@@ -146,6 +148,45 @@ Andrew Ng. CS229 Lecture Notes. Stanford University. 2012
 Zoran Bursac, C Heath Gauss, David Keith Williams, David W Hosmer: Purposeful Selection of Variables in Logistic Regression. Source Code for Biology and Medicine. 2008
 
 \end{thebibliography}
+
+\newpage
+\section{Appendix}
+
+\begin{figure}
+\centering
+\includegraphics[scale=1.15]{simulation_results_case1_10plot.png}
+\caption{Simulation Case Study 1: 10 Simulations}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=1.15]{simulation_results_case1_100plot.png}
+\caption{Simulation Case Study 1: 100 Simulations}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=1.15]{simulation_results_case1_1000plot.png}
+\caption{Simulation Case Study 1: 100 Simulations}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=1.0]{simulation_results_case1_10sum.png}
+\caption{Simulation Case Study 1: 10 Simulations}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=1.0]{simulation_results_case1_100sum.png}
+\caption{Simulation Case Study 1: 100 Simulations}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=1.0]{simulation_results_case1_1000sum.png}
+\caption{Simulation Case Study 1: 100 Simulations}
+\end{figure}
 
 
 \end{document}
