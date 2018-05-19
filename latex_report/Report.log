@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 MAY 2018 20:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  18 MAY 2018 21:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -251,37 +251,37 @@ Package pdftex.def Info: images/simulation.png  used on input line 99.
 File: images/simulation_results_case1_10plot.png Graphic file (type png)
 <use images/simulation_results_case1_10plot.png>
 Package pdftex.def Info: images/simulation_results_case1_10plot.png  used on in
-put line 157.
+put line 162.
 (pdftex.def)             Requested size: 311.93898pt x 370.11589pt.
 <images/simulation_results_case1_100plot.png, id=51, 275.5896pt x 328.5876pt>
 File: images/simulation_results_case1_100plot.png Graphic file (type png)
 <use images/simulation_results_case1_100plot.png>
 Package pdftex.def Info: images/simulation_results_case1_100plot.png  used on i
-nput line 163.
+nput line 168.
 (pdftex.def)             Requested size: 316.92557pt x 377.8728pt.
 <images/simulation_results_case1_1000plot.png, id=52, 264.0264pt x 315.0972pt>
 File: images/simulation_results_case1_1000plot.png Graphic file (type png)
 <use images/simulation_results_case1_1000plot.png>
 Package pdftex.def Info: images/simulation_results_case1_1000plot.png  used on 
-input line 169.
+input line 174.
 (pdftex.def)             Requested size: 303.62799pt x 362.35895pt.
 <images/simulation_results_case1_10sum.png, id=53, 245.718pt x 285.7074pt>
 File: images/simulation_results_case1_10sum.png Graphic file (type png)
 <use images/simulation_results_case1_10sum.png>
 Package pdftex.def Info: images/simulation_results_case1_10sum.png  used on inp
-ut line 175.
+ut line 180.
 (pdftex.def)             Requested size: 245.71739pt x 285.70668pt.
 <images/simulation_results_case1_100sum.png, id=54, 260.6538pt x 301.6068pt>
 File: images/simulation_results_case1_100sum.png Graphic file (type png)
 <use images/simulation_results_case1_100sum.png>
 Package pdftex.def Info: images/simulation_results_case1_100sum.png  used on in
-put line 181.
+put line 186.
 (pdftex.def)             Requested size: 260.65314pt x 301.60605pt.
 <images/simulation_results_case1_1000sum.png, id=55, 276.5532pt x 318.9516pt>
 File: images/simulation_results_case1_1000sum.png Graphic file (type png)
 <use images/simulation_results_case1_1000sum.png>
 Package pdftex.def Info: images/simulation_results_case1_1000sum.png  used on i
-nput line 187.
+nput line 192.
 (pdftex.def)             Requested size: 276.55252pt x 318.9508pt.
  [10] [11 <./images/simulation_results_case1_10plot.png>] [12 <./images/simulat
 ion_results_case1_100plot.png>] [13 <./images/simulation_results_case1_1000plot
@@ -318,7 +318,7 @@ sr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/
 local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
 ocal/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/loc
 al/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on Report.pdf (16 pages, 959152 bytes).
+Output written on Report.pdf (16 pages, 959397 bytes).
 PDF statistics:
  129 PDF objects out of 1000 (max. 8388607)
  80 compressed objects within 1 object stream
