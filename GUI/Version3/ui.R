@@ -72,7 +72,7 @@ ui <- fluidPage(
       h4("Simulation: Number of Iterations"),      
       sliderInput(inputId = "n_sim",                   
                   label = "Number of Simulations",                   
-                  value = 10, min=1,max = 1000, step = 1),
+                  value = 10, min=1,max = 10, step = 1),
       
       br(),
       submitButton("Simulate Data", icon("refresh"))

@@ -153,10 +153,32 @@ server <- function(input, output) {
     summary(LR_STEPS)
   })
   
+  output$lr_terms <- renderPrint({
+   LR_STEPS[["coefficients"]]
+  
+  })
+  
+  output$lr_terms2 <- renderPrint({
+
+    t = LR_STEPS[["model"]]
+    ncount = 0
+    evcount = 0
+    for(i in 2 : ncol(t)) {
+      if(grepl("N", colnames(t)[i])) {
+        ncount = ncount + 1
+      } else {
+        evcount = evcount + 1
+      }
+    }
+    print(paste0("The number of noise variables picked up is: ", ncount))
+    print(paste0("The number of true explanatory variables picked up is: ", evcount))
+  })
+  
   # Predict logistic regression
   output$lr_predict <- renderPrint({
     LR_PREDICT <<- predict(LR_STEPS, type = 'response')
-    table(SIM_DATA$y, LR_PREDICT >= 0.5)
+    t = table(SIM_DATA$y, LR_PREDICT >= 0.5)
+    t
   })
   
   # Create density and trace plots of model.

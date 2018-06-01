@@ -21,7 +21,7 @@ ui <- fluidPage(
       # Input: Noise Variables
       numericInput(inputId = "noise",
                    label = "Noise Variables",
-                   value = 2,min=0,max = 100),
+                   value = 5,min=0,max = 100),
       
       # Distribution for Noise Variables
       selectInput("ndist", label ="Noise Variable Distribution", 
@@ -90,11 +90,13 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("plot1")))
                  ), 
         tabPanel("Logistic Regression", 
-                 h5("TODO: get iterations working"),
-                 h4("Model Steps - 10 iterations"),
+                 h4("Model Steps"),
                  fluidRow(column(12,verbatimTextOutput("lr_step"))),
-                 h4("Average Model Summary"),
+                 h4("Model Summary"),
                  fluidRow(column(12,verbatimTextOutput("lr_summary"))),
+                 h4("Feature Coefficients"),
+                 fluidRow((column(12, verbatimTextOutput("lr_terms")))),
+                 fluidRow((column(12, h5(textOutput("lr_terms2"))))),
                  h4("Confusion Matrix"),
                  fluidRow(column(12,verbatimTextOutput("lr_predict"))),
                  h4("Model Plot"),
