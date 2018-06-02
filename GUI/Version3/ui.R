@@ -75,7 +75,8 @@ ui <- fluidPage(
                   value = 10, min=1,max = 10, step = 1),
       
       br(),
-      submitButton("Simulate Data", icon("refresh"))
+      submitButton("Simulate Data", icon("refresh")),
+      helpText("Press 'Simulate Data' to generate simulated dataset")
     ),
     
     # Main Panel
@@ -90,7 +91,8 @@ ui <- fluidPage(
                    )
                  ),
                  br(),
-                 fluidRow(column(12,tableOutput("table")))
+                 fluidRow(column(12,tableOutput("table"))),
+                 fluidRow(column(12,plotOutput("cplot")))
         ), 
         tabPanel("Case Study 1", 
                  fluidRow(
@@ -111,8 +113,10 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("case1_chart2"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart3")))
-        )
+        ),
+        tabPanel("Case Study II"),
+        fluidRow(column(12,align="center",verbatimTextOutput("rf_var"))
       )
     )
   )
-)
+))

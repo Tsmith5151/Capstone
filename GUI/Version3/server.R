@@ -4,8 +4,8 @@ library(GGally)
 library(randomForest)
 library(ROCR)
 library(caTools)
+library(corrplot)
 set.seed(1)
-
 
 # Fix threshold to 0.5
 # TPR, TNR, and Accuracy need same index
@@ -284,6 +284,29 @@ get_case1_plots <- function(lr,rf,xvar,yvar){
          col=c("red", "blue"), lty=1:2, cex=0.8,text.font=4,box.lty=0)
 }
 
+lr_rf_varselection <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
+  
+  # Regenerate Data
+  for (n in 1:n_sim){
+    
+    # Simulate Data
+    data<-sim_data(nrows,noise,ndist,0.50,ev,weights,yint)
+  
+    # Split Train/Testing
+    split_data(data,split)
+    
+    # Random Forest
+    rf <- randomForest(as.factor(y)~.,TRAIN,ntree=ntrees)
+    rf_importance <- importance(rf,type=2) 
+    
+    # Logistic Regression
+    lr_importance = step(lm(y ~., family = "binomial", data = TRAIN), direction = varselect)
+    
+    # ToDo: Setup Summary Table of variable importance
+  }
+}
+
+################################################
 server <- function(input, output) {
   
   # Return the requested dataset ----
@@ -297,7 +320,11 @@ server <- function(input, output) {
   
   # Show Table
   output$table <- renderTable({
-    head(simdata(), n = 20)
+    head(simdata(), n = 10)
+  })
+  
+  output$cplot <- renderPlot({
+    corrplot(cor(simdata()[,1:length(names(simdata()))-1]), method="shade",type='lower',tl.col = "black", tl.srt = 45)
   })
   
   # Print Equation
@@ -358,5 +385,23 @@ server <- function(input, output) {
     get_case1_plots(LR1,RF1,'nVar','F1')
   })
   
+  # CASE 2 Variable SELECTION
+  lr_rf_var <- reactive({
+    withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
+                 run_model <- lr_rf_varselection(input$n_sim,
+                                               input$split,
+                                               input$nrows,
+                                               input$noise,
+                                               input$ndist,
+                                               nvar,input$ev,
+                                               input$weights,
+                                               input$yint,
+                                               input$varselect, # Logistic Regression
+                                               input$ntree # Random Forest
+                 )
+    )
+  })
+  
+  # Print output
+  #output$rf_var <- renderPrint({print(lr_rf_var())})
 }
-
