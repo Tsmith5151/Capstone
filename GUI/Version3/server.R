@@ -6,7 +6,7 @@ library(ROCR)
 library(caTools)
 library(corrplot)
 set.seed(1)
-
+# KK: do AUC box, grid of f1, precision, recall, accuracy 2 by 2 grid of 4 histograms
 # Fix threshold to 0.5
 # TPR, TNR, and Accuracy need same index
 # Index of 23 is 0.499
@@ -241,10 +241,18 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
     }
     lr_matrix <- populateMatrix(lr_matrix, i, nvar, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
     rf_matrix <- populateMatrix(rf_matrix, i, nvar, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
+    saveAUCScores(lr_auc,rf_auc, nvar)
   }
   #df <- as.data.frame((sim_results))
   result=list(lr_matrix, rf_matrix) 
   return(result)
+}
+
+saveAUCScores <- function(lr, rf, nvar) {
+  lr <- as.data.frame(lr)
+  rf <- as.data.frame(rf)
+  AUC <<- merge(lr, rf)
+  colnames(AUC) <- c("Logistic Regression", "Random Forest")
 }
 
 populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost){
@@ -282,6 +290,13 @@ get_case1_plots <- function(lr,rf,xvar,yvar){
   # Legend
   legend("bottomright", legend=c("RF", "LR"),
          col=c("red", "blue"), lty=1:2, cex=0.8,text.font=4,box.lty=0)
+}
+
+get_case1_boxplots <- function(lr,rf) {
+  
+  boxplot(lr~rf,data=AUC, main="AUC Score", 
+          xlab="Algorithm", ylab="AUC")
+  
 }
 
 lr_rf_varselection <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
