@@ -117,7 +117,9 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart2"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("case1_chart3")))
+                 fluidRow(column(12,plotOutput("case1_chart3"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case1_chart4")))
         ),
         tabPanel("Case Study II"),
         fluidRow(column(12,align="center",verbatimTextOutput("rf_var"))

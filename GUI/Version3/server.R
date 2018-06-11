@@ -257,7 +257,7 @@ simulation_lr_rf <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,
     # Table
     lr_matrix <- populateMatrix(lr_matrix, i, nvar, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
     rf_matrix <- populateMatrix(rf_matrix, i, nvar, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
- #   saveAUCScores(lr_auc,rf_auc, nvar)
+    saveAUCScores(lr_auc,rf_auc, nvar)
   }
   #df <- as.data.frame((sim_results))
   result=list(lr_matrix, rf_matrix) 
@@ -266,14 +266,20 @@ simulation_lr_rf <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,
 
 saveAUCScores <- function(lr, rf, nvar) {
   lr <- as.data.frame(lr)
+  colnames(lr) <- c("score")
   lr$alg <- "Logistic Regression"
   lr$nvar <- nvar
   rf <- as.data.frame(rf)
+  colnames(rf) <- c("score")
   rf$alg <- "Random Forest"
   rf$nvar <- nvar
-  AUC <<- merge(lr, rf)
-  # score, alg, nvar
-  colnames(AUC) <- c("Logistic Regression", "Random Forest")
+  temp <- rbind(lr, rf)
+  # if(exists("AUC")) {
+  #   AUC <<- merge(AUC, temp)
+  # }
+  # else {
+    AUC <<- temp
+  #}
 }
 
 populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost){
@@ -316,7 +322,7 @@ get_case1_plots <- function(lr,rf,xvar,yvar){
 get_case1_boxplots <- function() {
   
   #ggplot(AUC, aes(x="Algorithm", y="AUC Score")) +  geom_boxplot()
-  ggplot(AUC, aes(x=dose, y=len, color=dose)) +
+  ggplot(AUC, aes(x=alg, y=score, color=nvar)) +
     geom_boxplot()
   
   
