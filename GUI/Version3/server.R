@@ -7,21 +7,6 @@ library(caTools)
 library(corrplot)
 set.seed(1)
 
-# Fix threshold to 0.5
-# TPR, TNR, and Accuracy need same index
-# Index of 23 is 0.499
-
-# Fix colors on legend of charts
-
-# Find a way to display what variables (noise or explanatory) each model picks
-# What percentage of actual variables (Type 1 and type 2 errors)
-
-# Clean up paper by May 13
-# Format, audience, problem statement
-
-# Meet Thursday @ 8pm
-
-
 linear_eq <- function(n_ev,weights,y_int){
   
   # Explanatory Variables
@@ -60,9 +45,10 @@ linear_eq <- function(n_ev,weights,y_int){
   
 }
 
-sim_data <- function(n_obs,n_noise,ndist,nvar,n_ev,weights,y_int){
+sim_data <- function(n_obs,n_noise,cat,ndist,nvar,n_ev,weights,y_int){
   
   data <- c()
+  
   # Noise Variables
   for (i in 1:n_noise){
     data<- defData(data,varname=paste0('N',i), dist=ndist, formula = "0", variance = nvar, link = "identity")
@@ -73,10 +59,22 @@ sim_data <- function(n_obs,n_noise,ndist,nvar,n_ev,weights,y_int){
     data<- defData(data,varname=paste0('EV',i), dist="normal", formula = "0", variance = nvar, link = "identity")
   }
   
+  #Categorical Variables
+  if(cat != 0){
+    for (i in 1:cat){
+    data<- defData(data,varname=paste0('Cat',i), dist="categorical", formula = "0.3;0.2;0.5")
+    }
+  }
+  
+  # Response Variable
   data <- defDataAdd(data,varname="y", dist="binary", formula=linear_eq(n_ev,weights,y_int), link = "logit")
   
   # Build Simulated Data 
   data <- as.data.frame.matrix(genData(n_obs,data))
+  
+  # Convert Categorical Variables to Factors
+  cols =grep('Cat', names(data), value=TRUE) 
+  data[cols] <- lapply(data[cols], factor)
   
   return(data[,2:(ncol(data))])
 }
@@ -239,6 +237,8 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
       rf_cost <- c(rf_cost, c)
       
     }
+    
+    # Table
     lr_matrix <- populateMatrix(lr_matrix, i, nvar, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
     rf_matrix <- populateMatrix(rf_matrix, i, nvar, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
   }
@@ -311,7 +311,7 @@ server <- function(input, output) {
   
   # Return the requested dataset ----
   simdata <- reactive({
-    SIM_DATA <<- sim_data(input$nrows,input$noise,input$ndist,input$nvar,input$ev,input$weights,input$yint)
+    SIM_DATA <<- sim_data(input$nrows,input$noise,input$cat,input$ndist,input$nvar,input$ev,input$weights,input$yint)
   })
   
   equation <- reactive({
