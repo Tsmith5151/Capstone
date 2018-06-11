@@ -129,16 +129,16 @@ do_logisticregression <- function(train,test,varselect){
 
 
 # Logistic Regression and Random Forest Simulation
-simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
+simulation_lr_rf <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
   lr_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(lr_matrix) = list( 
-    c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
+    c("", "", "", "", "", "", "", "", "", ""),         # row names 
     c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   rf_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(rf_matrix) = list( 
-    c("St. dev 1", "", "", "", "", "", "", "", "", ""),         # row names 
+    c("", "", "", "", "", "", "", "", "", ""),         # row names 
     c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   # Iterate over Variance 
@@ -167,7 +167,7 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
     for (n in 1:n_sim){
       
       # Regenerate Data
-      data<-sim_data(nrows,noise,ndist,nvar,ev,weights,yint)
+      data<-sim_data(nrows,noise,ncat,ndist,nvar,ev,weights,yint)
       
       # Split Train/Testing
       split_data(data,split)
@@ -257,7 +257,7 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
     # Table
     lr_matrix <- populateMatrix(lr_matrix, i, nvar, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
     rf_matrix <- populateMatrix(rf_matrix, i, nvar, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
-    saveAUCScores(lr_auc,rf_auc, nvar)
+ #   saveAUCScores(lr_auc,rf_auc, nvar)
   }
   #df <- as.data.frame((sim_results))
   result=list(lr_matrix, rf_matrix) 
@@ -266,8 +266,13 @@ simulation_lr_rf <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,
 
 saveAUCScores <- function(lr, rf, nvar) {
   lr <- as.data.frame(lr)
+  lr$alg <- "Logistic Regression"
+  lr$nvar <- nvar
   rf <- as.data.frame(rf)
+  rf$alg <- "Random Forest"
+  rf$nvar <- nvar
   AUC <<- merge(lr, rf)
+  # score, alg, nvar
   colnames(AUC) <- c("Logistic Regression", "Random Forest")
 }
 
@@ -308,10 +313,12 @@ get_case1_plots <- function(lr,rf,xvar,yvar){
          col=c("red", "blue"), lty=1:2, cex=0.8,text.font=4,box.lty=0)
 }
 
-get_case1_boxplots <- function(lr,rf) {
+get_case1_boxplots <- function() {
   
-  boxplot(lr~rf,data=AUC, main="AUC Score", 
-          xlab="Algorithm", ylab="AUC")
+  #ggplot(AUC, aes(x="Algorithm", y="AUC Score")) +  geom_boxplot()
+  ggplot(AUC, aes(x=dose, y=len, color=dose)) +
+    geom_boxplot()
+  
   
 }
 
@@ -368,6 +375,7 @@ server <- function(input, output) {
     withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
                  run_model <- simulation_lr_rf(input$n_sim,
                                                input$split,
+                                               input$cat,
                                                input$nrows,
                                                input$noise,
                                                input$ndist,
@@ -414,6 +422,11 @@ server <- function(input, output) {
   # CASE1 Plots
   output$case1_chart3 <- renderPlot({
     get_case1_plots(LR1,RF1,'nVar','F1')
+  })
+  
+  # Case 1 Box plots
+  output$case1_chart4 <- renderPlot({
+    get_case1_boxplots()
   })
   
   # CASE 2 Variable SELECTION
