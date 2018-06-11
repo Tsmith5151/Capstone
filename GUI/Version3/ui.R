@@ -37,6 +37,11 @@ ui <- fluidPage(
                    label = "Explanatory Variable",
                    value = 10, min=0, max = 100, step=1),
       
+      # Input: Categorical Variables
+      numericInput(inputId = "cat",
+                   label = "Categorical Variable",
+                   value = 0, min=0, max = 100, step=1),
+      
       # Input: Explanatory Variables Weights
       selectInput(inputId = "weights",
                   label = "Explanatory Variable Coefficients",
