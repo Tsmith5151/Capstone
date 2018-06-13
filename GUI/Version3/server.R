@@ -274,12 +274,13 @@ saveAUCScores <- function(lr, rf, nvar) {
   rf$alg <- "Random Forest"
   rf$nvar <- nvar
   temp <- rbind(lr, rf)
-  # if(exists("AUC")) {
-  #   AUC <<- merge(AUC, temp)
-  # }
-  # else {
+  if (exists("AUC")) {
+     AUC <<- rbind(AUC, temp)
+  }
+   else {
     AUC <<- temp
-  #}
+   }
+  AUC[,'nvar'] <<- as.factor(AUC[,'nvar'])
 }
 
 populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost){
@@ -320,12 +321,7 @@ get_case1_plots <- function(lr,rf,xvar,yvar){
 }
 
 get_case1_boxplots <- function() {
-  
-  #ggplot(AUC, aes(x="Algorithm", y="AUC Score")) +  geom_boxplot()
-  ggplot(AUC, aes(x=alg, y=score, color=nvar)) +
-    geom_boxplot()
-  
-  
+  ggplot(AUC, aes(x=nvar, y=score, fill=alg)) + geom_boxplot() + ggtitle('Logistic Regression vs Random Forest')
 }
 
 lr_rf_varselection <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
