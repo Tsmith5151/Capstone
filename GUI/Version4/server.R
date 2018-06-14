@@ -356,19 +356,19 @@ lr_rf_varselection <- function(n_sim,split,nrows,noise,ndist,nvar,ev,weights,yin
 # Run Logistic Regression and Random Forest Simulations sweeping number of noise variables
 simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
-  lr_matrix = matrix(c(0,0,0,0,0,0), nrow=4, ncol=9, byrow = TRUE)
+  lr_matrix = matrix(c(0,0,0,0,0,0), nrow=5, ncol=9, byrow = TRUE)
   dimnames(lr_matrix) = list( 
-    c("", "", "", ""),         # row names 
+    c("", "", "", "", ""),         # row names 
     c("Num Noise","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
-  rf_matrix = matrix(c(0,0,0,0,0,0), nrow=4, ncol=9, byrow = TRUE)
+  rf_matrix = matrix(c(0,0,0,0,0,0), nrow=5, ncol=9, byrow = TRUE)
   dimnames(rf_matrix) = list( 
-    c("", "", "", ""),         # row names 
+    c("", "", "", "", ""),         # row names 
     c("Num Noise","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   # Iterate over number of noise variables 
   i <- 0
-  for (noise in c(1,5,10,20)){
+  for (noise in c(1,5,10,20,50)){
     i <- i+1
     # Initialize List and Append Results
     lr_tpr <- c()
@@ -535,11 +535,11 @@ server <- function(input, output) {
   
   # Titles
   output$lr_title_nvar <- renderText({
-    paste0( "Total Number of Logistic Regression Simulations: ", input$n_sim)
+    paste0( "The table below is the average of running ", input$n_sim, " simulations of logistic regression at 10 levels of variance (variance = 0.5 to 5.0 in increments of 0.5) in the generated data.")
   })
   
   output$rf_title_nvar <- renderText({
-    paste0( "Total Number of Random Forest Simulations: ", input$n_sim)
+    paste0( "The table below is the average of running ", input$n_sim, " simulations of random forest at 10 levels of variance (variance = 0.5 to 5.0 in increments of 0.5) in the generated data.")
   })
   
   # Print LR Matrix
@@ -577,11 +577,11 @@ server <- function(input, output) {
   
   ####################### Number of noise variables ************************************
   output$lr_title_num_nvar <- renderText({
-    paste0( "Total Number of Explanatory Variables: ", input$n_sim)
+    paste0( "The table below displays the results of running logistic regression 10 times with ", input$n_sim, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
   })
   
   output$rf_title_num_nvar <- renderText({
-    paste0( "Total Number of Explanatory Variables: ", input$n_sim)
+    paste0( "The table below displays the results of running random forest 10 times with ", input$n_sim, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
   })
   
   lr_rf_num_nvar <- reactive({

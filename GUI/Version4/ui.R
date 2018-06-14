@@ -92,25 +92,32 @@ ui <- fluidPage(
         tabPanel("Simulated Data", 
                  fluidRow(
                    column(12,
-                          h4(tableOutput("equation"))
+                          h3("Equation of model:"),
+                          h4(tableOutput("equation")),
+                          p("In the equation above, y is the response variable calculated from the explanatory variables.  In the table below, we display the first 10 data row where y is actually the log probability of the response variable and not the true y from the equation above.")
                    )
                  ),
                  br(),
                  fluidRow(column(12,tableOutput("table"))),
+                 fluidRow(column(12,
+                                 h4("Correlation of variables: "))),
                  fluidRow(column(12,plotOutput("cplot")))
         ), 
         tabPanel("Variance in vars", 
                  fluidRow(
                    column(12,
-                          h4(textOutput("lr_title_nvar"))
+                          h4("Logistic Regression Results"),
+                          p(textOutput("lr_title_nvar"))
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("lr_sim_nvar"))),
                  fluidRow(
                    column(12,
-                          h4(textOutput("rf_title_nvar"))
+                          h4("Random Forest Results"),
+                          p(textOutput("rf_title_nvar"))
                    )
                  ),
+                 fluidRow(column(12,h4("Plots of results:"))),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_nvar"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart1"))),
@@ -135,6 +142,7 @@ ui <- fluidPage(
                           p(textOutput("rf_title_num_nvar"))
                    )
                  ),
+                 fluidRow(column(12,h4("Plots of results:"))),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_num_nvar"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("casen_chart1"))),
