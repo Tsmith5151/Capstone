@@ -103,7 +103,14 @@ ui <- fluidPage(
                                  h4("Correlation of variables: "))),
                  fluidRow(column(12,plotOutput("cplot")))
         ), 
-        tabPanel("Variance of Predictor Variables", 
+        tabPanel("Case 1", 
+                 fluidRow(
+                   column(12,
+                          h4("Case Description"),
+                          p("In this case, we simulate the dataset and set the variance of each variable (noise and explantory)
+                            to 0.5 to 5.0 in an interval of 0.5 and display the results of each simulation.")
+                   )
+                 ),
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
@@ -127,7 +134,14 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart4")))
         ),
-        tabPanel("Noise Variables",
+        tabPanel("Case 2",
+                 fluidRow(
+                   column(12,
+                          h4("Case Description"),
+                          p("In this case, we simulate the dataset and set the number of
+                            noise variables to 1, 5, 10, 20, and 50 and display the results of each simulation.")
+                   )
+                 ),
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
@@ -152,8 +166,16 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("case2_chart4")))
                  
                  ),
-        fluidRow(column(12,align="center",verbatimTextOutput("rf_var"))
-      )
-    )
+        tabPanel("Case 3",
+                 fluidRow(
+                   column(12,
+                          h4("Case Description"),
+                          p("In this case, we simulate the dataset and set the number of
+                            explanatory variables to 1, 5, 10, 20, and 50 and display the results of each simulation.")
+                   )
+                 )
+        )
+      ) # End tab panel
+    ) # End main panel
   )
-))
+)

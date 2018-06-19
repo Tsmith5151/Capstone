@@ -620,6 +620,10 @@ server <- function(input, output) {
   })
   
   equation <- reactive({
+    rm(list = ls())
+    gc()
+    par(mfrow=c(1,1))
+    
     linear_eq(input$ev,input$weights,input$yint)
   })
   
