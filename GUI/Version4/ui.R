@@ -117,9 +117,8 @@ ui <- fluidPage(
                           p(textOutput("rf_title_nvar"))
                    )
                  ),
-                 fluidRow(column(12,h4("Plots of results:"))),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_nvar"))),
-                 tags$hr(),
+                 fluidRow(column(12,h4("Simulation Plots"))),
                  fluidRow(column(12,plotOutput("case1_chart1"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart2"))),
@@ -142,16 +141,15 @@ ui <- fluidPage(
                           p(textOutput("rf_title_num_nvar"))
                    )
                  ),
-                 fluidRow(column(12,h4("Plots of results:"))),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_num_nvar"))),
+                 fluidRow(column(12,h4("Simulation Plots"))),
+                 fluidRow(column(12,plotOutput("case2_chart1"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("casen_chart1"))),
+                 fluidRow(column(12,plotOutput("case2_chart2"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("casen_chart2"))),
+                 fluidRow(column(12,plotOutput("case2_chart3"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("casen_chart3"))),
-                 tags$hr(),
-                 fluidRow(column(12,plotOutput("casen_chart4")))
+                 fluidRow(column(12,plotOutput("case2_chart4")))
                  
                  ),
         fluidRow(column(12,align="center",verbatimTextOutput("rf_var"))

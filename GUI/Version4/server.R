@@ -5,6 +5,7 @@ library(randomForest)
 library(ROCR)
 library(caTools)
 library(corrplot)
+library(gplots)
 set.seed(1)
 
 linear_eq <- function(n_ev,weights,y_int){
@@ -80,7 +81,6 @@ sim_data <- function(n_obs,n_noise,cat,ndist,nvar,n_ev,weights,y_int){
 }
 
 
-
 # Split Training/Testing Sets
 split_data <- function(data, r_split) {
   set.seed(123)
@@ -88,7 +88,6 @@ split_data <- function(data, r_split) {
   TRAIN <<- subset(data,sample ==TRUE)
   TEST <<- subset(data, sample==FALSE)
 }
-
 
 
 # Random Forest
@@ -418,12 +417,12 @@ simulation_ex_var <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights
   lr_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(lr_matrix) = list( 
     c("", "", "", "", "", "", "", "", "", ""),         # row names 
-    c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
+    c("nEV","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   rf_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
   dimnames(rf_matrix) = list( 
     c("", "", "", "", "", "", "", "", "", ""),         # row names 
-    c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
+    c("nEV","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
   
   # Iterate over Ex. Variables
   i <- 0
@@ -541,7 +540,7 @@ simulation_ex_var <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights
     # Table
     lr_matrix <- populateMatrix(lr_matrix, i, nvar, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
     rf_matrix <- populateMatrix(rf_matrix, i, nvar, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
-    saveAUCScores(lr_auc,rf_auc, nvar)
+    saveAUCScores2(lr_auc,rf_auc, nvar)
   }
   result=list(lr_matrix, rf_matrix) 
   return(result)
@@ -587,7 +586,7 @@ saveAUCScores2 <- function(lr, rf, noise) {
 }
 ###################### PLOTS ##############################
 
-get_case1_plots <- function(lr,rf,xvar,yvar){
+get_line_plots <- function(lr,rf,xvar,yvar){
   
   # Logistic Regression
   plot(lr[,xvar],lr[,yvar],xlab=xvar,ylab=yvar,main=paste0('Simulation Results: ',xvar,' vs ',yvar),
@@ -612,7 +611,7 @@ get_boxplots <- function(df,x_axis) {
 }
 
 
-################################################
+####################### Varying Variance ####################### 
 server <- function(input, output) {
   
   # Return the requested dataset ----
@@ -680,20 +679,20 @@ server <- function(input, output) {
   output$case1_chart1 <- renderPlot({
     LR1 <<- as.data.frame(LR_RF[1])
     RF1 <<- as.data.frame(LR_RF[2])
-    get_case1_plots(LR1,RF1,'nVar','TPR')
+    get_line_plots(LR1,RF1,'nVar','TPR')
   })
   
   # CASE1 Plots
   output$case1_chart2 <- renderPlot({
-    get_case1_plots(LR1,RF1,'nVar','Accuracy')
+    get_line_plots(LR1,RF1,'nVar','Accuracy')
   })
   
   # CASE1 Plots
   output$case1_chart3 <- renderPlot({
-    get_case1_plots(LR1,RF1,'nVar','F1')
+    get_line_plots(LR1,RF1,'nVar','F1')
   })
   
-  # CASE 1 BOX PLOT
+  # CASE1 BOX PLOT
   output$case1_chart4 <- renderPlot({
     df <- AUC
     get_boxplots(df,'nvar')
@@ -726,26 +725,39 @@ server <- function(input, output) {
     )
   })
   
-  # Plots
-  output$casen_chart1 <- renderPlot({
-    LR2 <<- as.data.frame(LR_RF_2[1])
-    RF2 <<- as.data.frame(LR_RF_2[2])
-    get_case1_plots(LR2,RF2,'Num.Noise','TPR')
+  
+  # Print LR Matrix
+  output$lr_sim_num_nvar <- renderTable({
+    LR_RF2 <<- lr_rf_num_nvar()
+    LR_RF2[1]
   })
   
-  # Plots
-  output$casen_chart2 <- renderPlot({
-    get_case1_plots(LR2,RF2,'Num.Noise','Accuracy')
+  # Print RF Matrix
+  output$rf_sim_num_nvar <- renderTable({
+    LR_RF2[2]
   })
   
-  # Plots
-  output$casen_chart3 <- renderPlot({
-    get_case1_plots(LR2,RF2,'Num.Noise','F1')
+  # CASE2 Plots
+  output$case2_chart1 <- renderPlot({
+    LR2 <<- as.data.frame(LR_RF2[1])
+    RF2 <<- as.data.frame(LR_RF2[2])
+    get_line_plots(LR2,RF2,'Num.Noise','TPR')
   })
   
-  # Box Plots
-  output$casen_chart4 <- renderPlot({
-    get_casen_boxplots()
+  # CASE2 Plots
+  output$case2_chart2 <- renderPlot({
+    get_line_plots(LR2,RF2,'Num.Noise','Accuracy')
+  })
+  
+  # CASE2 Plots
+  output$case2_chart3 <- renderPlot({
+    get_line_plots(LR2,RF2,'Num.Noise','F1')
+  })
+  
+  # CASE2 BOX PLOT
+  output$case2_chart4 <- renderPlot({
+    df <- AUC2
+    get_boxplots(df,'noise')
   })
   
 }
