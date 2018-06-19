@@ -94,7 +94,7 @@ ui <- fluidPage(
                    column(12,
                           h3("Equation of model:"),
                           h4(tableOutput("equation")),
-                          p("In the equation above, y is the response variable calculated from the explanatory variables.  In the table below, we display the first 10 data row where y is actually the log probability of the response variable and not the true y from the equation above.")
+                          p("Note: In the equation above, y is the response variable is a function of explanatory variables. In the table below, only the first 10 data row are displayed;  'y' is the log probability of the response variable and not the true y from the equation above.")
                    )
                  ),
                  br(),
@@ -103,7 +103,7 @@ ui <- fluidPage(
                                  h4("Correlation of variables: "))),
                  fluidRow(column(12,plotOutput("cplot")))
         ), 
-        tabPanel("Variance in vars", 
+        tabPanel("Variance of Predictor Variables", 
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
@@ -128,7 +128,7 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart4")))
         ),
-        tabPanel("Number of noise variables",
+        tabPanel("Noise Variables",
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
