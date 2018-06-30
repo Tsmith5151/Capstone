@@ -187,8 +187,8 @@ get_results_rf <- function (rf_pred) {
 simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
   # Initialize dataframe used to hold results
-  DF_CASE1_RAW <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric(),algorithm=character())
-  DF_CASE1_AGG <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric())
+  df_case1_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric(),algorithm=character())
+  df_case1_agg <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric())
   
   # Iterate over variance 
   for (nvar in seq(from=0.50,to=5.0,by=0.50)){
@@ -239,21 +239,20 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
     df_raw$nvar <- nvar
     
     # Merge Results
-    DF_CASE1_AGG <- rbind(DF_CASE1_AGG,df_agg)
-    DF_CASE1_RAW <<- rbind(DF_CASE1_RAW,df_raw)
+    df_case1_agg <- rbind(df_case1_agg,df_agg)
+    df_case1_raw <- rbind(df_case1_raw,df_raw)
   }
   
-  return(DF_CASE1_AGG)
+  DF_CASE1_RAW <<- df_case1_raw
+  return(df_case1_agg)
 }    
-
-
 
 # CASE 2: Run Logistic Regression and Random Forest Simulations sweeping number of noise variables
 simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
  
   # Initialize dataframe used to hold results
-  DF_CASE2_RAW <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_noise = numeric(),algorithm=character())
-  DF_CASE2_AGG <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_noise = numeric())
+  df_case2_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric(),algorithm=character())
+  df_case2_agg <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric())
   
   # Iterate over number of noise variables 
   for (noise in c(1,5,10,20,50)){
@@ -304,11 +303,12 @@ simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
     df_raw$num_noise <- noise
     
     # Merge Results
-    DF_CASE2_AGG <- rbind(DF_CASE2_AGG,df_agg)
-    DF_CASE2_RAW <<- rbind(DF_CASE2_RAW,df_raw)
+    df_case2_agg <- rbind(df_case2_agg,df_agg)
+    df_case2_raw <- rbind(df_case2_raw,df_raw)
   }
   
-  return(DF_CASE2_AGG)
+  DF_CASE2_RAW <<- df_case2_raw
+  return(df_case2_agg)
 }   
 
 
@@ -316,8 +316,8 @@ simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
 simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
   # Initialize dataframe used to hold results
-  DF_CASE3_RAW <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_ev = numeric(),algorithm=character())
-  DF_CASE3_AGG <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_ev = numeric())
+  df_case3_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric(),algorithm=character())
+  df_case3_agg <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric())
   
   # Iterate over number of noise variables 
   for (num_ev in c(1,5,10,20,50)){
@@ -368,13 +368,13 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
     df_raw$num_ev <- num_ev
     
     # Merge Results
-    DF_CASE3_AGG <- rbind(DF_CASE3_AGG,df_agg)
-    DF_CASE3_RAW <<- rbind(DF_CASE3_RAW,df_raw)
+    df_case3_agg <- rbind(df_case2_agg,df_agg)
+    df_case3_raw <- rbind(df_case2_raw,df_raw)
   }
   
-  return(DF_CASE3_AGG)
-} 
-
+  DF_CASE3_RAW <<- df_case3_raw
+  return(df_case3_agg)
+}   
 
 
 ###################### PLOTS ##############################
@@ -386,7 +386,7 @@ get_line_plots <- function(lr,rf,xvar,yvar){
        col='sienna1 ',type='b',pch=19,lwd=3,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5,ylim=c(0,1))
   
   # Random Forest
-  lines(rf[,xvar],rf[,yvar],col='lightseagreen ',type='b',pch=18,lwd=3)
+  lines(rf[,xvar],rf[,yvar],col='lightseagreen',type='b',pch=18,lwd=3)
   
   #grid
   grid(nx = NULL, ny = NULL, col = "white", lty = "solid")
@@ -397,12 +397,11 @@ get_line_plots <- function(lr,rf,xvar,yvar){
 }
 
 
-get_boxplots <- function(df,x_axis) {
-  ggplot(df, aes(x=as.factor(df[,x_axis]), y=auc, fill=df$algorithm)) + xlab(x_axis) + ylab("AUC Score") + geom_boxplot()  + 
+get_boxplots <- function(df,x_axis,y_axis) {
+  ggplot(df, aes(x=as.factor(df[,x_axis]), y=df[,y_axis], fill=factor(df$algorithm))) + xlab(x_axis) + ylab(y_axis) + geom_boxplot()  + 
     ggtitle('Logistic Regression vs Random Forest') + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) +
     scale_fill_discrete(name = "Algorithms")
 }
-
 
 ####################### Varying Variance ####################### 
 server <- function(input, output) {
@@ -489,7 +488,12 @@ server <- function(input, output) {
   
   # CASE1 BOX PLOT
   output$case1_chart4 <- renderPlot({
-    get_boxplots(DF_CASE1_RAW,'nvar')
+    get_boxplots(DF_CASE1_RAW,'nvar','acc')
+  })
+  
+  # CASE1 BOX PLOT
+  output$case1_chart5 <- renderPlot({
+    get_boxplots(DF_CASE1_RAW,'nvar','auc')
   })
   
 
@@ -547,9 +551,12 @@ server <- function(input, output) {
     get_line_plots(LR2,RF2,'num_noise','acc')
   })
   
-  # CASE2 BOX PLOT
   output$case2_chart4 <- renderPlot({
-    get_boxplots(DF_CASE2_RAW,'num_noise')
+    get_boxplots(DF_CASE2_RAW,'num_noise','acc')
+  })
+  
+  output$case2_chart5 <- renderPlot({
+    get_boxplots(DF_CASE2_RAW,'num_noise','auc')
   })
   
   
@@ -607,8 +614,11 @@ server <- function(input, output) {
     get_line_plots(LR3,RF3,'num_ev','acc')
   })
   
-  # CASE3 BOX PLOT
   output$case3_chart4 <- renderPlot({
-    get_boxplots(DF_CASE3_RAW,'num_ev')
+    get_boxplots(DF_CASE3_RAW,'num_ev','acc')
+  })
+  
+  output$case3_chart5 <- renderPlot({
+    get_boxplots(DF_CASE2_RAW,'num_ev','auc')
   })
 }

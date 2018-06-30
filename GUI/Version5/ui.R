@@ -132,7 +132,9 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart3"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("case1_chart4")))
+                 fluidRow(column(12,plotOutput("case1_chart4"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case1_chart5")))
         ),
         tabPanel("Case 2",
                  fluidRow(
@@ -163,8 +165,9 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case2_chart3"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("case2_chart4")))
-                 
+                 fluidRow(column(12,plotOutput("case2_chart4"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case2_chart5")))
                  ),
         tabPanel("Case 3",
                  fluidRow(
@@ -195,7 +198,9 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case3_chart3"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("case3_chart4")))
+                 fluidRow(column(12,plotOutput("case3_chart4"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case3_chart5")))
                  )
         ) # End tab panel
       ) # End main panel
