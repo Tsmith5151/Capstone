@@ -94,7 +94,7 @@ split_data <- function(data, r_split) {
 do_randomforest <- function(train,test,n_tree){
   
   # Fit Model
-  model.train <- randomForest(as.factor(y)~.,train,ntree=n_tree)
+  model.train <- randomForest(as.factor(y)~.,train,ntree=n_tree, cutoff=c(0.5,1-0.5))
   
   # Prediction
   pred<-predict(model.train, test[, !names(test) %in% c("y")], type = 'response')
@@ -114,43 +114,37 @@ do_logisticregression <- function(train,test,varselect){
   return(pred)
 }
 
+# Random forest performance
+getRFPerformance <- function (rf_pred) {
+  rf_temp <- performance(rf_pred, "tpr", "fpr")
+  rf_perf <- data.frame(fpr=rf_temp@x.values[[1]][2], tpr=rf_temp@y.values[[1]][2])
+  
+  rf_temp <- performance(rf_pred, "rec", "prec")
+  rf_perf2 <- data.frame(prec=rf_temp@x.values[[1]][2], rec=rf_temp@y.values[[1]][2])
+  rf_perf$prec <- rf_perf2$prec
+  rf_perf$rec <- rf_perf2$rec
+  
+  rf_temp <- performance(rf_pred, "f", "acc")
+  rf_perf3 <- data.frame(acc=rf_temp@x.values[[1]][2], f=rf_temp@y.values[[1]][2])
+  rf_perf$acc <- rf_perf3$acc
+  rf_perf$f <- rf_perf3$f
+  
+  rf_temp <- performance(rf_pred, "auc")
+  rf_perf4 <- data.frame(auc=rf_temp@y.values[[1]])
+  rf_perf$auc <- rf_perf4$auc
+  
+  return(rf_perf)
+}
 
-# Run Logistic Regression and Random Forest Simulations sweeping variance of variables
+
+
+# CASE 1: Run Logistic Regression and Random Forest Simulations sweeping variance of variables
 simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
-  lr_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
-  dimnames(lr_matrix) = list( 
-    c("", "", "", "", "", "", "", "", "", ""),         # row names 
-    c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
-  
-  rf_matrix = matrix(c(0,0,0,0,0,0), nrow=10, ncol=9, byrow = TRUE)
-  dimnames(rf_matrix) = list( 
-    c("", "", "", "", "", "", "", "", "", ""),         # row names 
-    c("nVar","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
-  
-  # Iterate over Variance 
-  i <- 0
+  # Iterate over variance 
   for (nvar in seq(from=0.50,to=5.0,by=0.50)){
-    i <- i+1
-    # Initialize List and Append Results
-    lr_tpr <- c()
-    rf_tpr <- c()
-    lr_fpr <- c()
-    rf_fpr <- c()
-    lr_precision <- c()
-    rf_precision <- c()
-    lr_recall <- c()
-    rf_recall <- c()
-    lr_f1 <- c()
-    rf_f1 <- c()
-    lr_acc <- c()
-    rf_acc <- c()
-    lr_auc <- c()
-    rf_auc <- c()
-    lr_cost <- c()
-    rf_cost <- c()
     
-    # Number of Simulations
+    # Iterate of number of simulations
     for (n in 1:n_sim){
       
       # Regenerate Data
@@ -165,150 +159,33 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
       # Do Logistic Regression
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
-      # TRP
-      tp <- performance(lr_pred, measure = "tpr")
-      tp = tp@y.values[[1]][23]
-      lr_tpr <- c(lr_tpr, tp)
+      # Logistic regression performance
       
-      tp <- performance(rf_pred, measure = "tpr")
-      tp = tp@y.values[[1]][2]
-      rf_tpr <- c(rf_tpr, tp)
       
-      # FPR
-      fp <- performance(lr_pred, measure = "tnr")
-      fp = fp@y.values[[1]][23]
-      lr_fpr <- c(lr_fpr, fp)
+      # Random forest performance
+      rf_perf <- getRFPerformance(rf_pred)
+      rf_perf$nvar <- nvar
       
-      fp <- performance(rf_pred, measure = "tnr")
-      fp = fp@y.values[[1]][2]
-      rf_fpr <- c(rf_fpr, fp)
-      
-      # Precision/Recall
-      p <- performance(lr_pred,measure='prec')
-      p = p@y.values[[1]][23]
-      lr_precision <- c(lr_precision, p)
-      
-      p <- performance(rf_pred,measure='prec')
-      p = p@y.values[[1]][2]
-      rf_precision <- c(rf_precision, p)
-      
-      # Recall
-      rc <- performance(lr_pred, measure='rec')
-      rc = rc@y.values[[1]][23]
-      lr_recall <- c(lr_recall, rc)
-      
-      rc <- performance(rf_pred, measure='rec')
-      rc = rc@y.values[[1]][2]
-      rf_recall <- c(rf_recall, rc)
-      
-      # F1 Score
-      f <- performance(lr_pred,measure="f")
-      x = as.data.frame(f@y.values[[1]])
-      f <- max(tail(x,-1))
-      lr_f1 <- c(lr_f1,f)
-      
-      f <- performance(rf_pred,measure="f")
-      x = as.data.frame(f@y.values[[1]])
-      f <- max(tail(x,-1))
-      rf_f1 <- c(rf_f1,f)
-      
-      #Accuracy
-      a <- performance(lr_pred, measure = "acc")
-      a = a@y.values[[1]][23]
-      lr_acc <- c(lr_acc,a)
-      
-      a <- performance(rf_pred, measure = "acc")
-      a = a@y.values[[1]][2]
-      rf_acc <- c(rf_acc,a)
-      
-      # AUC
-      a <- performance(lr_pred,measure="auc")
-      a <- a@y.values[[1]]
-      lr_auc <- c(lr_auc, a)
-      
-      a <- performance(rf_pred,measure="auc")
-      a <- a@y.values[[1]]
-      rf_auc <- c(rf_auc, a)
-      
-      # Cost
-      c <- performance(lr_pred,measure="cost")
-      c <- min(c@y.values[[1]])
-      lr_cost <- c(lr_cost, c)
-      
-      c <- performance(rf_pred,measure="cost")
-      c <- min(c@y.values[[1]])
-      rf_cost <- c(rf_cost, c)
+      if (exists("RF_PERF")) {
+        RF_PERF <<- rbind(RF_PERF, rf_perf)
+      }
+      else {
+        RF_PERF <<- rf_perf
+      }
       
     }
-    
-    # Table
-    lr_matrix <- populateMatrix(lr_matrix, i, nvar, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
-    rf_matrix <- populateMatrix(rf_matrix, i, nvar, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
-    saveAUCScores(lr_auc,rf_auc, nvar)
   }
-  result=list(lr_matrix, rf_matrix) 
+  result=list(LR_PERF, RF_PERF)
   return(result)
 }
 
 
-populateMatrix <- function (results_matrix, i, nvar, tpr, fpr, precision, recall, f1, acc, auc, cost){
-  results_matrix[i,1] <- nvar
-  
-  results_matrix[i,2] <- mean(tpr)
-  
-  results_matrix[i,3] <- mean(fpr)
-  
-  results_matrix[i,4] <-mean(recall)
-  
-  results_matrix[i,5] <-mean(precision)
-  
-  results_matrix[i,6] <- mean(f1)
-  
-  results_matrix[i,7] <- mean(acc)
-  
-  results_matrix[i,8] <- mean(auc)
-  
-  results_matrix[i,9] <- mean(cost)
-  
-  return(results_matrix)
-  
-}
-
-# Run Logistic Regression and Random Forest Simulations sweeping number of noise variables
+# CASE 2: Run Logistic Regression and Random Forest Simulations sweeping number of noise variables
 simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
-  
-  lr_matrix = matrix(c(0,0,0,0,0,0), nrow=5, ncol=9, byrow = TRUE)
-  dimnames(lr_matrix) = list( 
-    c("", "", "", "", ""),         # row names 
-    c("Num Noise","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
-  
-  rf_matrix = matrix(c(0,0,0,0,0,0), nrow=5, ncol=9, byrow = TRUE)
-  dimnames(rf_matrix) = list( 
-    c("", "", "", "", ""),         # row names 
-    c("Num Noise","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
-  
+ 
   # Iterate over number of noise variables 
-  i <- 0
   for (noise in c(1,5,10,20,50)){
-    i <- i+1
-    # Initialize List and Append Results
-    lr_tpr <- c()
-    rf_tpr <- c()
-    lr_fpr <- c()
-    rf_fpr <- c()
-    lr_precision <- c()
-    rf_precision <- c()
-    lr_recall <- c()
-    rf_recall <- c()
-    lr_f1 <- c()
-    rf_f1 <- c()
-    lr_acc <- c()
-    rf_acc <- c()
-    lr_auc <- c()
-    rf_auc <- c()
-    lr_cost <- c()
-    rf_cost <- c()
-    
+   
     # Number of Simulations
     for (n in 1:n_sim){
       
@@ -324,127 +201,24 @@ simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
       # Do Logistic Regression
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
-      # TRP
-      tp <- performance(lr_pred, measure = "tpr")
-      tp = tp@y.values[[1]][23]
-      lr_tpr <- c(lr_tpr, tp)
-      
-      tp <- performance(rf_pred, measure = "tpr")
-      tp = tp@y.values[[1]][2]
-      rf_tpr <- c(rf_tpr, tp)
-      
-      # FPR
-      fp <- performance(lr_pred, measure = "tnr")
-      fp = fp@y.values[[1]][23]
-      lr_fpr <- c(lr_fpr, fp)
-      
-      fp <- performance(rf_pred, measure = "tnr")
-      fp = fp@y.values[[1]][2]
-      rf_fpr <- c(rf_fpr, fp)
-      
-      # Precision/Recall
-      p <- performance(lr_pred,measure='prec')
-      p = p@y.values[[1]][23]
-      lr_precision <- c(lr_precision, p)
-      
-      p <- performance(rf_pred,measure='prec')
-      p = p@y.values[[1]][2]
-      rf_precision <- c(rf_precision, p)
-      
-      # Recall
-      rc <- performance(lr_pred, measure='rec')
-      rc = rc@y.values[[1]][23]
-      lr_recall <- c(lr_recall, rc)
-      
-      rc <- performance(rf_pred, measure='rec')
-      rc = rc@y.values[[1]][2]
-      rf_recall <- c(rf_recall, rc)
-      
-      # F1 Score
-      f <- performance(lr_pred,measure="f")
-      x = as.data.frame(f@y.values[[1]])
-      f <- max(tail(x,-1))
-      lr_f1 <- c(lr_f1,f)
-      
-      f <- performance(rf_pred,measure="f")
-      x = as.data.frame(f@y.values[[1]])
-      f <- max(tail(x,-1))
-      rf_f1 <- c(rf_f1,f)
-      
-      #Accuracy
-      a <- performance(lr_pred, measure = "acc")
-      a = a@y.values[[1]][23]
-      lr_acc <- c(lr_acc,a)
-      
-      a <- performance(rf_pred, measure = "acc")
-      a = a@y.values[[1]][2]
-      rf_acc <- c(rf_acc,a)
-      
-      # AUC
-      a <- performance(lr_pred,measure="auc")
-      a <- a@y.values[[1]]
-      lr_auc <- c(lr_auc, a)
-      
-      a <- performance(rf_pred,measure="auc")
-      a <- a@y.values[[1]]
-      rf_auc <- c(rf_auc, a)
-      
-      # Cost
-      c <- performance(lr_pred,measure="cost")
-      c <- min(c@y.values[[1]])
-      lr_cost <- c(lr_cost, c)
-      
-      c <- performance(rf_pred,measure="cost")
-      c <- min(c@y.values[[1]])
-      rf_cost <- c(rf_cost, c)
+      # Logistic Regreesion performance
+
+      # Random Forest performance
       
     }
     
-    # Table
-    lr_matrix <- populateMatrix(lr_matrix, i, noise, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
-    rf_matrix <- populateMatrix(rf_matrix, i, noise, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
-    saveAUCScores2(lr_auc,rf_auc, noise)
+    #end sims
   }
 
-  result=list(lr_matrix, rf_matrix) 
-  return(result)
+  #end end
 }
 
 
-# Run Logistic Regression and Random Forest Simulations sweeping num ex. variables 
+# CASE 3: Run Logistic Regression and Random Forest Simulations sweeping num ex. variables 
 simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
-  lr_matrix = matrix(c(0,0,0,0,0,0), nrow=5, ncol=9, byrow = TRUE)
-  dimnames(lr_matrix) = list( 
-    c("", "", "", "", ""),         # row names 
-    c("num_ev","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
-  
-  rf_matrix = matrix(c(0,0,0,0,0,0), nrow=5, ncol=9, byrow = TRUE)
-  dimnames(rf_matrix) = list( 
-    c("", "", "", "", ""),         # row names 
-    c("num_ev","TPR", "TNR", "Recall", "Precision", "F1", "Accuracy", "AUC", "Explicit Cost")) # column names 
-  
   # Iterate over number of noise variables 
-  i <- 0
   for (num_ev in c(1,5,10,20,50)){
-    i <- i+1
-    # Initialize List and Append Results
-    lr_tpr <- c()
-    rf_tpr <- c()
-    lr_fpr <- c()
-    rf_fpr <- c()
-    lr_precision <- c()
-    rf_precision <- c()
-    lr_recall <- c()
-    rf_recall <- c()
-    lr_f1 <- c()
-    rf_f1 <- c()
-    lr_acc <- c()
-    rf_acc <- c()
-    lr_auc <- c()
-    rf_auc <- c()
-    lr_cost <- c()
-    rf_cost <- c()
     
     # Number of Simulations
     for (n in 1:n_sim){
@@ -461,146 +235,19 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
       # Do Logistic Regression
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
-      # TRP
-      tp <- performance(lr_pred, measure = "tpr")
-      tp = tp@y.values[[1]][23]
-      lr_tpr <- c(lr_tpr, tp)
+      # Logistic Regreesion performance
       
-      tp <- performance(rf_pred, measure = "tpr")
-      tp = tp@y.values[[1]][2]
-      rf_tpr <- c(rf_tpr, tp)
-      
-      # FPR
-      fp <- performance(lr_pred, measure = "tnr")
-      fp = fp@y.values[[1]][23]
-      lr_fpr <- c(lr_fpr, fp)
-      
-      fp <- performance(rf_pred, measure = "tnr")
-      fp = fp@y.values[[1]][2]
-      rf_fpr <- c(rf_fpr, fp)
-      
-      # Precision/Recall
-      p <- performance(lr_pred,measure='prec')
-      p = p@y.values[[1]][23]
-      lr_precision <- c(lr_precision, p)
-      
-      p <- performance(rf_pred,measure='prec')
-      p = p@y.values[[1]][2]
-      rf_precision <- c(rf_precision, p)
-      
-      # Recall
-      rc <- performance(lr_pred, measure='rec')
-      rc = rc@y.values[[1]][23]
-      lr_recall <- c(lr_recall, rc)
-      
-      rc <- performance(rf_pred, measure='rec')
-      rc = rc@y.values[[1]][2]
-      rf_recall <- c(rf_recall, rc)
-      
-      # F1 Score
-      f <- performance(lr_pred,measure="f")
-      x = as.data.frame(f@y.values[[1]])
-      f <- max(tail(x,-1))
-      lr_f1 <- c(lr_f1,f)
-      
-      f <- performance(rf_pred,measure="f")
-      x = as.data.frame(f@y.values[[1]])
-      f <- max(tail(x,-1))
-      rf_f1 <- c(rf_f1,f)
-      
-      #Accuracy
-      a <- performance(lr_pred, measure = "acc")
-      a = a@y.values[[1]][23]
-      lr_acc <- c(lr_acc,a)
-      
-      a <- performance(rf_pred, measure = "acc")
-      a = a@y.values[[1]][2]
-      rf_acc <- c(rf_acc,a)
-      
-      # AUC
-      a <- performance(lr_pred,measure="auc")
-      a <- a@y.values[[1]]
-      lr_auc <- c(lr_auc, a)
-      
-      a <- performance(rf_pred,measure="auc")
-      a <- a@y.values[[1]]
-      rf_auc <- c(rf_auc, a)
-      
-      # Cost
-      c <- performance(lr_pred,measure="cost")
-      c <- min(c@y.values[[1]])
-      lr_cost <- c(lr_cost, c)
-      
-      c <- performance(rf_pred,measure="cost")
-      c <- min(c@y.values[[1]])
-      rf_cost <- c(rf_cost, c)
+      # Random Forest performance
       
     }
     
-    # Table
-    lr_matrix <- populateMatrix(lr_matrix, i, num_ev, lr_tpr, lr_fpr, lr_precision, lr_recall, lr_f1, lr_acc, lr_auc, lr_cost) 
-    rf_matrix <- populateMatrix(rf_matrix, i, num_ev, rf_tpr, rf_fpr, rf_precision, rf_recall, rf_f1, rf_acc, rf_auc, rf_cost)
-    saveAUCScores3(lr_auc,rf_auc, num_ev)
+    # End sims
   }
-  result=list(lr_matrix, rf_matrix) 
-  return(result)
+  # end end
 }
 
 
-################ SAVE RESULTS OF EACH ITERATION ################
-saveAUCScores <- function(lr, rf, nvar) {
-  lr <- as.data.frame(lr)
-  colnames(lr) <- c("score")
-  lr$alg <- "Logistic Regression"
-  lr$nvar <- nvar
-  rf <- as.data.frame(rf)
-  colnames(rf) <- c("score")
-  rf$alg <- "Random Forest"
-  rf$nvar <- nvar
-  temp <- rbind(lr, rf)
-  if (exists("AUC")) {
-    AUC <<- rbind(AUC, temp)
-  }
-  else {
-    AUC <<- temp
-  }
-}
 
-saveAUCScores2 <- function(lr, rf, noise) {
-  lr <- as.data.frame(lr)
-  colnames(lr) <- c("score")
-  lr$alg <- "Logistic Regression"
-  lr$noise <- noise
-  rf <- as.data.frame(rf)
-  colnames(rf) <- c("score")
-  rf$alg <- "Random Forest"
-  rf$noise <- noise
-  temp <- rbind(lr, rf)
-  if (exists("AUC2")) {
-    AUC2 <<- rbind(AUC2, temp)
-  }
-  else {
-    AUC2 <<- temp
-  }
-}
-
-saveAUCScores3 <- function(lr, rf, num_ev) {
-  lr <- as.data.frame(lr)
-  colnames(lr) <- c("score")
-  lr$alg <- "Logistic Regression"
-  lr$noise <- num_ev
-  rf <- as.data.frame(rf)
-  colnames(rf) <- c("score")
-  rf$alg <- "Random Forest"
-  rf$noise <- num_ev
-  temp <- rbind(lr, rf)
-  if (exists("AUC3")) {
-    AUC3 <<- rbind(AUC3, temp)
-  }
-  else {
-    AUC3 <<- temp
-  }
-}
 ###################### PLOTS ##############################
 
 get_line_plots <- function(lr,rf,xvar,yvar){
