@@ -368,8 +368,8 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
     df_raw$num_ev <- num_ev
     
     # Merge Results
-    df_case3_agg <- rbind(df_case2_agg,df_agg)
-    df_case3_raw <- rbind(df_case2_raw,df_raw)
+    df_case3_agg <- rbind(df_case3_agg,df_agg)
+    df_case3_raw <- rbind(df_case3_raw,df_raw)
   }
   
   DF_CASE3_RAW <<- df_case3_raw
@@ -377,13 +377,69 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
 }   
 
 
+# CASE 4:  Run Logistic Regression and Random Forest Simulations sweeping num observations and Variables
+simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
+  
+  # Initialize dataframe used to hold results
+  df_case4_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), 
+                             auc = numeric(), algorithm=character(),num_ev = numeric(),obs = numeric())
+ 
+  # Iterate over number of observations
+  for (nrows in seq(from=100,to=5000,by=10)){
+    
+    df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
+    
+    # Number of Simulations
+    for (num_ev in c(1,10,20,50)){
+      
+      # Regenerate Data
+      data<-sim_data(nrows,noise,ncat,ndist,nvar,num_ev,weights,yint)
+      
+      # Split Train/Testing
+      split_data(data,split)
+      
+      # Do RandomForest
+      rf_pred <- do_randomforest(TRAIN,TEST,ntrees)
+      
+      # Do Logistic Regression
+      lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
+      
+      # Get Simulation Results --> Logistic Regression
+      df_lr <- get_results_lr(lr_pred,0.50)
+      df_lr <- df_lr[,!names(df_lr) %in% c("cut")]
+      
+      # Get Simulation Results --> Random Forest
+      df_rf <- get_results_rf(rf_pred)
+      
+      #Combine Aggregated DataFrames
+      df_iter <- rbind(df_lr,df_rf)
+      df_iter$num_ev <- num_ev
+      
+      #Append Data
+      df_sim_case <- rbind(df_sim_case,df_iter)
+    }
+    
+    # Raw Results
+    df_raw <- df_sim_case
+    
+    # Add number of rows
+    df_raw$obs <- nrows
+    
+    # Merge Results
+    df_case4_raw <- rbind(df_case4_raw,df_raw)
+  }
+  
+  DF_CASE4_RAW <<- df_case4_raw
+  return(DF_CASE4_RAW)
+}   
+
 ###################### PLOTS ##############################
 
 get_line_plots <- function(lr,rf,xvar,yvar){
   
   # Logistic Regression
   plot(lr[,xvar],lr[,yvar],xlab=xvar,ylab=yvar,main=paste0('Simulation Results: ',xvar,' vs ',yvar),
-       col='sienna1 ',type='b',pch=19,lwd=3,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5,ylim=c(0,1))
+       col='sienna1',type='b',pch=19,lwd=3,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5,ylim=c(0,1))
   
   # Random Forest
   lines(rf[,xvar],rf[,yvar],col='lightseagreen',type='b',pch=18,lwd=3)
@@ -397,11 +453,23 @@ get_line_plots <- function(lr,rf,xvar,yvar){
 }
 
 
+get_line_plots_case4 <- function(df,y_axis,ev){
+  
+  # Filter For Number of Explanatory Variables
+  df<- subset(df, num_ev == ev)
+  ggplot(df, aes(x=df[,"obs"],y=df[,y_axis],colour=factor(df$algorithm)),group=factor(df$algorithm)) + 
+  ggtitle(paste('Logistic Regression vs Random Forest',': Total EV --',ev)) + 
+  geom_line(size=1.15) + scale_color_manual(values=c("sienna1", "lightseagreen")) + xlab("Observations") + ylab(y_axis) + labs(colour="Algorithms") + 
+  theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) + scale_fill_discrete(name = "Algorithms")
+}
+
+
 get_boxplots <- function(df,x_axis,y_axis) {
   ggplot(df, aes(x=as.factor(df[,x_axis]), y=df[,y_axis], fill=factor(df$algorithm))) + xlab(x_axis) + ylab(y_axis) + geom_boxplot()  + 
     ggtitle('Logistic Regression vs Random Forest') + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) +
     scale_fill_discrete(name = "Algorithms")
 }
+
 
 ####################### Varying Variance ####################### 
 server <- function(input, output) {
@@ -619,6 +687,51 @@ server <- function(input, output) {
   })
   
   output$case3_chart5 <- renderPlot({
-    get_boxplots(DF_CASE2_RAW,'num_ev','auc')
+    get_boxplots(DF_CASE3_RAW,'num_ev','auc')
   })
+  
+  ####################### Varying Number of explanatory variables ####################### 
+  output$lr_title_num_obs <- renderText({
+    paste0( "The table below displays a sample of the results of running logistic regression and random forest with varying number of observations")
+  })
+  
+  lr_rf_num_obs <- reactive({
+    withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
+                 run_model <- simulation_num_obs(input$n_sim,
+                                                  input$split,
+                                                  input$cat,
+                                                  input$nrows,
+                                                  input$noise,
+                                                  input$ndist,
+                                                  input$nvar,
+                                                  input$ev,
+                                                  input$weights,
+                                                  input$yint,
+                                                  input$varselect, # Logistic Regression
+                                                  input$ntree # Random Forest
+                 )
+    )
+  })
+  
+  
+  # Print Matrix
+  output$lr_rf_sim_num_nobs <- renderTable({
+    LR_RF4 <<- lr_rf_num_obs()
+    head(LR_RF4,10)
+  })
+  
+  # Plot
+  output$case4_chart1 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'acc',1)
+  })
+  output$case4_chart2 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'acc',10)
+  })
+  output$case4_chart3 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'acc',20)
+  })
+  output$case4_chart4 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'acc',50)
+  })
+  
 }

@@ -201,6 +201,30 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("case3_chart4"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case3_chart5")))
+                 ),
+        tabPanel("Case 4",
+                 fluidRow(
+                   column(12,
+                          h4("Case Description"),
+                          p("In this case, we simulate the dataset and set the number of observations from 10 to 1000
+                            with explanatory variables to 1 10, 20, and 50 and display the results of each simulation.")
+                          )
+                   ),
+                 fluidRow(
+                   column(12,
+                          h4("Logistic Regression and Random Forest Results"),
+                          p(textOutput("lr_title_num_nobs"))
+                   )
+                 ),
+                 fluidRow(column(12,align="center",tableOutput("lr_rf_sim_num_nobs"))),
+                 fluidRow(column(12,h4("Simulation Plots"))),
+                 fluidRow(column(12,plotOutput("case4_chart1"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case4_chart2"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case4_chart3"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case4_chart4")))
                  )
         ) # End tab panel
       ) # End main panel
