@@ -14,7 +14,7 @@ ui <- fluidPage(
       # Input: Number of Rows
       numericInput(inputId = "nrows",
                    label = "Number of Rows",
-                   value = 100,min=100,max = 10000),
+                   value = 100000,min=100,max = 10000),
       
       # Input: Noise Variables
       numericInput(inputId = "noise",
@@ -35,7 +35,7 @@ ui <- fluidPage(
       # Input: Explanatory Variables
       numericInput(inputId = "ev",
                    label = "Explanatory Variable",
-                   value = 10, min=0, max = 100, step=1),
+                   value = 5, min=0, max = 100, step=1),
       
       # Input: Categorical Variables
       numericInput(inputId = "cat",
@@ -77,7 +77,7 @@ ui <- fluidPage(
       h4("Simulation: Number of Iterations"),      
       sliderInput(inputId = "n_sim",                   
                   label = "Number of Simulations",                   
-                  value = 10, min=1,max = 10, step = 1),
+                  value = 1000, min=1,max = 10000, step = 1),
       
       br(),
       submitButton("Simulate Data", icon("refresh")),
