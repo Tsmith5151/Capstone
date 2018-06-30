@@ -177,14 +177,14 @@ ui <- fluidPage(
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
-                          p(textOutput("lr_title_num_evar"))
+                          p(textOutput("lr_title_num_nevar"))
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("lr_sim_num_evar"))),
                  fluidRow(
                    column(12,
                           h4("Random Forest Results"),
-                          p(textOutput("rf_title_num_evar"))
+                          p(textOutput("rf_title_num_nevar"))
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_num_evar"))),

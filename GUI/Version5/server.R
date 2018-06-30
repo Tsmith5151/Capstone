@@ -114,35 +114,86 @@ do_logisticregression <- function(train,test,varselect){
   return(pred)
 }
 
-# Random forest performance
-getRFPerformance <- function (rf_pred) {
-  rf_temp <- performance(rf_pred, "tpr", "fpr")
-  rf_perf <- data.frame(fpr=rf_temp@x.values[[1]][2], tpr=rf_temp@y.values[[1]][2])
+# Logistic regression performance
+get_results_lr <- function(lr_pred,upper_prob){
   
-  rf_temp <- performance(rf_pred, "rec", "prec")
-  rf_perf2 <- data.frame(prec=rf_temp@x.values[[1]][2], rec=rf_temp@y.values[[1]][2])
-  rf_perf$prec <- rf_perf2$prec
-  rf_perf$rec <- rf_perf2$rec
+  # TPR and FPR
+  perf <- performance(lr_pred, "tpr", "fpr")
+  cutoffs<- data.frame(cut=perf@alpha.values[[1]], fpr=perf@x.values[[1]],tpr=perf@y.values[[1]])
+  perf1 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
+  perf1 <- perf1[1,]
   
-  rf_temp <- performance(rf_pred, "f", "acc")
-  rf_perf3 <- data.frame(acc=rf_temp@x.values[[1]][2], f=rf_temp@y.values[[1]][2])
-  rf_perf$acc <- rf_perf3$acc
-  rf_perf$f <- rf_perf3$f
+  # Recal Precision
+  perf <- performance(lr_pred, "rec", "prec")
+  cutoffs <- data.frame(cut=perf@alpha.values[[1]], rec=perf@x.values[[1]],prec=perf@y.values[[1]])
+  perf2 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob ))
+  perf2 <- perf2[1,]
   
-  rf_temp <- performance(rf_pred, "auc")
-  rf_perf4 <- data.frame(auc=rf_temp@y.values[[1]])
-  rf_perf$auc <- rf_perf4$auc
+  #Accuracy
+  perf <- performance(lr_pred, measure = "acc")
+  cutoffs <- data.frame(cut=perf@x.values[[1]], acc=perf@y.values[[1]])
+  perf3 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
+  perf3 <- perf3[1,]
   
-  return(rf_perf)
+  #AUC
+  perf <- performance(lr_pred, measure = "auc")
+  perf4 <- data.frame(auc=perf@y.values[[1]])
+  perf4 <- perf4[1,]
+  
+  # Combine DataFrames
+  df_iter <- merge(perf1,perf2)
+  df_iter <- merge(df_iter,perf3)
+  df_iter <- merge(df_iter,perf4)
+  
+  names(df_iter) <- c("fpr","tpr","rec","prec","acc","auc","algorithm")
+  df_iter$algorithm <- "Logistic Regression"
+  
+  return(df_iter)
+  
 }
 
-
+# Random forest performance
+get_results_rf <- function (rf_pred) {
+  
+  # TPR and FPR
+  perf <- performance(rf_pred, "tpr", "fpr")
+  perf1 <- data.frame(fpr=perf@x.values[[1]][2], tpr=perf@y.values[[1]][2])
+  
+  # Recal Precision
+  perf <- performance(rf_pred, "rec", "prec")
+  perf2 <- data.frame(prec=perf@x.values[[1]][2], rec=perf@y.values[[1]][2])
+  
+  #Accuracy
+  perf <- performance(rf_pred, "acc")
+  perf3 <- data.frame(acc=perf@y.values[[1]][2])
+  
+  #AUC
+  perf <- performance(rf_pred, "auc")
+  perf4 <- data.frame(auc=perf@y.values[[1]])
+  
+  # Combine DataFrames
+  df_iter <- merge(perf1,perf2)
+  df_iter <- merge(df_iter,perf3)
+  df_iter <- merge(df_iter,perf4)
+  df_iter <- df_iter[1,]
+  
+  df_iter$algorithm <- "RandomForest"
+  
+  df_iter <- df_iter[c("fpr","tpr","rec","prec","acc","auc","algorithm")]
+  return(df_iter)
+}
 
 # CASE 1: Run Logistic Regression and Random Forest Simulations sweeping variance of variables
 simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
+  # Initialize dataframe used to hold results
+  DF_CASE1_RAW <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric(),algorithm=character())
+  DF_CASE1_AGG <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric())
+  
   # Iterate over variance 
   for (nvar in seq(from=0.50,to=5.0,by=0.50)){
+    
+    df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character())
     
     # Iterate of number of simulations
     for (n in 1:n_sim){
@@ -159,33 +210,56 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
       # Do Logistic Regression
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
-      # Logistic regression performance
+      # Get Simulation Results --> Logistic Regression
+      df_lr <- get_results_lr(lr_pred,0.50)
+      df_lr <- df_lr[,!names(df_lr) %in% c("cut")]
       
+      # Get Simulation Results --> Random Forest
+      df_rf <- get_results_rf(rf_pred)
       
-      # Random forest performance
-      rf_perf <- getRFPerformance(rf_pred)
-      rf_perf$nvar <- nvar
-      
-      if (exists("RF_PERF")) {
-        RF_PERF <<- rbind(RF_PERF, rf_perf)
-      }
-      else {
-        RF_PERF <<- rf_perf
-      }
-      
+      #Combine Aggregated DataFrames
+      df_iter <- rbind(df_lr,df_rf)
+
+      #Append Data
+      df_sim_case <- rbind(df_sim_case,df_iter)
     }
+    
+    # Raw Results
+    df_raw <- df_sim_case
+    
+    # Aggregate (i.e. Mean of Simulation Results)
+    df_agg <- aggregate(df_sim_case, by=list(df_sim_case$algorithm), FUN=mean)
+    df_agg <- df_agg[, !(colnames(df_agg) %in% c("algorithm"))]
+    
+    #Rename 
+    colnames(df_agg)[colnames(df_agg)=="Group.1"] <- "algorithm"
+    
+    # Add "Num Variance"
+    df_agg$nvar <- nvar
+    df_raw$nvar <- nvar
+    
+    # Merge Results
+    DF_CASE1_AGG <- rbind(DF_CASE1_AGG,df_agg)
+    DF_CASE1_RAW <<- rbind(DF_CASE1_RAW,df_raw)
   }
-  result=list(LR_PERF, RF_PERF)
-  return(result)
-}
+  
+  return(DF_CASE1_AGG)
+}    
+
 
 
 # CASE 2: Run Logistic Regression and Random Forest Simulations sweeping number of noise variables
 simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
  
+  # Initialize dataframe used to hold results
+  DF_CASE2_RAW <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_noise = numeric(),algorithm=character())
+  DF_CASE2_AGG <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_noise = numeric())
+  
   # Iterate over number of noise variables 
   for (noise in c(1,5,10,20,50)){
-   
+    
+    df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character())
+    
     # Number of Simulations
     for (n in 1:n_sim){
       
@@ -201,24 +275,54 @@ simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
       # Do Logistic Regression
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
-      # Logistic Regreesion performance
-
-      # Random Forest performance
+      # Get Simulation Results --> Logistic Regression
+      df_lr <- get_results_lr(lr_pred,0.50)
+      df_lr <- df_lr[,!names(df_lr) %in% c("cut")]
       
+      # Get Simulation Results --> Random Forest
+      df_rf <- get_results_rf(rf_pred)
+      
+      #Combine Aggregated DataFrames
+      df_iter <- rbind(df_lr,df_rf)
+      
+      #Append Data
+      df_sim_case <- rbind(df_sim_case,df_iter)
     }
     
-    #end sims
+    # Raw Results
+    df_raw <- df_sim_case
+    
+    # Aggregate (i.e. Mean of Simulation Results)
+    df_agg <- aggregate(df_sim_case, by=list(df_sim_case$algorithm), FUN=mean)
+    df_agg <- df_agg[, !(colnames(df_agg) %in% c("algorithm"))]
+    
+    #Rename 
+    colnames(df_agg)[colnames(df_agg)=="Group.1"] <- "algorithm"
+    
+    # Add noise number
+    df_agg$num_noise <- noise
+    df_raw$num_noise <- noise
+    
+    # Merge Results
+    DF_CASE2_AGG <- rbind(DF_CASE2_AGG,df_agg)
+    DF_CASE2_RAW <<- rbind(DF_CASE2_RAW,df_raw)
   }
-
-  #end end
-}
+  
+  return(DF_CASE2_AGG)
+}   
 
 
 # CASE 3: Run Logistic Regression and Random Forest Simulations sweeping num ex. variables 
 simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees){
   
+  # Initialize dataframe used to hold results
+  DF_CASE3_RAW <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_ev = numeric(),algorithm=character())
+  DF_CASE3_AGG <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), num_ev = numeric())
+  
   # Iterate over number of noise variables 
   for (num_ev in c(1,5,10,20,50)){
+    
+    df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character())
     
     # Number of Simulations
     for (n in 1:n_sim){
@@ -235,16 +339,41 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
       # Do Logistic Regression
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
-      # Logistic Regreesion performance
+      # Get Simulation Results --> Logistic Regression
+      df_lr <- get_results_lr(lr_pred,0.50)
+      df_lr <- df_lr[,!names(df_lr) %in% c("cut")]
       
-      # Random Forest performance
+      # Get Simulation Results --> Random Forest
+      df_rf <- get_results_rf(rf_pred)
       
+      #Combine Aggregated DataFrames
+      df_iter <- rbind(df_lr,df_rf)
+      
+      #Append Data
+      df_sim_case <- rbind(df_sim_case,df_iter)
     }
     
-    # End sims
+    # Raw Results
+    df_raw <- df_sim_case
+    
+    # Aggregate (i.e. Mean of Simulation Results)
+    df_agg <- aggregate(df_sim_case, by=list(df_sim_case$algorithm), FUN=mean)
+    df_agg <- df_agg[, !(colnames(df_agg) %in% c("algorithm"))]
+    
+    #Rename 
+    colnames(df_agg)[colnames(df_agg)=="Group.1"] <- "algorithm"
+    
+    # Add ev number
+    df_agg$num_ev <- num_ev
+    df_raw$num_ev <- num_ev
+    
+    # Merge Results
+    DF_CASE3_AGG <- rbind(DF_CASE3_AGG,df_agg)
+    DF_CASE3_RAW <<- rbind(DF_CASE3_RAW,df_raw)
   }
-  # end end
-}
+  
+  return(DF_CASE3_AGG)
+} 
 
 
 
@@ -254,7 +383,7 @@ get_line_plots <- function(lr,rf,xvar,yvar){
   
   # Logistic Regression
   plot(lr[,xvar],lr[,yvar],xlab=xvar,ylab=yvar,main=paste0('Simulation Results: ',xvar,' vs ',yvar),
-       col='sienna1 ',type='b',pch=19,lwd=3,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5,ylim=c(0.50,1))
+       col='sienna1 ',type='b',pch=19,lwd=3,cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5,ylim=c(0,1))
   
   # Random Forest
   lines(rf[,xvar],rf[,yvar],col='lightseagreen ',type='b',pch=18,lwd=3)
@@ -269,7 +398,7 @@ get_line_plots <- function(lr,rf,xvar,yvar){
 
 
 get_boxplots <- function(df,x_axis) {
-  ggplot(df, aes(x=as.factor(df[,x_axis]), y=score, fill=df$alg)) + xlab(x_axis) + ylab("AUC Score") + geom_boxplot()  + 
+  ggplot(df, aes(x=as.factor(df[,x_axis]), y=auc, fill=df$algorithm)) + xlab(x_axis) + ylab("AUC Score") + geom_boxplot()  + 
     ggtitle('Logistic Regression vs Random Forest') + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) +
     scale_fill_discrete(name = "Algorithms")
 }
@@ -335,45 +464,42 @@ server <- function(input, output) {
   # Print LR Matrix
   output$lr_sim_nvar <- renderTable({
     LR_RF <<- lr_rf_nvar()
-    LR_RF[1]
+    LR1 <<- LR_RF[LR_RF$algorithm == 'Logistic Regression',]
+    RF1 <<- LR_RF[LR_RF$algorithm == 'RandomForest',]
+    LR1
   })
   
   # Print RF Matrix
   output$rf_sim_nvar <- renderTable({
-    LR_RF[2]
+    RF1
   })
   
   # CASE1 Plots
   output$case1_chart1 <- renderPlot({
-    LR1 <<- as.data.frame(LR_RF[1])
-    RF1 <<- as.data.frame(LR_RF[2])
-    get_line_plots(LR1,RF1,'nVar','TPR')
+    get_line_plots(LR1,RF1,'nvar','tpr')
   })
   
-  # CASE1 Plots
   output$case1_chart2 <- renderPlot({
-    get_line_plots(LR1,RF1,'nVar','Accuracy')
+    get_line_plots(LR1,RF1,'nvar','fpr')
   })
   
-  # CASE1 Plots
   output$case1_chart3 <- renderPlot({
-    get_line_plots(LR1,RF1,'nVar','F1')
+    get_line_plots(LR1,RF1,'nvar','acc')
   })
   
   # CASE1 BOX PLOT
   output$case1_chart4 <- renderPlot({
-    df <- AUC
-    get_boxplots(df,'nvar')
+    get_boxplots(DF_CASE1_RAW,'nvar')
   })
   
 
   ####################### Number of noise variables ####################### 
   output$lr_title_num_nvar <- renderText({
-    paste0( "The table below displays the results of running logistic regression 10 times with ", input$n_sim, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
+    paste0( "The table below displays the results of running logistic regression ", input$n_sim, " times with ", input$ev, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
   })
   
   output$rf_title_num_nvar <- renderText({
-    paste0( "The table below displays the results of running random forest 10 times with ", input$n_sim, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
+    paste0( "The table below displays the results of running random forest ", input$n_sim, " times with ", input$ev, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
   })
   
   lr_rf_num_nvar <- reactive({
@@ -398,45 +524,42 @@ server <- function(input, output) {
   # Print LR Matrix
   output$lr_sim_num_nvar <- renderTable({
     LR_RF2 <<- lr_rf_num_nvar()
-    LR_RF2[1]
+    LR2 <<- LR_RF2[LR_RF2$algorithm == 'Logistic Regression',]
+    RF2 <<- LR_RF2[LR_RF2$algorithm == 'RandomForest',]
+    LR2
   })
   
   # Print RF Matrix
   output$rf_sim_num_nvar <- renderTable({
-    LR_RF2[2]
+    RF2
   })
   
   # CASE2 Plots
   output$case2_chart1 <- renderPlot({
-    LR2 <<- as.data.frame(LR_RF2[1])
-    RF2 <<- as.data.frame(LR_RF2[2])
-    get_line_plots(LR2,RF2,'Num.Noise','TPR')
+    get_line_plots(LR2,RF2,'num_noise','tpr')
   })
   
-  # CASE2 Plots
   output$case2_chart2 <- renderPlot({
-    get_line_plots(LR2,RF2,'Num.Noise','Accuracy')
+    get_line_plots(LR2,RF2,'num_noise','fpr')
   })
   
-  # CASE2 Plots
   output$case2_chart3 <- renderPlot({
-    get_line_plots(LR2,RF2,'Num.Noise','F1')
+    get_line_plots(LR2,RF2,'num_noise','acc')
   })
   
   # CASE2 BOX PLOT
   output$case2_chart4 <- renderPlot({
-    df <- AUC2
-    get_boxplots(df,'noise')
+    get_boxplots(DF_CASE2_RAW,'num_noise')
   })
   
   
   ####################### Number of explanatory variables ####################### 
   output$lr_title_num_nevar <- renderText({
-    paste0( "The table below displays the results of running logistic regression 10 times with ", input$n_sim, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
+    paste0( "The table below displays the results of running logistic regression ", input$n_sim, " times with ", input$noise, " noise variables and 1, 5, 10, 20, and 50 explanatory variables in the dataset.")
   })
   
   output$rf_title_num_nevar <- renderText({
-    paste0( "The table below displays the results of running random forest 10 times with ", input$n_sim, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
+    paste0( "The table below displays the results of running random forest ", input$n_sim, " times with ", input$noise, " noise variables and 1, 5, 10, 20, and 50 explanatory variables in the dataset.")
   })
   
   lr_rf_num_ev <- reactive({
@@ -461,34 +584,31 @@ server <- function(input, output) {
   # Print LR Matrix
   output$lr_sim_num_evar <- renderTable({
     LR_RF3 <<- lr_rf_num_ev()
-    LR_RF3[1]
+    LR3 <<- LR_RF3[LR_RF3$algorithm == 'Logistic Regression',]
+    RF3 <<- LR_RF3[LR_RF3$algorithm == 'RandomForest',]
+    LR3
   })
   
   # Print RF Matrix
   output$rf_sim_num_evar <- renderTable({
-    LR_RF3[2]
+    RF3
   })
   
   # CASE3 Plots
   output$case3_chart1 <- renderPlot({
-    LR3 <<- as.data.frame(LR_RF3[1])
-    RF3 <<- as.data.frame(LR_RF3[2])
-    get_line_plots(LR3,RF3,'num_ev','TPR')
+    get_line_plots(LR3,RF3,'num_ev','tpr')
   })
   
-  # CASE3 Plots
   output$case3_chart2 <- renderPlot({
-    get_line_plots(LR3,RF3,'num_ev','Accuracy')
+    get_line_plots(LR3,RF3,'num_ev','fpr')
   })
   
-  # CASE3 Plots
   output$case3_chart3 <- renderPlot({
-    get_line_plots(LR3,RF3,'num_ev','F1')
+    get_line_plots(LR3,RF3,'num_ev','acc')
   })
   
   # CASE3 BOX PLOT
   output$case3_chart4 <- renderPlot({
-    df <- AUC3
-    get_boxplots(df,'noise')
+    get_boxplots(DF_CASE3_RAW,'num_ev')
   })
 }
