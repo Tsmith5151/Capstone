@@ -62,7 +62,7 @@ ui <- fluidPage(
       hr(), 
       h4("Variable Selection Model"),            
       selectInput(inputId = "varselect",
-                  label = "Stepwise Selection Model",
+                  label = "Variable Selection Method",
                   choices = list("backward" = "backward", 
                                  "forward" = "forward",
                                  "forward & backward" = "both"), 
@@ -82,7 +82,7 @@ ui <- fluidPage(
       hr(), 
       h4("Simulation: Number of Iterations"),      
       sliderInput(inputId = "n_sim",                   
-                  label = "Number of Simulations",                   
+                  label = "Iterations",
                   value = 10, min=0,max = 10000, step = 100),
       
       br(),
@@ -117,6 +117,7 @@ ui <- fluidPage(
                             to 0.5 to 5.0 in an interval of 0.5 and display the results of each simulation.")
                    )
                  ),
+                 tags$hr(),
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
@@ -124,6 +125,7 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("lr_sim_nvar"))),
+                 tags$hr(),
                  fluidRow(
                    column(12,
                           h4("Random Forest Results"),
@@ -131,7 +133,12 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_nvar"))),
+                 tags$hr(),
+                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,align="center",tableOutput("ttest1"))),
+                 tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
+                 tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart1"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart2"))),
@@ -150,6 +157,7 @@ ui <- fluidPage(
                             noise variables to 1, 5, 10, 20, and 50 and display the results of each simulation.")
                    )
                  ),
+                 tags$hr(),
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
@@ -157,6 +165,7 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("lr_sim_num_nvar"))),
+                 tags$hr(),
                  fluidRow(
                    column(12,
                           h4("Random Forest Results"),
@@ -164,6 +173,10 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_num_nvar"))),
+                 tags$hr(),
+                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,align="center",tableOutput("ttest2"))),
+                 tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
                  fluidRow(column(12,plotOutput("case2_chart1"))),
                  tags$hr(),
@@ -183,6 +196,7 @@ ui <- fluidPage(
                             explanatory variables to 1, 5, 10, 20, and 50 and display the results of each simulation.")
                           )
                    ),
+                 tags$hr(),
                  fluidRow(
                    column(12,
                           h4("Logistic Regression Results"),
@@ -190,6 +204,7 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("lr_sim_num_evar"))),
+                 tags$hr(),
                  fluidRow(
                    column(12,
                           h4("Random Forest Results"),
@@ -197,6 +212,10 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_num_evar"))),
+                 tags$hr(),
+                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,align="center",tableOutput("ttest3"))),
+                 tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
                  fluidRow(column(12,plotOutput("case3_chart1"))),
                  tags$hr(),
@@ -216,6 +235,7 @@ ui <- fluidPage(
                             with explanatory variables to 1 10, 20, and 50 and display the results of each simulation.")
                           )
                    ),
+                 tags$hr(),
                  fluidRow(
                    column(12,
                           h4("Logistic Regression and Random Forest Results"),
@@ -223,6 +243,10 @@ ui <- fluidPage(
                    )
                  ),
                  fluidRow(column(12,align="center",tableOutput("lr_rf_sim_num_nobs"))),
+                 tags$hr(),
+                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,align="center",tableOutput("ttest4"))),
+                 tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
                  fluidRow(column(12,plotOutput("case4_chart1"))),
                  tags$hr(),
