@@ -65,7 +65,7 @@ sim_data <- function(n_obs,n_noise,cat,ndist,nvar,n_ev,weights,y_int){
   #Categorical Variables
   if(cat != 0){
     for (i in 1:cat){
-    data<- defData(data,varname=paste0('Cat',i), dist="categorical", formula = "0.3;0.2;0.5")
+      data<- defData(data,varname=paste0('Cat',i), dist="categorical", formula = "0.3;0.2;0.5")
     }
   }
   
@@ -152,7 +152,7 @@ get_results_models <- function(lr_pred,upper_prob,algorithm){
   
   df_iter <- df_iter[,!names(df_iter) %in% c("cut")]
   names(df_iter) <- c("fpr","tpr","rec","prec","acc","auc","algorithm")
- 
+  
   return(df_iter)
   
 }
@@ -201,10 +201,10 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
       # Get Simulation Results --> LR & RF
       df_lr <- get_results_models(lr_pred,prob_thresh,"Logistic Regression")
       df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
-     
+      
       #Combine Aggregated DataFrames
       df_iter <- rbind(df_lr,df_rf)
-
+      
       #Append Data
       df_sim_case <- rbind(df_sim_case,df_iter)
     }
@@ -238,7 +238,7 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
 
 # CASE 2: Run Logistic Regression and Random Forest Simulations sweeping number of noise variables
 simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees,prob_thresh){
- 
+  
   # Initialize dataframe used to hold results
   df_case2_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric(),algorithm=character())
   df_case2_agg <- data.frame(algorithm = character(),cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), auc = numeric(), nvar = numeric())
@@ -293,6 +293,9 @@ simulation_num_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
     df_case2_raw <- rbind(df_case2_raw,df_raw)
   }
   
+  DF_CASE2_RAW <<- df_case2_raw
+  
+  
   #Statistical Results
   DF_CASE2_RAW_TTEST <<- get_ttest_results(DF_CASE2_RAW)
   return(df_case2_agg)  
@@ -316,7 +319,7 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
       
       # Regenerate Data
       data<-sim_data(nrows,noise,ncat,ndist,nvar,num_ev,weights,yint)
-  
+      
       # Split Train/Testing
       split_data(data,split)
       
@@ -356,6 +359,9 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
     df_case3_raw <- rbind(df_case3_raw,df_raw)
   }
   
+  DF_CASE3_RAW <<- df_case3_raw
+  
+  
   #Statistical Results
   DF_CASE3_RAW_TTEST <<- get_ttest_results(DF_CASE3_RAW)
   return(df_case3_agg)
@@ -368,7 +374,7 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
   # Initialize dataframe used to hold results
   df_case4_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), 
                              auc = numeric(), algorithm=character(),num_ev = numeric(),obs = numeric())
- 
+  
   # Iterate over number of observations
   for (nrows in seq(from=100,to=5000,by=10)){
     
@@ -411,6 +417,10 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
     df_case4_raw <- rbind(df_case4_raw,df_raw)
   }
   
+  DF_CASE4_RAW <<- df_case4_raw
+  
+  
+  
   #Statistical Results
   DF_CASE4_RAW_TTEST <<- get_ttest_results(DF_CASE4_RAW)
   return(df_case4_agg)  
@@ -441,9 +451,9 @@ get_line_plots_case4 <- function(df,y_axis,ev){
   # Filter For Number of Explanatory Variables
   df<- subset(df, num_ev == ev)
   ggplot(df, aes(x=df[,"obs"],y=df[,y_axis],colour=factor(df$algorithm)),group=factor(df$algorithm)) + 
-  ggtitle(paste('Logistic Regression vs Random Forest',': Total EV --',ev)) + 
-  geom_line(size=1.15) + scale_color_manual(values=c("sienna1", "lightseagreen")) + xlab("Observations") + ylab(y_axis) + labs(colour="Algorithms") + 
-  theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) + scale_fill_discrete(name = "Algorithms")
+    ggtitle(paste('Logistic Regression vs Random Forest',': Total EV --',ev)) + 
+    geom_line(size=1.15) + scale_color_manual(values=c("sienna1", "lightseagreen")) + xlab("Observations") + ylab(y_axis) + labs(colour="Algorithms") + 
+    theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) + scale_fill_discrete(name = "Algorithms")
 }
 
 
@@ -488,17 +498,17 @@ server <- function(input, output) {
   lr_rf_nvar <- reactive({
     withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
                  run_model <- simulation_nvar(input$n_sim,
-                                               input$split,
-                                               input$cat,
-                                               input$nrows,
-                                               input$noise,
-                                               input$ndist,
-                                               nvar,input$ev,
-                                               input$weights,
-                                               input$yint,
-                                               input$varselect, # Logistic Regression
-                                               input$ntree, # Random Forest
-                                               input$prob_thresh
+                                              input$split,
+                                              input$cat,
+                                              input$nrows,
+                                              input$noise,
+                                              input$ndist,
+                                              nvar,input$ev,
+                                              input$weights,
+                                              input$yint,
+                                              input$varselect, # Logistic Regression
+                                              input$ntree, # Random Forest
+                                              input$prob_thresh
                  )
     )
   })
@@ -553,7 +563,7 @@ server <- function(input, output) {
     get_boxplots(DF_CASE1_RAW,'nvar','auc')
   })
   
-
+  
   ####################### Number of noise variables ####################### 
   output$lr_title_num_nvar <- renderText({
     paste0( "The table below displays the results of running logistic regression ", input$n_sim, " times with ", input$ev, " explanatory variables and 1, 5, 10, 20, and 50 noise variables in the dataset.")
@@ -566,18 +576,18 @@ server <- function(input, output) {
   lr_rf_num_nvar <- reactive({
     withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
                  run_model <- simulation_num_nvar(input$n_sim,
-                                              input$split,
-                                              input$cat,
-                                              input$nrows,
-                                              inpur$noise,
-                                              input$ndist,
-                                              input$nvar,
-                                              input$ev,
-                                              input$weights,
-                                              input$yint,
-                                              input$varselect, # Logistic Regression
-                                              input$ntree, # Random Forest
-                                              input$prob_thresh
+                                                  input$split,
+                                                  input$cat,
+                                                  input$nrows,
+                                                  inpur$noise,
+                                                  input$ndist,
+                                                  input$nvar,
+                                                  input$ev,
+                                                  input$weights,
+                                                  input$yint,
+                                                  input$varselect, # Logistic Regression
+                                                  input$ntree, # Random Forest
+                                                  input$prob_thresh
                  )
     )
   })
@@ -699,18 +709,18 @@ server <- function(input, output) {
   lr_rf_num_obs <- reactive({
     withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
                  run_model <- simulation_num_obs(input$n_sim,
-                                                  input$split,
-                                                  input$cat,
-                                                  input$nrows,
-                                                  input$noise,
-                                                  input$ndist,
-                                                  input$nvar,
-                                                  input$ev,
-                                                  input$weights,
-                                                  input$yint,
-                                                  input$varselect, # Logistic Regression
-                                                  input$ntree, # Random Forest
-                                                  input$prob_thresh
+                                                 input$split,
+                                                 input$cat,
+                                                 input$nrows,
+                                                 input$noise,
+                                                 input$ndist,
+                                                 input$nvar,
+                                                 input$ev,
+                                                 input$weights,
+                                                 input$yint,
+                                                 input$varselect, # Logistic Regression
+                                                 input$ntree, # Random Forest
+                                                 input$prob_thresh
                  )
     )
   })
