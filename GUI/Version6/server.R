@@ -95,6 +95,7 @@ split_data <- function(data, r_split) {
 do_randomforest <- function(train,test,n_tree){
   
   # RF Model
+  test$y <- as.factor(test$y)
   model.train <- randomForest(as.factor(y)~.,train,ntree=n_tree,importance=TRUE)
   pred <- predict(model.train, type="prob", newdata=test)[,2]
   pred <- prediction(pred,test$y)
@@ -106,7 +107,7 @@ do_randomforest <- function(train,test,n_tree){
 do_logisticregression <- function(train,test,varselect){
   
   # Fit Model
-  model.train = step(lm(y ~., family = "binomial", data = train), direction = varselect)
+  model.train = step(lm(y ~., data = train), direction = varselect)
   pred <- predict(model.train, test[, !names(test) %in% c("y")], type = 'response')
   pred <- prediction(pred, test$y)
   return(pred)
@@ -157,7 +158,7 @@ get_results_models <- function(model,upper_prob,algorithm){
 # Compute Two Sample TTest
 get_ttest_results <- function(df){
   df <- df %>%
-    summarise_each(funs(t.test(.[algorithm == "RandomForest"], .[algorithm == "Logistic Regression"])$p.value), vars = fpr:auc)
+    summarise_each(funs(t.test(.[algorithm == "RandomForest"], .[algorithm == "Logistic Regression"],pair = TRUE,conf.int=0.95)$p.value), vars = fpr:auc)
   
   results <- as.data.frame(df)
   names(results) <- c('fpr','tpr','rec','prec','acc','auc')
@@ -358,7 +359,6 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
   
   DF_CASE3_RAW <<- df_case3_raw
   
-  
   #Statistical Results
   DF_CASE3_RAW_TTEST <<- get_ttest_results(DF_CASE3_RAW)
   return(df_case3_agg)
@@ -373,55 +373,64 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
                              auc = numeric(), algorithm=character(),num_ev = numeric(),obs = numeric())
   
   # Iterate over number of observations
-  for (nrows in seq(from=100,to=5000,by=10)){
+  for (nrows in seq(from=100,to=1000,by=100)){
     
-    df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
+    df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
     
     # Number of EV
     for (num_ev in c(1,10,20,50)){
       
-      # Regenerate Data
-      data<-sim_data(nrows,noise,ncat,ndist,nvar,num_ev,weights,yint)
+      df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
+
+      for (n in 1:n_sim){
+        # Regenerate Data
+        data<-sim_data(nrows,noise,ncat,ndist,nvar,num_ev,weights,yint)
       
-      # Split Train/Testing
-      split_data(data,split)
+        # Split Train/Testing
+        split_data(data,split)
+        
+        # Do RandomForest
+        rf_pred <- do_randomforest(TRAIN,TEST,ntrees)
+        
+        # Do Logistic Regression
+        lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
+        
+        # Get Simulation Results --> LR & RF
+        df_lr <- get_results_models(lr_pred,prob_thresh,"Logistic Regression")
+        df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
+        
+        #Combine Aggregated DataFrames
+        df_iter <- rbind(df_lr,df_rf)
+        df_iter$num_ev <- num_ev
+        
+        #Append Data
+        df_sim_case <- rbind(df_sim_case,df_iter)
+      }
       
-      # Do RandomForest
-      rf_pred <- do_randomforest(TRAIN,TEST,ntrees)
+      # Aggregate (i.e. Mean of Simulation Results)
+      df_sim_case <- aggregate(df_sim_case, by=list(df_sim_case$algorithm), FUN=mean)
+      df_sim_case <- df_sim_case[, !(colnames(df_sim_case) %in% c("algorithm"))]
       
-      # Do Logistic Regression
-      lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
+      #Rename 
+      colnames(df_sim_case)[colnames(df_sim_case)=="Group.1"] <- "algorithm"
       
-      # Get Simulation Results --> LR & RF
-      df_lr <- get_results_models(lr_pred,prob_thresh,"Logistic Regression")
-      df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
-      
-      #Combine Aggregated DataFrames
-      df_iter <- rbind(df_lr,df_rf)
-      df_iter$num_ev <- num_ev
-      
-      #Append Data
-      df_sim_case <- rbind(df_sim_case,df_iter)
+      # Add ev number
+      df_sim_case$num_ev <- num_ev
+      df_agg <- rbind(df_agg,df_sim_case)
     }
     
-    # Raw Results
-    df_raw <- df_sim_case
-    
     # Add number of rows
-    df_raw$obs <- nrows
+    df_agg$obs <- nrows
     
     # Merge Results
-    df_case4_raw <- rbind(df_case4_raw,df_raw)
+    df_case4_raw <- rbind(df_case4_raw,df_agg)
   }
   
-  DF_CASE4_RAW <<- df_case4_raw
-  
-  
-  
   #Statistical Results
-  DF_CASE4_RAW_TTEST <<- get_ttest_results(DF_CASE4_RAW)
-  return(df_case4_agg)  
+  DF_CASE4_RAW_TTEST <<- get_ttest_results(df_case4_raw)
+  return(df_case4_raw)
 }
+
 
 ###################### PLOTS ##############################
 
@@ -725,13 +734,14 @@ server <- function(input, output) {
   
   # Print Matrix
   output$lr_rf_sim_num_nobs <- renderTable({
-    LR_RF4 <<- lr_rf_num_obs()
-    head(LR_RF4,10)
+    DF_CASE4_RAW <<- lr_rf_num_obs()
+    head(DF_CASE4_RAW,10)
   })
   
-  # Print TTEST
+  # Print Matrix
   output$ttest4 <- renderTable({
-    DF_CASE4_RAW_TTEST
+    DF_CASE4_RAW <<- lr_rf_num_obs()
+    head(DF_CASE4_RAW ,10)
   })
   
   # Plot
@@ -748,4 +758,5 @@ server <- function(input, output) {
     get_line_plots_case4(DF_CASE4_RAW,'acc',50)
   })
   
+
 }

@@ -115,8 +115,8 @@ ui <- fluidPage(
                           h4("Case Description"),
                           p("In this case, we simulate the dataset and set the variance of each variable (noise and explantory)
                             to 0.5 to 5.0 in an interval of 0.5 and display the results of each simulation.")
-                   )
-                 ),
+                          )
+                   ),
                  tags$hr(),
                  fluidRow(
                    column(12,
@@ -134,7 +134,7 @@ ui <- fluidPage(
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_nvar"))),
                  tags$hr(),
-                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,h4("Paired Two Sample T-Test Results"))),
                  fluidRow(column(12,align="center",tableOutput("ttest1"))),
                  tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
@@ -148,15 +148,15 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("case1_chart4"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case1_chart5")))
-        ),
+                 ),
         tabPanel("Case 2",
                  fluidRow(
                    column(12,
                           h4("Case Description"),
                           p("In this case, we simulate the dataset and set the number of
                             noise variables to 1, 5, 10, 20, and 50 and display the results of each simulation.")
-                   )
-                 ),
+                          )
+                   ),
                  tags$hr(),
                  fluidRow(
                    column(12,
@@ -174,7 +174,7 @@ ui <- fluidPage(
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_num_nvar"))),
                  tags$hr(),
-                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,h4("Paired Two Sample T-Test Results"))),
                  fluidRow(column(12,align="center",tableOutput("ttest2"))),
                  tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
@@ -213,7 +213,7 @@ ui <- fluidPage(
                  ),
                  fluidRow(column(12,align="center",tableOutput("rf_sim_num_evar"))),
                  tags$hr(),
-                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,h4("Paired Two Sample T-Test Results"))),
                  fluidRow(column(12,align="center",tableOutput("ttest3"))),
                  tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
@@ -236,15 +236,7 @@ ui <- fluidPage(
                           )
                    ),
                  tags$hr(),
-                 fluidRow(
-                   column(12,
-                          h4("Logistic Regression and Random Forest Results"),
-                          p(textOutput("lr_title_num_nobs"))
-                   )
-                 ),
-                 fluidRow(column(12,align="center",tableOutput("lr_rf_sim_num_nobs"))),
-                 tags$hr(),
-                 fluidRow(column(12,h4("Two Sample T-Test Results"))),
+                 fluidRow(column(12,h4("Paired Two Sample T-Test Results"))),
                  fluidRow(column(12,align="center",tableOutput("ttest4"))),
                  tags$hr(),
                  fluidRow(column(12,h4("Simulation Plots"))),
@@ -256,8 +248,8 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case4_chart4")))
                  )
-        ) # End tab panel
+      ) # End tab panel
       ) # End main panel
     )
 )
-  
+#End
