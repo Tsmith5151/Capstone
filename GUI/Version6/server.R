@@ -91,19 +91,15 @@ split_data <- function(data, r_split) {
   TEST <<- subset(data, sample==FALSE)
 }
 
-
 # Random Forest
 do_randomforest <- function(train,test,n_tree){
   
-  # Fit Model
-  trainy <- as.factor(train$y)
-  test$y <- as.factor(test$y)
-  
-  model.rf <- randomForest(y~.,train,ntree=n_tree,importance=TRUE,cutoff=c(0.50,0.50))
-  
-  pred <- predict(model.rf,type="response",newdata=test)
+  # RF Model
+  model.train <- randomForest(as.factor(y)~.,train,ntree=n_tree,importance=TRUE)
+  pred <- predict(model.train, type="prob", newdata=test)[,2]
   pred <- prediction(pred,test$y)
   return(pred)
+  
 }
 
 # Logistic Regression
@@ -111,36 +107,37 @@ do_logisticregression <- function(train,test,varselect){
   
   # Fit Model
   model.train = step(lm(y ~., family = "binomial", data = train), direction = varselect)
-  
-  # Prediction
   pred <- predict(model.train, test[, !names(test) %in% c("y")], type = 'response')
   pred <- prediction(pred, test$y)
   return(pred)
 }
 
 # Logistic Regression/ Random Forest performance
-get_results_models <- function(lr_pred,upper_prob,algorithm){
+get_results_models <- function(model,upper_prob,algorithm){
   
   # TPR and FPR
-  perf <- performance(lr_pred, "tpr", "fpr",cutoffs=seq(0,1,0.01))
+  perf <- performance(model, "tpr", "fpr",cutoffs=seq(0,1,0.01))
   cutoffs<- data.frame(cut=perf@alpha.values[[1]], fpr=perf@x.values[[1]],tpr=perf@y.values[[1]])
   perf1 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
   perf1 <- perf1[1,]
+
   
   # Recal Precision
-  perf <- performance(lr_pred, "rec", "prec")
+  perf <- performance(model, "rec", "prec")
   cutoffs <- data.frame(cut=perf@alpha.values[[1]], rec=perf@x.values[[1]],prec=perf@y.values[[1]])
   perf2 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob ))
   perf2 <- perf2[1,]
   
+  
   #Accuracy
-  perf <- performance(lr_pred, measure = "acc")
+  perf <- performance(model, measure = "acc")
   cutoffs <- data.frame(cut=perf@x.values[[1]], acc=perf@y.values[[1]])
   perf3 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
   perf3 <- perf3[1,]
   
+  
   #AUC
-  perf <- performance(lr_pred, measure = "auc")
+  perf <- performance(model, measure = "auc")
   perf4 <- data.frame(auc=perf@y.values[[1]])
   perf4 <- perf4[1,]
   
@@ -149,7 +146,7 @@ get_results_models <- function(lr_pred,upper_prob,algorithm){
   df_iter <- merge(df_iter,perf3)
   df_iter <- merge(df_iter,perf4)
   df_iter$algorithm <- algorithm
-  
+
   df_iter <- df_iter[,!names(df_iter) %in% c("cut")]
   names(df_iter) <- c("fpr","tpr","rec","prec","acc","auc","algorithm")
   
@@ -194,7 +191,7 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
       
       # Do RandomForest
       rf_pred <- do_randomforest(TRAIN,TEST,ntrees)
-      
+     
       # Do Logistic Regression
       lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
       
@@ -380,7 +377,7 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
     
     df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
     
-    # Number of Simulations
+    # Number of EV
     for (num_ev in c(1,10,20,50)){
       
       # Regenerate Data
