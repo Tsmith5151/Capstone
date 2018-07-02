@@ -95,6 +95,7 @@ split_data <- function(data, r_split) {
 do_randomforest <- function(train,test,n_tree){
   
   # RF Model
+  test$y <- as.factor(test$y)
   model.train <- randomForest(as.factor(y)~.,train,ntree=n_tree,importance=TRUE)
   pred <- predict(model.train, type="prob", newdata=test)[,2]
   pred <- prediction(pred,test$y)
