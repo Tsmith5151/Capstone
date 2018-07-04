@@ -926,35 +926,35 @@ server <- function(input, output) {
   })
   
   output$case5_chart5 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',1)
-  })
-  
-  output$case5_chart6 <- renderPlot({
     get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',10)
   })
   
-  output$case5_chart7 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',20)
-  })
-  
-  output$case5_chart8 <- renderPlot({
+  output$case5_chart6 <- renderPlot({
     get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',50)
   })
   
-  output$case5_chart9 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'auc',1)
+  output$case5_chart7 <- renderPlot({
+    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',100)
   })
   
-  output$case5_chart10 <- renderPlot({
+  output$case5_chart8 <- renderPlot({
+    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',200)
+  })
+  
+  output$case5_chart9 <- renderPlot({
     get_line_plots_other(DF_CASE5_RAW,"num_noise",'auc',10)
   })
   
+  output$case5_chart10 <- renderPlot({
+    get_line_plots_other(DF_CASE5_RAW,"num_noise",'auc',50)
+  })
+  
   output$case5_chart11 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'auc',20)
+    get_line_plots_other(DF_CASE5_RAW,"num_noise",'auc',100)
   })
   
   output$case5_chart12 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'auc',50)
+    get_line_plots_other(DF_CASE5_RAW,"num_noise",'auc',200)
   })
   
   # CASE5 Histogam
