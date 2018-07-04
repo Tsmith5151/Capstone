@@ -317,7 +317,9 @@ ui <- fluidPage(
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case5_chart12"))),
                  tags$hr(),
-                 fluidRow(column(12,plotOutput("case5_chart13")))
+                 fluidRow(column(12,plotOutput("case5_chart13"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart14")))
                  )
       ) # End tab panel
       ) # End main panel
