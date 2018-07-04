@@ -272,6 +272,52 @@ ui <- fluidPage(
                  fluidRow(column(12,plotOutput("case4_chart11"))),
                  tags$hr(),
                  fluidRow(column(12,plotOutput("case4_chart12")))
+                 ),
+        tabPanel("Case 5",
+                 fluidRow(
+                   column(12,
+                          h4("Case Description"),
+                          p("In this case, we simulate the dataset and set the number of noise variables 1 to 200 by 10
+                            with explanatory variables to 1 10, 20, and 50 and display the results of each simulation.")
+                          )
+                   ),
+                 fluidRow(
+                   column(12,
+                          h4("Simulation Results")
+                   )
+                 ),
+                 fluidRow(column(12,align="center",tableOutput("lr_rf_sim_num_noise"))),
+                 tags$hr(),
+                 fluidRow(column(12,h4("Paired Two Sample T-Test Results"))),
+                 fluidRow(column(12,align="center",tableOutput("ttest5"))),
+                 tags$hr(),
+                 fluidRow(column(12,h4("Simulation Plots"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart1"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart2"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart3"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart4"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart5"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart6"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart7"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart8"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart9"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart10"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart11"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart12"))),
+                 tags$hr(),
+                 fluidRow(column(12,plotOutput("case5_chart13")))
                  )
       ) # End tab panel
       ) # End main panel
