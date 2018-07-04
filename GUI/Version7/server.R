@@ -439,19 +439,18 @@ simulation_num_noise <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weig
   df_case5_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), 
                              auc = numeric(), algorithm=character(),num_ev = numeric(),num_noise = numeric())
   
-  # Iterate over Noise Variables
-  for (num_noise in seq(from=1,to=200,by=10)){
+  # Iterate over number of observations
+  for (num_noise in seq(from=10,to=200,by=10)){
     
     df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
     
     # Number of EV
-    for (num_ev in c(1,10,20,50)){
+    for (num_ev in c(10,50,100,200)){
       
       df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
       
       for (n in 1:n_sim){
         # Regenerate Data
-        print(num_noise)
         data<-sim_data(nrows,num_noise,ncat,ndist,nvar,num_ev,weights,yint)
         
         # Split Train/Testing
@@ -487,7 +486,7 @@ simulation_num_noise <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weig
       df_agg <- rbind(df_agg,df_sim_case)
     }
     
-    # Add number of rows
+    # Add number of noise variables
     df_agg$num_noise <- num_noise
     
     # Merge Results
