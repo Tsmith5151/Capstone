@@ -439,7 +439,7 @@ simulation_num_noise <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weig
   df_case5_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), 
                              auc = numeric(), algorithm=character(),num_ev = numeric(),num_noise = numeric())
   
-  # Iterate over number of observations
+  # Iterate over number of noise variables
   for (num_noise in seq(from=10,to=200,by=10)){
     
     df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
