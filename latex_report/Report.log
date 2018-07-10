@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  8 JUL 2018 22:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  9 JUL 2018 22:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -243,33 +243,43 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 12.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 12.
-<images/rshiny.png, id=1, 341.5962pt x 331.9602pt>
-File: images/rshiny.png Graphic file (type png)
-<use images/rshiny.png>
-Package pdftex.def Info: images/rshiny.png  used on input line 28.
-(pdftex.def)             Requested size: 341.59535pt x 331.95938pt.
 
 [1
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+<images/rshiny.png, id=13, 341.5962pt x 331.9602pt>
+File: images/rshiny.png Graphic file (type png)
+<use images/rshiny.png>
+Package pdftex.def Info: images/rshiny.png  used on input line 44.
+(pdftex.def)             Requested size: 277.69987pt x 269.86388pt.
+
 [2 <./images/rshiny.png>]
-<images/sigmoid.png, id=19, 294.8616pt x 187.902pt>
+<images/decisiontree.png, id=21, 311.1625pt x 367.3725pt>
+File: images/decisiontree.png Graphic file (type png)
+<use images/decisiontree.png>
+Package pdftex.def Info: images/decisiontree.png  used on input line 60.
+(pdftex.def)             Requested size: 173.56177pt x 204.91437pt.
+ [3 <./images/decisiontree.png>]
+<images/randomforest.png, id=27, 752.8125pt x 416.55624pt>
+File: images/randomforest.png Graphic file (type png)
+<use images/randomforest.png>
+Package pdftex.def Info: images/randomforest.png  used on input line 78.
+(pdftex.def)             Requested size: 312.40906pt x 172.86761pt.
+ [4] [5 <./images/randomforest.png>]
+<images/sigmoid.png, id=36, 294.8616pt x 187.902pt>
 File: images/sigmoid.png Graphic file (type png)
 <use images/sigmoid.png>
-Package pdftex.def Info: images/sigmoid.png  used on input line 60.
+Package pdftex.def Info: images/sigmoid.png  used on input line 103.
 (pdftex.def)             Requested size: 294.86087pt x 187.90154pt.
- [3]
-Underfull \vbox (badness 3635) has occurred while \output is active []
-
- [4 <./images/sigmoid.png>] [5] (./Report.aux) ) 
+ [6 <./images/sigmoid.png>] [7] (./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 1838 strings out of 492649
- 25396 string characters out of 6129622
- 97927 words of memory out of 5000000
- 5720 multiletter control sequences out of 15000+600000
+ 1848 strings out of 492649
+ 25650 string characters out of 6129622
+ 98927 words of memory out of 5000000
+ 5728 multiletter control sequences out of 15000+600000
  7456 words of font info for 27 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,6n,25p,1423b,228s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,6n,25p,2053b,231s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2018/texmf-
 dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-di
@@ -286,10 +296,10 @@ ic/amsfonts/cm/cmr9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmsy7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmtt9.pfb>
-Output written on Report.pdf (5 pages, 323730 bytes).
+Output written on Report.pdf (7 pages, 530093 bytes).
 PDF statistics:
- 85 PDF objects out of 1000 (max. 8388607)
- 58 compressed objects within 1 object stream
+ 97 PDF objects out of 1000 (max. 8388607)
+ 64 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
