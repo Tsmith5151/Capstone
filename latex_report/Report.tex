@@ -97,9 +97,7 @@ Advantages of using tree like learning algorithms allow for training models on l
 \end{figure}
 
 
-
 The idea of randomly sampling the without replacement is known as bagging and this results in a different tree being generated to train on; averaging the results from the 'n' number of trees will result in decreasing the variance and establishing a smoother decision boundary (Hastie,  2009). For instance, while using random forest for classification, each tree will give an estimate of the probability of the class label, the probabilities will be averaged over the 'n' trees and the highest yields the predicted class label. In addition to bagging or bootstrap aggregation, in order to further reduces the variance in the decision boundary further, the trees must be completely uncorrelated and the method of bootstrapping alone is not enough. Breiman introduced the idea of randomly sampling 'm' number of features at each decision split in the tree as a way to decorrelate the trees in the random forest algorithm.  
-
 
 
 \subsection{Logistic Regression}
@@ -170,9 +168,10 @@ The disclaimer for utilizing this tool when selecting which machine learning mod
 \section{Conclusions}
 
 
+
 \section{Future Work}
 
-
+The application provides the ability to answer in-depth statistical questions and evaluate classification perofrmance of two machine learning models, random forest and logistic regression. One of the objectives moving forward is to implement other algorithms such as Naive Bayes, XGBootst, and Artifical Neural Networks. Add more on hypyerparameter tuning, Grid Search, and applying k-fold cross-validation to further improvde model performance.....
 
 \end{document}
 
