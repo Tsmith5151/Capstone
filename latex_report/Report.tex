@@ -22,17 +22,14 @@ Selecting a learning algorithm to implement for a particular application on the 
 Datasets consist of various shapes and compositions, which poses the question, what data characteristics result in one machine learning algroithm outperforming others. Both quantitative and qualitative, data can be a combination of categorical and numerical multivariates that can range from a variety of entities. When it comes to model selection, this is a constant challenge data scientist are often faced with. Training and evaluating multiple machine learning models for a given use case can be an expensive task computationally and time consuming. The analysis presented in this work is to provide insight into the relative performance of a learning algorithm conditioned on the particular characteristics of a dataset. To do so, random forest and logistic regression are the two models that will be analyzed for comparing binary classification (y = {0,1}) performances with differing dataset structures. Both classifiers have been widely implemented in various domains and their successes have been well documneted. However, the particular characteristics of a dataset that make one model outperform the other is unknown as most published work compares overall performance between the two models for a single dataset. The objective of this study is to develop a statisitcal tool to directly observe the accuracy of each model by averaging the accuracy rate of 1000 random generations of assorted multivariate datasets. Classification metrics, such as accuracy, area under the curve, true positive rate, false positive rate, and precision are examined for model performance. Finally a pairwise two-sample t-test is conducted at the end of each simulation case study in order to provide statistical quantification as to whether a difference in model performance is conclusive enough to state the difference is significant or if the observed difference is by random chance. 
 
 
-Characteristics of a dataset can be comprised of missing values, outlier, highly correlated variables, concave or convex shapes, or subsets of the data that can be represented as clusters. Complex datasets that are not linearly seperable, or in other words, where a linear hyperplane splits the data into two halves such that the model poorly predicts the class label of the respected observation (Figure 1). One approach to infering underlying complexities of high-dimensional dataset is Topological Data Analysis (e.g. TDA), an evolving method that utilizes topological and geometric tools to identify relevant features in the data. Robust to noisy and incomplete datasets, TDA can be described as method that helps identify structures like clusters or other hidden shapes that can provide a more accurate representation of the dataset (Chazal et al, 2017). Models can then be trained on the new representaiton of the data that has been reconstructed, which has shown promising results.  
+Characteristics of a dataset can be comprised of missing values, outlier, highly correlated variables, concave or convex shapes, or subsets of the data that can be represented as clusters. Complex datasets that are not linearly seperable, or in other words, where a linear hyperplane splits the data into two halves such that the model poorly predicts the class label of the respected observation (Figure 1). One approach to infering underlying complexities of high-dimensional dataset is Topological Data Analysis (e.g. TDA), an evolving method that utilizes topological and geometric tools to identify relevant features in the data. Robust to noisy and incomplete datasets, TDA can be described as method that helps identify structures like clusters or other hidden shapes that can provide a more accurate representation of the dataset (Chazal et al, 2017). Models can then be trained on the new representaiton of the data that has been reconstructed, which has shown promising results.While TDA looks at the proximity of data points and connectivity that can be mapped to a 1-dimensional plane for representing the shape of the data (Munch,2017), our analysis is aimed at creating various complexities in the data and evaluating model performance on the raw structure in a multidimensional space. For instance, altering the variance in the explanatory and noise variables, changing the number of observations, and varying the number of continuous features included in a multivariate dataset was considered. Investigation into why models like logistic regression or random forest perform differently for simple and complex data characteristics was the motivation behind this work.
 
 
-While TDA looks at the proximity of data points and connectivity that can be mapped to a 1-dimensional plane for representing the shape of the data (Munch,2017), our analysis is aimed at creating various complexities in the data and evaluating model performance on the raw structure in a multidimensional space. For instance, altering the variance in the explanatory and noise variables, changing the number of observations, and varying the number of continuous features included in a multivariate dataset was considered. Investigation into why models like logistic regression or random forest perform differently for simple and complex data characteristics was the motivation behind this work.
-
-
-Machine learning algorithms can yield varying classification performance depending how the shape and the structure of the data. The data examined in this work is only for continuous variables that have a gaussian distribution. However, more complex structures like the toy dataset shown below in Figure 2 which consists of concave and convex shapes, it's clearly observed that Random Forest does a better job at classifying the two labels. 
+Performance of machine learning classifiers can yield varying results depending on the shape and structure of the data. The data examined in this work is only for continuous variables that have a gaussian distribution. However, more complex structures can exists like the toy dataset shown below in Figure 1 and Figure 2 which consists of concave and convex shape. As illustrated below in Figure 1 and Figure 2, both random forest and logistic regression nearly establishes an identical decision boundary for the left-hand side dataset. Alternatively, logistic regression underperforms random forest and yields a higher missclassification rate, which raises a profounding questions as to which data characteristics consitutes one model acheiving an overall better classification score. It should be noted this work only investigates random forest and logistic regression, however generalizaiton of the current applicaiton can be adapted to other linear and nonlinear models. 
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\textwidth]{decisionboundry.png}
+\includegraphics[width=0.9\textwidth]{decisionboundary.png}
 \caption{Logistic Regression Decision Boundary}
 \end{figure}
 
@@ -90,7 +87,7 @@ Entropy = -p\log_{2}(p) - q\log_{2}(q)
 \end{equation}
 
 
-Advantages of using tree like learning algorithms allow for training models on large datasets in addition to quantitative and qualitative input variables. Additionally, tree based models can be immune to redundant variables or variables with high correlation which may lead to overfitting in other learning algorithms. Trees have also very few parameters to tune for when training the model and performs relatively well with outliers or missing values in a dataset. However, trees are prone to poor prediction performance; decision trees themselves are prone to overfitting noise in a training set which ultimately leads to results with high variance. In other words, this means the model could accurately predict the same data it was trained on but may not possess the same performance on datasets without the similar patterns and variations in the training set. Even fully grown decision trees are notorious for overfitting and do not generalize well to unseen data; random forest solves the overfitting conundrum by using a combination or "ensemble" of decision trees where the values in the tree are a random, independent, sample. The idea of randomly sampling the without replacement is known as bagging and this results in a different tree being generated to train on; averaging the results from the 'n' number of trees will result in decreasing the variance and establishing a smoother decision boundary (Hastie,  2009). For instance, while using random forest for classification, each tree will give an estimate of the probability of the class label, the probabilities will be averaged over the 'n' trees and the highest yields the predicted class label. In addition to bagging or bootstrap aggregation, in order to further reduces the variance in the decision boundary further, the trees must be completely uncorrelated and the method of bootstrapping alone is not enough. Breiman introduced the idea of randomly sampling 'm' number of features at each decision split in the tree as a way to decorrelate the trees in the random forest algorithm.  
+Advantages of using tree like learning algorithms allow for training models on large datasets in addition to quantitative and qualitative input variables. Additionally, tree based models can be immune to redundant variables or variables with high correlation which may lead to overfitting in other learning algorithms. Trees have also very few parameters to tune for when training the model and performs relatively well with outliers or missing values in a dataset. However, trees are prone to poor prediction performance; decision trees themselves are prone to overfitting noise in a training set which ultimately leads to results with high variance. In other words, this means the model could accurately predict the same data it was trained on but may not possess the same performance on datasets without the similar patterns and variations in the training set. Even fully grown decision trees are notorious for overfitting and do not generalize well to unseen data; random forest solves the overfitting conundrum by using a combination or "ensemble" of decision trees where the values in the tree are a random, independent, sample. 
 
 
 \begin{figure}
@@ -98,6 +95,11 @@ Advantages of using tree like learning algorithms allow for training models on l
 \includegraphics[width=0.90\textwidth]{randomforest.png}
 \caption{Example of Decision Tree (Balazs Holczer)}
 \end{figure}
+
+
+
+The idea of randomly sampling the without replacement is known as bagging and this results in a different tree being generated to train on; averaging the results from the 'n' number of trees will result in decreasing the variance and establishing a smoother decision boundary (Hastie,  2009). For instance, while using random forest for classification, each tree will give an estimate of the probability of the class label, the probabilities will be averaged over the 'n' trees and the highest yields the predicted class label. In addition to bagging or bootstrap aggregation, in order to further reduces the variance in the decision boundary further, the trees must be completely uncorrelated and the method of bootstrapping alone is not enough. Breiman introduced the idea of randomly sampling 'm' number of features at each decision split in the tree as a way to decorrelate the trees in the random forest algorithm.  
+
 
 
 \subsection{Logistic Regression}
@@ -141,7 +143,7 @@ J(\theta) = -\frac{1}{m}\sum p_{i}log(y_{i}) + (1-p_{i})log(1-y_{i})
 \end{equation}
 
 
-\section{Results}
+\section{Analysis and Results}
 
 \subsection{Case 1}
 
@@ -166,6 +168,9 @@ The disclaimer for utilizing this tool when selecting which machine learning mod
 
 
 \section{Conclusions}
+
+
+\section{Future Work}
 
 
 
