@@ -140,6 +140,20 @@ The objective is to find a set of weights such that the negative log likelihood 
 J(\theta) = -\frac{1}{m}\sum p_{i}log(y_{i}) + (1-p_{i})log(1-y_{i})
 \end{equation}
 
+\section{Criteria for Model Comparison}
+
+When comparing overall model performance, accuracy, true positive rate, false positive rate, precision, recall, and AUC were considered as the core metrics.
+
+For each simulation case, the dataset was randomly partitioned into 70\% being utilized to train the model while the remainder 30\% is for testing on out-of-sample data. First metric is accuracy, the percentage of correct classification. If classified as a success, how often does the model predict success and if it was a failure, how often is a failure predicted. Next, true positive rate and sensitivity are calculated as the portion of positives or successes that are correctly identified. On the other hand, false positive rate is the portion that was incorrectly identified as positive or success but is actually negative.  Depending on the application and domain, one may care about incorrectly classifying a positive more than incorrectly classifying a negative.  For example, when dealing with anything medical or health related, such as predicting if a patient will have dementia, it is extremely important to have a low false positive rate because telling someone they have dementia when they do not can cause a lot of emotional stress.  False positive rate is also important in quality fields where cost is high.  To test a silicon wafer for defects for instance, a machine goes through and places a dot where there could be a defect in the material or conductivity.  If there are too many defects, a tester will often throw away out the entire wafer.  However, one wafer could cost \$10,000 or more so throwing away a wafer that could be perfectly fine because of a false defect can be very costly.  When dealing with an automated event or airport security, it may be okay to have a higher false negative rate because it is a relatively cheap and non-life-threatening task to confirm an automated alert as actually positive.
+
+These data points can be graphically represented using the receiver operating characteristic curve or ROC curve.  The ROC curve is a graph with the x axis from 0 to 1 of the false positive rate, and the y axis from 0 to 1 of the true positive rate at various threshold settings.  A perfect predictor would have a false positive rate of 0 and a true positive rate of 1.  When graphed over a series of thresholds, the area under the curve (AUC) can provide a single value for providing insight into how well the model is classifying the labels. For interpretation, the higher the AUC, the better the model performs. The AUC is more descriptive than accuracy because it is a balance of accuracy and false positive rate.
+
+Both recall and precision are often reported for classification performances.  Recall is the ability to find all relevant instances while precision is the proportion of the data points the model considers relevant that are actually relevant.  Precision is the number of true positives divided by the number of true positives and false positives.  This provides an indication of the ability of a classification model to identify only relevant data.  For example, if running a preliminary test to predict if a patient has a disease or not, precision would be equal to the number of patients who have the disease and were predicted correctly divided by the number of patients who have the disease and were predicted correctly plus the patients incorrectly predicted as having the disease.  Recall is the number of true positives divided by the number of true positives and false negatives. Recall tells us the ability of a model to find all relevant cases within a dataset.  Using the example above, recall would be equal to the number of patients who have the disease and were predicted correctly divided by the number of patients who have the disease and were predicted correctly plus the patients incorrectly predicted as not having the disease. Thus a high recall is desired to find all patients who actually have the disease andcan allow a lower precision if the cost of a follow up check is low.
+
+\section{Ethics}
+
+The disclaimer for utilizing this tool when selecting which machine learning model to implement in a production setting should done so with caution. Currently, the tool does not have certain functionalities to mimic real-world datasets, such as outliers or missing values to name a few. Failure to incorporate these types of characteristics in the simulated dataset can lead to inaccurate conclusions as to which algorithm yielded a better performance and thus any conclusions made from the RShiny tool may not generalize to these types of datasets. Moreover, the tool only considers random forest and logistic regression. As a result, other algorithms such as support vector machines or neural networks could produce higher prediciton accuracies and could be a better model to implement with datsets where the decision boundary is non-linearly seperable. Finally, in the context of the synthetic data generated in the application, there is no legal violations or security concerns. It should be clearly stated that the users should only consider the tool for educational purposes only as this application is still in the development phase. Any decisions drawn from the tool are not endorsed by the authors of this paper. Since all data will be simulated via our tool we do not anticipate any ethical concerns. For future work, we may allow users to upload their own dataset to our tool to run an evaluation.  In this case, we will not store or publish any of the users' data inside the app.  We will also notify the users that our tool should be used for education purposes only.  Because we are not storing any data, we will not run a security scan on our application but we will use best practices to avoid any known vulnerabilities. If any issues are reported we will also notify users of potential deficiencies as well as correct these deficiencies if possible.
+
 
 \section{Analysis and Results}
 
@@ -153,6 +167,11 @@ The simulation is then again, but now adding more noise variables (noise = 100) 
 
 Figures I and J show the true positive rate and false positive rate respectively with 100 noise variables and 5 explanatory variables over increasing levels of variance in the variables. Interestingly, for variance 0.5 to 2.5 and a lot of noise, random forest has a higher true positive rate.  At around variance = 3.0 and higher, random forest still has a higher true positive rate, but it is not as large of a difference from logistic regression than variance < 2.5.  Unfortunately, as shown in Figure J the false positive rate for random forest is again higher than logistic regression so the gap in higher true positive rate is not enough to make overall accuracy higher for random forest.
 
+\begin{figure}
+\centering
+\includegraphics[scale=0.55]{case1.png}
+\caption{Case 1 Simulation Results}
+\end{figure}
 
 \subsection{Case 2}
 
@@ -160,14 +179,16 @@ In the second simulation study, the model performance was evaluated with respect
 
 Figures C and D show the true positive rate and false positive rate respectively.  For true positive rate, when the number of noise variables is the less than or equal to the number of explanatory variables in the dataset, logistic regression is higher.  However, once the number of noise variables exceeds the number of explanatory variables, random forest begins to have a higher true positive rate than logistic regression.  As the amount of noise in the data increases, the false positive rate for both models also increases.  However, the rate of increase in false positive rate for random forest is greater than the rate of increase in false positive rate for logistic regression as noise increases. Furthermore, the simulations were tested with 10, 20 and 50 explanatory variables in the dataset and observed the same trends in model performance as with 5 explanatory variables.
 
-\section{Ethics}
-
-The disclaimer for utilizing this tool when selecting which machine learning model to implement in a production setting should done so with caution. Currently, the tool does not have certain functionalities to mimic real-world datasets, such as outliers or missing values to name a few. Failure to incorporate these types of characteristics in the simulated dataset can lead to inaccurate conclusions as to which algorithm yielded a better performance and thus any conclusions made from the RShiny tool may not generalize to these types of datasets. Moreover, the tool only considers random forest and logistic regression. As a result, other algorithms such as support vector machines or neural networks could produce higher prediciton accuracies and could be a better model to implement with datsets where the decision boundary is non-linearly seperable. Finally, in the context of the synthetic data generated in the application, there is no legal violations or security concerns. It should be clearly stated that the users should only consider the tool for educational purposes only as this application is still in the development phase. Any decisions drawn from the tool are not endorsed by the authors of this paper.
+\begin{figure}
+\centering
+\includegraphics[scale=0.55]{case2.png}
+\caption{Case 2 Simulation Results}
+\end{figure}
 
 
 \section{Conclusions}
 
-
+To include....
 
 \section{Future Work}
 
