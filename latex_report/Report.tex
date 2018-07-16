@@ -158,31 +158,60 @@ Additionally, since all data will be simulated via the analytical tool developed
 
 \subsection{Case 1}
 
-The first case investigated was comparing model performance with respect to change in variance in the explanatory and noise variables. The hypothesis was that an increase in variance would strengthen the accuracy for both models. For this simulation case, the application was configured to run 1000 simulations for 1000 observations. In Figure A, the results display the accuracy when there are 10 noise variables and 5 explanatory variables. The line graph shows that logistic regression looks to have a slightly higher accuracy over random forest.  However, to quantify this statistically, the p-value the paired two sample t-test was less than significance level of 0.05. In Figure B, the spread of accuracy for both models for all 1000 simulations is illustrated. From this plot, there is some overlap of the boxplots which suggests that although the line plots make linear regression look like a higher accuracy, random forest has very similar accuracy.
+The first case investigated was comparing model performance with respect to change in variance in the explanatory and noise variables. The hypothesis was that an increase in variance would strengthen the accuracy for both models. For this simulation case, the application was configured to run 1000 simulations for 1000 observations. In the top row of Figure ~\ref{fig:case1results}, the results display the accuracy when there are 10 noise variables and 5 explanatory variables. The line graph shows that logistic regression looks to have a slightly higher accuracy over random forest.  However, to quantify this statistically, the p-value the paired two sample t-test was less than significance level of 0.05. In the boxplots of Figure ~\ref{fig:case1results}, the spread of accuracy for both models for all 1000 simulations is illustrated. From this plot, there is some overlap of the boxplots which suggests that although the line plots make linear regression look like a higher accuracy, random forest has very similar accuracy.
 
-Figures C and D show the true positive rate and false positive rate respectively. The true positive rate for both models are nearly the same at each variance level.  However, one can see that the false positive rate for random forest is significantly higher than logistic regression (p-value = 0.63).  Even though both models have the same performance in terms of correctly classifying a true value as true, the false positive rate for random forest is higher than logistic regression.  This causes logistic regression to outperform random forest in terms of overall accuracy at each level of variance.
-
-The simulation is then again, but now adding more noise variables (noise = 100) and the results of the accuracy is shown in Figure F. By looking at Figure A and Figure F, a similar trend is observed. With a p-value less than 0.05, there is no significant difference in accuracy between the two models. The boxplots for this simulation is also comparable to Figure B with 10 noise variables where minimal overlap in the boxplots for each model at each level of variance is observed. However, with 100 noise variables, the boxplots are much more consistent in that they are all about the same size for each level of variance.  In Figure B, the boxplots for each model are noticeably different sizes.
-
-Figures I and J show the true positive rate and false positive rate respectively with 100 noise variables and 5 explanatory variables over increasing levels of variance in the variables. Interestingly, for variance 0.5 to 2.5 and a lot of noise, random forest has a higher true positive rate.  At around variance = 3.0 and higher, random forest still has a higher true positive rate, but it is not as large of a difference from logistic regression than variance < 2.5.  Unfortunately, as shown in Figure J the false positive rate for random forest is again higher than logistic regression so the gap in higher true positive rate is not enough to make overall accuracy higher for random forest.
+The bottom row of Figure ~\ref{fig:case1results} displays the results of the true positive rate on the left and false positive rate on the right. The true positive rate for both models are nearly the same at each variance level.  However, one can see that the false positive rate for random forest is significantly higher than logistic regression (p-value = 0.63).  Even though both models have the same performance in terms of correctly classifying a true value as true, the false positive rate for random forest is higher than logistic regression.  This causes logistic regression to outperform random forest in terms of overall accuracy at each level of variance.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.55]{case1.png}
-\caption{Case 1 Simulation Results}
+\caption{Case 1 Simulation Results: 5 noise and 10 explanatory variables}
+\label{fig:case1results}
+\end{figure}
+
+The simulation is then again, but now adding more noise variables (noise = 100) and the results of the accuracy is shown in the top row of Figure ~\ref{fig:case1resultsb}. By looking at Figure ~\ref{fig:case1results} and Figure ~\ref{fig:case1resultsb}, a similar trend is observed. With a p-value less than 0.05, there is no significant difference in accuracy between the two models. The boxplots for this simulation is also comparable with 10 noise variables where minimal overlap in the boxplots for each model at each level of variance is observed. However, with 100 noise variables, the boxplots are much more consistent in that they are all about the same size for each level of variance.  In Figure ~\ref{fig:case1resultsb}, the boxplots for each model are noticeably different sizes.
+
+The bottom row of Figure ~\ref{fig:case1resultsb} displays the true positive rate on the left and false positive rate on the right with 100 noise variables and 5 explanatory variables over increasing levels of variance in the variables. Interestingly, for variance 0.5 to 2.5 and a lot of noise, random forest has a higher true positive rate.  At around variance = 3.0 and higher, random forest still has a higher true positive rate, but it is not as large of a difference from logistic regression than variance < 2.5.  Unfortunately, the false positive rate for random forest is again higher than logistic regression so the gap in higher true positive rate is not enough to make overall accuracy higher for random forest.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.55]{case1_b.png}
+\caption{Case 1 Simulation Results: 100 noise and 5 explanatory variables}
+\label{fig:case1resultsb}
 \end{figure}
 
 \subsection{Case 2}
 
-In the second simulation study, the model performance was evaluated with respect to change in the amount of noise in the dataset. Likewise, 1000 simulations were performed with the number of noise variables = 1, 5, 10, 20, 40, 60, 80, 100, 150, 200.  The results of the accuracy for each model when the number of explanatory variables is 5 with 1000 observations are shown in FigZ.  As expected, as the amount of noise in the dataset increases, the accuracy starts to decline for both models.
-
-Figures C and D show the true positive rate and false positive rate respectively.  For true positive rate, when the number of noise variables is the less than or equal to the number of explanatory variables in the dataset, logistic regression is higher.  However, once the number of noise variables exceeds the number of explanatory variables, random forest begins to have a higher true positive rate than logistic regression.  As the amount of noise in the data increases, the false positive rate for both models also increases.  However, the rate of increase in false positive rate for random forest is greater than the rate of increase in false positive rate for logistic regression as noise increases. Furthermore, the simulations were tested with 10, 20 and 50 explanatory variables in the dataset and observed the same trends in model performance as with 5 explanatory variables.
+In case 2, we compared model performance with respect to change in the amount of noise in the dataset. We first did this by running 1000 simulations on a dataset with the number of noise variables = 1, 5, 10, 20, and 50.  In Figure ~\ref{fig:case2results}, we see the results of the accuracy for each model when the number of explanatory variables is 5 with 1000 observations.  As we expected, as the amount of noise in the dataset increases, we see the accuracy start to decline for both models. However, we were not able to get the full picture by stopping at 50 noise variables, so we ran this again increasing the noise further.  Figure ~\ref{fig:case2resultsb} shows the results of accuracy when setting the number of noise variables to 1, 5, 10, 20, 40, 60, 80, 100, 150, 200.  Accuracy is still slightly declining as we increase the noise past 50 noise variables and logistic regression is still performing with a higher accuracy (p-value = 9.559e-07).
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.55]{case2.png}
-\caption{Case 2 Simulation Results}
+\caption{Case 2 Simulation Results: 1 to 50 noise variables}
+\label{fig:case2results}
 \end{figure}
+
+The bottom rows of Figures ~\ref{fig:case2results} and ~\ref{fig:case2resultsb} show the true positive rate on the left and false positive rate on the right.  For true positive rate, when the number of noise variables is the less than or equal to the number of explanatory variables in the dataset, logistic regression is higher.  However, once the number of noise variables exceeds the number of explanatory variables, random forest begins to have a higher true positive rate than logistic regression.  As the amount of noise in the data increases, the false positive rate for both models also increase.  However, the rate of increase in false positive rate for random forest is greater than the rate of increase in false positive rate for logistic regression as noise increases.  Logistic regression does not have much change in true or false positive rate as noise increases past 50, but random forest false positive rate noticeably increases past 50 noise variables.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.55]{case2_b.png}
+\caption{Case 2 Simulation Results: 1 to 200 noise variables}
+\label{fig:case2resultsb}
+\end{figure}
+
+\subsection{Case 3}
+
+In case 3, we compared model performance with respect to change in the number of explanatory variables in the dataset.  In other words, the number of variables that relate to the response variable we are predicting. We did this by running 1000 simulations on a dataset with the number of explanatory variables = 1, 5, 10, 20, 30, 40, 50.  In the top row of Figure ~\ref{fig:case3results}, we see the results of the accuracy for each model when the number of noise variables is 50 with 1000 observations.  With 30 or less explanatory variables, as the number of explanatory variables in the dataset increases, the accuracy increases as well.  When the number of explanatory variables is above 30, random forest begins to taper off whereas logistic regression continues to increase in overall accuracy. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.55]{case3.png}
+\caption{Case 3 Simulation Results}
+\label{fig:case3results}
+\end{figure}
+
+The bottom row of Figure ~\ref{fig:case3results} displays the true positive rate on the left and false positive rate on the right.  When we look at the true positive rate for the models, below 30 explanatory variables, random forest had a higher true positive rate.  At 30 explanatory variables, logistic regression crosses over and continually increases to have a higher true positive rate than random forest.  When we look at false positive rate, logistic regression decreases as we add more explanatory variables.  Random forest false positive rate initially decreases from 1 to 10 explanatory variables but from 10 to 50 explanatory variables, there is not much change.  The crossover point in true positive rate at 30 explanatory variables and the continued decrease in false positive rate for logistic regression as explanatory variables increases is evident in the overall accuracy plots.  From the accuracy plots, we can see the drastic gap in performance of the two models after 20 to 30 explanatory variables.
 
 
 \section{Conclusions}

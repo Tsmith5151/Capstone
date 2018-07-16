@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 JUL 2018 22:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 JUL 2018 20:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -295,43 +295,63 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 <images/case1.png, id=65, 614.7768pt x 411.4572pt>
 File: images/case1.png Graphic file (type png)
 <use images/case1.png>
-Package pdftex.def Info: images/case1.png  used on input line 171.
+Package pdftex.def Info: images/case1.png  used on input line 167.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
- [12]
-<images/case2.png, id=69, 614.7768pt x 411.4572pt>
+ [12 <./images/case1.png>]
+<images/case1_b.png, id=70, 614.7768pt x 411.4572pt>
+File: images/case1_b.png Graphic file (type png)
+<use images/case1_b.png>
+Package pdftex.def Info: images/case1_b.png  used on input line 178.
+(pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
+ [13 <./images/case1_b.png>]
+<images/case2.png, id=76, 614.7768pt x 411.4572pt>
 File: images/case2.png Graphic file (type png)
 <use images/case2.png>
-Package pdftex.def Info: images/case2.png  used on input line 183.
+Package pdftex.def Info: images/case2.png  used on input line 189.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
- [13 <./images/case1.png>] [14 <./images/case2.png>] (./Report.aux) ) 
+<images/case2_b.png, id=77, 614.7768pt x 411.4572pt>
+File: images/case2_b.png Graphic file (type png)
+<use images/case2_b.png>
+Package pdftex.def Info: images/case2_b.png  used on input line 198.
+(pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [14 <./images/case2.png>]
+<images/case3.png, id=82, 614.7768pt x 391.7034pt>
+File: images/case3.png Graphic file (type png)
+<use images/case3.png>
+Package pdftex.def Info: images/case3.png  used on input line 209.
+(pdftex.def)             Requested size: 338.12828pt x 215.43753pt.
+ [15 <./images/case2_b.png>] [16 <./images/case3.png>] [17]
+(./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 1868 strings out of 492649
- 26133 string characters out of 6129622
- 99927 words of memory out of 5000000
- 5744 multiletter control sequences out of 15000+600000
+ 1888 strings out of 492649
+ 26521 string characters out of 6129622
+ 99974 words of memory out of 5000000
+ 5761 multiletter control sequences out of 15000+600000
  7456 words of font info for 27 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,6n,25p,1891b,231s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/loca
-l/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local
-/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/
-texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/te
-xlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/tex
-live/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texl
-ive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texliv
-e/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/
-2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/20
-18/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2018/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2018/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2018/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2018/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2018/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Report.pdf (14 pages, 1050931 bytes).
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmbx9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.
+pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb
+></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></
+usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr
+/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/lo
+cal/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loc
+al/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local
+/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on Report.pdf (17 pages, 1353941 bytes).
 PDF statistics:
- 127 PDF objects out of 1000 (max. 8388607)
- 79 compressed objects within 1 object stream
+ 140 PDF objects out of 1000 (max. 8388607)
+ 85 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
