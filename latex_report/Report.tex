@@ -19,45 +19,50 @@ Selecting a learning algorithm to implement for a particular application on the 
 
 \section{Introduction}
 
-Datasets consist of various shapes and compositions, which poses the question, what data characteristics result in one machine learning algroithm outperforming others. Both quantitative and qualitative, data can be a combination of categorical and numerical multivariates that can range from a variety of entities. When it comes to model selection, this is a constant challenge data scientist are often faced with. Training and evaluating multiple machine learning models for a given use case can be an expensive task computationally and time consuming. The analysis presented in this work is to provide insight into the relative performance of a learning algorithm conditioned on the particular characteristics of a dataset. To do so, random forest and logistic regression are the two models that will be analyzed for comparing binary classification (y = {0,1}) performances with differing dataset structures. Both classifiers have been widely implemented in various domains and their successes have been well documneted. However, the particular characteristics of a dataset that make one model outperform the other is unknown as most published work compares overall performance between the two models for a single dataset. The objective of this study is to develop a statisitcal tool to directly observe the accuracy of each model by averaging the accuracy rate of 1000 random generations of assorted multivariate datasets. Classification metrics, such as accuracy, area under the curve, true positive rate, false positive rate, and precision are examined for model performance. Finally, a pairwise two-sample t-test is conducted at the end of each simulation case study in order to provide statistical quantification as to whether a difference in model performance is conclusive enough to state the difference is significant or if the observed difference is by random chance. 
+Datasets consist of various shapes and compositions, which poses the question, what data characteristics result in one machine learning algroithm outperforming others. Both quantitative and qualitative, data can be a combination of categorical and numerical multivariates that can range from a variety of entities. When it comes to model selection, this is a constant challenge data scientist are often faced with. Training and evaluating multiple machine learning models for a given use case can be an expensive task computationally and time consuming. The analysis presented in this work is to provide insight into the relative performance of a learning algorithm conditioned on the particular characteristics of a dataset. To do so, random forest and logistic regression are the two models that will be analyzed for comparing binary classification (y = {0,1}) performances with differing dataset structures. Both classifiers have been widely implemented in various domains and their successes have been well documneted. However, the particular characteristics of a dataset that make one model outperform the other is unknown as most published work compares overall performance between the two models for a single dataset. The objective of this study is to develop a statisitcal tool to directly observe the classification performance of each model by averaging metrics for 1000 random generations of assorted multivariate datasets. Classification metrics, such as accuracy, area under the curve, true positive rate, false positive rate, and precision are examined for performance. Finally, a pairwise two-sample t-test is conducted at the end of each simulation case study in order to provide statistical quantification as to whether a difference in model performance is conclusive enough to state the difference is significant or if the observed difference is by random chance. 
 
 
 Characteristics of a dataset can be comprised of missing values, outlier, highly correlated variables, concave or convex shapes, or subsets of the data that can be represented as clusters. Complex datasets that are not linearly separable, or in other words, where a linear hyperplane splits the data into two halves such that the model poorly predicts the class label of the respected observation (Figure 1). One approach to infering underlying complexities of high-dimensional dataset is Topological Data Analysis (e.g. TDA), an evolving method that utilizes topological and geometric tools to identify relevant features in the data. Robust to noisy and incomplete datasets, TDA can be described as method that helps identify structures like clusters or other hidden shapes that can provide a more accurate representation of the dataset (Chazal et al, 2017). Models can then be trained on the new representaiton of the data that has been reconstructed, which has shown promising results. While TDA looks at the proximity of data points and connectivity that can be mapped to a 1-dimensional plane for representing the shape of the data (Munch,2017), our analysis is aimed at creating various complexities in the data and evaluating model performance on the raw structure in a multidimensional space. For instance, altering the variance in the explanatory and noise variables, changing the number of observations, and varying the number of continuous features included in a multivariate dataset was considered. Investigation into why models like logistic regression or random forest perform differently for simple and complex data characteristics was the motivation behind this work.
 
 
-The data examined in this work is only for continuous variables that have a gaussian distribution. However, more complex structures can exist like the toy dataset shown below in Figure 1 and Figure 2 which consists of concave and convex shape. As illustrated in these figures, both random forest and logistic regression nearly establishes an identical decision boundary for the left-hand side dataset. Alternatively, logistic regression underperforms random forest and yields a higher missclassification rate, which raises a profounding questions as to which data characteristics consitutes one model acheiving an overall better classification score. It should be noted this work only investigates random forest and logistic regression, however generalizaiton of the current applicaiton can be adapted to other linear and nonlinear models. As previously alluded, performance of machine learning classifiers can yield varying results depending on the shape and structure of the data
+The data examined in this work is only for continuous variables that have a gaussian distribution. However, more complex structures can exist like the toy dataset shown below in ~\ref{fig:boundary1} and ~\ref{fig:boundary2} which consists of concave and convex shape. As illustrated in these figures, both random forest and logistic regression nearly establishes an identical decision boundary for the left-hand side dataset. Alternatively, logistic regression underperforms random forest and yields a higher missclassification rate, which raises a profounding questions as to which data characteristics consitutes one model acheiving an overall better classification score. It should be noted this work only investigates random forest and logistic regression, however generalizaiton of the current applicaiton can be adapted to other linear and nonlinear models. As previously alluded, performance of machine learning classifiers can yield varying results depending on the shape and structure of the data
 
 \begin{figure}
 \centering
 \includegraphics[width=0.9\textwidth]{decisionboundary.png}
 \caption{Logistic Regression Decision Boundary}
+\label{fig:boundary1}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=0.9\textwidth]{decisionboundary2.png}
 \caption{Random Forest (n-Trees = 100) Decision Boundary}
+\label{fig:boundary2}
 \end{figure}
 
 
 Numerous studies have been published that compare random forest and logistic regression algorithms however, most research experiments consisted of either a single dataset or multiple datasets from the same source. In these scenarios, sometimes logistic regression performed better while in other cases random forest performed better. For example, one experiment used several neuropsychological tests to predict dementia stated that with respect to specificity and overall classification accuracy, random forests and linear discriminant analysis rank first among all the classifiers including logistic regression (Guerreiro, 2011). Contrastingly, another article analyzing Twitter tweets surrounding the 2016 United States election concludes that when Principal Component Analysis (PCA) is applied to tweets, logistic regression provides better results than random forest (Begenilmis, 2017). The type of data and data sources used in the studies above are drastically different from each other and each algorithm performs differently due to the type of data it was utilizing to train the classifiers. This analysis aims to provide a method of evaluating random forest and logistic regression models for a variety of data conditions.
 
 
-\section{Data Set}
+\section{Analytical Tool}
 
-To conduct the statistical analysis, an interactive web application was developed using RShiny which allows end users to rapidly generate simulated datasets and evaluate performance metrics between machine learning models, random forest and logistic regression. For performing numerical simulations, creating synthetic datasets is pivotal for the analysis. Simstudy, an open source package in the R programming language, was leveraged in this work as the method for producing datasets of various structures. Given this work is aimed at model performance for binary classification, the response variable 'y' is a function of only the explanatory variables 'x' included in the model euqation (Eq. 1). Binary response variable takes on the values of either 1 or 0; thus the formula represents the log of odd or probability of the response being a 1 or 0. As previously stated, the explanatory variable beta is related to the binary response, while the noise variables 'N' are not. The parameter estimates explain the relationship between independent variables 'X' and the dependent variable 'Y', and the 'Y' scale is known as the logit, or log of odds. For each simulation case study explored in the work, the default parameter estimate (e.g. beta) values are uniform at 0.50 and the input features, both noise and explanatory variables, are all continuous and normally distributed. 
-
-\begin{equation}
-\log(y) = N_{0} + \beta_{1}X_{1} + .....\beta_{n}X_{n} + N_{n} 
-\end{equation}
-
-The user interface for the developed RShiny application shown in Figure 3 allows users the ability to create multivariate datesets with several input configuraiton options such as specifying the number of observations in the dataset along with selecting distribution of input features as either gaussian or poisson. Moreoever, users can also modify the magnitudes of the parameter estimates to be non-uniform, allowing for a subset of the explanatory variables to be a more significant predictor of the response variable. 
+To conduct the statistical analysis, an interactive web application was developed using RShiny which allows end users to rapidly generate simulated datasets and evaluate performance metrics between machine learning models, random forest and logistic regression. The application requires several input arguments to be confgured prior to generating a dataset of an arbitrary length such as specifying variances in the features, number of observations, noise and explanatory variables. Moreover, the user has the ability to choose how the parameter estimates are weighted (e.g. uniform weights or unbalanced). Configurations like setting the number of trees for random forest or specifying the percentage of the training and testing sizes is also options the users can set.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.8\textwidth]{rshiny.png}
 \caption{R Shinny Application - Data Simulator}
+\label{fig:rshiny}
 \end{figure}
+
+For performing numerical simulations, creating synthetic datasets is pivotal for the analysis. Simstudy, an open source package in the R programming language, was leveraged in this work as the method for producing datasets of various structures. Given this work is aimed at model performance for binary classification, the response variable 'y' is a function of only the explanatory variables 'x' included in the model euqation (Eq. 1). Binary response variable takes on the values of either 1 or 0; thus the formula represents the log of odd or probability of the response being a 1 or 0. As previously stated, the explanatory variable beta is related to the binary response, while the noise variables 'N' are not. The parameter estimates explain the relationship between independent variables 'X' and the dependent variable 'Y', and the 'Y' scale is known as the logit, or log of odds. For each simulation case study explored in the work, the default parameter estimate (e.g. beta) values are uniform at 0.50 and the input features, both noise and explanatory variables, are all continuous and normally distributed. 
+
+\begin{equation}
+\log(y) = N_{0} + \beta_{1}X_{1} + .....\beta_{n}X_{n} + N_{n} 
+\end{equation}
+
+The user interface for the developed RShiny application shown in ~\ref{fig:rshiny} allows users the ability to create multivariate datesets with several input configuraiton options such as specifying the number of observations in the dataset along with selecting distribution of input features as either gaussian or poisson. Moreoever, users can also modify the magnitudes of the parameter estimates to be non-uniform, allowing for a subset of the explanatory variables to be a more significant predictor of the response variable. 
 
 
 \section{Methods and Experiments}
@@ -241,6 +246,37 @@ To include....
 \section{Future Work}
 
 In the current development version, the application provides the ability to answer in-depth statistical questions and evaluate classification performance of two machine learning models, random forest and logistic regression. Future development is to incorporate other algorithms such as Naive Bayes, XGBoost, and Artificial Neural Networks. Also, the application can be expanded beyond binary classification to multi-labeled datasets and evolving to include regression. Specifying the for the number of trees in the random forest model is an input the user will need to tune for in attempt to improve performance. Rather than hard coding the number of trees, the user could select an apply grid search option, which is an exhaustively optimization method that scans all possible parameter combinations in order to find the best estimators that yields the highest accuracy or other specified metrics. Lastly, one of the motivations behind this work is having the ability to open the door for other questions of interest to help address, like what is the average Type I or Type II error for logistic regression using forward selection criteria under similar data structures outlined in the results section of this paper. Just one example, but this application is intended to provide a foundation and the ability to expand well beyond the scope of work presented in this analysis.
+
+
+\newpage
+\begin{thebibliography}{9}
+
+
+\bibitem{einstein} 
+Beğenilmiş, Erdem; Üsküdarlı, Suzan.  Organized Behavior Classification of Tweet Sets using Supervised Learning Methods. eprint arXiv:1711.10720. 11/2017.
+
+\bibitem{einstein} 
+Graham Dunn. (2007) Regression Models for Method Comparison Data. Journal of Biopharmaceutical Statistics 17:4, pages 739-756
+
+\bibitem{einstein} 
+Guerreiro, Manuela; Maroco, João; de Mendonça, Alexandre; Rodrigues, Ana; Santana, Isabel; Silva, Dina. Data mining methods in the prediction of Dementia: A real-data comparison of the accuracy, sensitivity and specificity of linear discriminant analysis, logistic regression, neural networks, support vector machines, classification trees and random forests. BMC Research Notes20114:299. https://doi.org/10.1186/1756-0500-4-299.
+
+\bibitem{einstein} 
+Hastie, T., Tibshirani, R., Friedman, J. (2009). The elements of statistical learning: data mining, inference and prediction. Springer. 
+
+\bibitem{einstein} 
+Olson, Randal S.; Moore, Jason H.  Identifying and Harnessing the Building Blocks of Machine Learning Pipelines for Sensible Initialization of a Data Science Automation Tool. eprint arXiv:1607.08878. 07/2016. 
+
+\bibitem{einstein} 
+Ng, Andrew. CS229 Lecture Notes. Stanford University. 2012
+
+\bibitem{einstein} 
+Thanh Lam, Hoang; Thiebaut, Johann-Michael; Sinn, Mathieu; Chen, Bei; Mai, Tiep; Alkan, Oznur.  One button machine for automating feature engineering in relational databases. eprint arXiv:1706.00327. 06/2017.
+
+\bibitem{einstein} 
+Zoran Bursac, C Heath Gauss, David Keith Williams, David W Hosmer: Purposeful Selection of Variables in Logistic Regression. Source Code for Biology and Medicine. 2008
+
+\end{thebibliography}
 
 \end{document}
 
