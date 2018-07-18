@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  17 JUL 2018 20:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  17 JUL 2018 20:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -151,6 +151,18 @@ File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 \Gin@req@width=\dimen126
 )
 (./Report.aux
+
+LaTeX Warning: Label `einstein' multiply defined.
+
+
+LaTeX Warning: Label `einstein' multiply defined.
+
+
+LaTeX Warning: Label `einstein' multiply defined.
+
+
+LaTeX Warning: Label `einstein' multiply defined.
+
 
 LaTeX Warning: Label `einstein' multiply defined.
 
@@ -357,10 +369,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 1908 strings out of 492649
- 26875 string characters out of 6129622
- 100060 words of memory out of 5000000
- 5779 multiletter control sequences out of 15000+600000
+ 1909 strings out of 492649
+ 26883 string characters out of 6129622
+ 100061 words of memory out of 5000000
+ 5780 multiletter control sequences out of 15000+600000
  7456 words of font info for 27 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,6n,25p,1895b,231s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -379,7 +391,7 @@ ive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive
 18/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/201
 8/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2018/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Report.pdf (18 pages, 1982817 bytes).
+Output written on Report.pdf (18 pages, 1983473 bytes).
 PDF statistics:
  147 PDF objects out of 1000 (max. 8388607)
  87 compressed objects within 1 object stream
