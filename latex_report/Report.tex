@@ -47,14 +47,14 @@ Numerous studies have been published that compare random forest and logistic reg
 
 \section{Analytical Tool}
 
-To conduct the statistical analysis, an interactive web application was developed using RShiny which allows end users to rapidly generate simulated datasets and evaluate performance metrics between the machine learning models. This application allows several input options to be configured prior to generating a dataset of an arbitrary length such as specifying variances in the features, number of observations, noise and explanatory variables. Moreover, the user has the ability to choose how the parameter estimates are weighted (e.g. uniform weights or unbalanced). Configurations for the machine learning models such as setting the number of trees for random forest or specifying the percentage of the training and testing sizes are also options the users can set.
-
 \begin{figure}
 \centering
 \includegraphics[width=0.85\textwidth]{full-tool.png}
 \caption{R Shinny Application - Data Simulator}
 \label{fig:rshiny}
 \end{figure}
+
+To conduct the statistical analysis, an interactive web application was developed using RShiny which allows end users to rapidly generate simulated datasets and evaluate performance metrics between the machine learning models. This application is shown in Figure~\ref{fig:rshiny} and allows several input options to be configured prior to generating a multivariate dataset of an arbitrary length such as specifying number of observations in the dataset, variances in the features, amount of noise and explanatory variables, and the distribution of input features as either Gaussian or Poisson. Moreover, the user has the ability to choose how the parameter estimates are weighted (e.g. uniform weights or unbalanced), allowing for a subset of the explanatory variables to be a more significant predictor of the response variable than others. The left solumn of the tool also has configurations for the machine learning models such as setting the number of trees for random forest or specifying the percentage of the training and testing set splits.
 
 \begin{figure}
 \centering
@@ -63,13 +63,20 @@ To conduct the statistical analysis, an interactive web application was develope
 \label{fig:dataset}
 \end{figure}
 
-For performing numerical simulations, creating synthetic datasets is pivotal for the analysis. SimStudy, an open source package in the R programming language, was leveraged in this work as the method for producing datasets of various structures. Given this work is aimed at model performance for binary classification, the response variable 'y' is a function of only the explanatory variables 'x' included in the model equation (Eq. 1) and displayed in the tool in Figure~\ref{fig:dataset}. Binary response variables take on the value of either a 1 or 0; thus the formula represents the log of odd or probability of the response being a 1 or 0. As previously stated, the explanatory variable 'EV' is related to the binary response, while the noise variables 'N' are not. The parameter estimates explain the relationship between independent variables 'X' and the dependent variable 'Y', and the 'Y' scale is known as the logit, or log of odds. For each simulation case study explored in the work, the default parameter estimate, beta, is set to a uniform 0.50 and the input features, both noise and explanatory variables, are all continuous and normally distributed. 
+For performing numerical simulations, creating synthetic datasets is pivotal for the analysis. SimStudy is an open source package in the R programming language. This was leveraged in this work as the method for producing datasets of various structures. Given this work is aimed at model performance for binary classification, the response variable 'y' is a function of only the explanatory variables 'x' included in the model equation (Eq. 1) and displayed in the tool in Figure~\ref{fig:dataset}.  Figure~\ref{fig:dataset} is a screenshot of the first tab in the center content of the tool.  It displays the equation as well as the first 10 rows of the dataset with all columns of 'EV', 'N', and the response 'y'. The binary response variables take on the value of either a 1 or 0; thus the formula represents the log of odd or probability of the response being a 1 or 0. As previously stated, the explanatory variable 'EV' is related to the binary response, while the noise variables 'N' are not. The parameter estimates explain the relationship between independent variables 'X' and the dependent variable 'Y', and the 'Y' scale is known as the logit, or log of odds. For each simulation case study explored in the work, the default parameter estimate, beta, is set to a uniform 0.50 and the input features, both noise and explanatory variables, are all continuous and normally distributed. 
 
 \begin{equation}
 \log(y) = N_{0} + \beta_{1}X_{1} + .....\beta_{n}X_{n} + N_{n} 
 \end{equation}
 
-The user interface for the developed RShiny application is shown in Figure~\ref{fig:rshiny} allows users the ability to create multivariate datasets with several input configuration options such as specifying the number of observations in the dataset along with selecting distribution of input features as either Gaussian or Poisson. Moreover, users can also modify the magnitudes of the parameter estimates to be non-uniform, allowing for a subset of the explanatory variables to be a more significant predictor of the response variable. 
+The rest of the tabs in the tool are for the case studies that we explored in this work.  On each tab, there is a description of what each case is simulating and the results of running random forest and logistic regression predictions on the simulated data.  The average of the evaluation metrics are summarized in a table and line charts and a spread of the evaluation metrics are seen in a boxplot. Figure~\ref{fig:center} is an example of the summary, table of average evaluation metrics for each model, and a two sample t-test for the difference in models.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.75]{center.png}
+\caption{Example case study tab}
+\label{fig:center}
+\end{figure}
 
 \section{Methods and Experiments}
 
