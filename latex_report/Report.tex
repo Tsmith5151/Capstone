@@ -163,19 +163,19 @@ To conduct the statistical analysis, an interactive web application was develope
 
 \begin{figure}
 \centering
-\includegraphics[width=0.85\textwidth]{full-tool.png}
+\includegraphics[width=0.95\textwidth]{full-tool.png}
 \caption{Data Simulator}
 \label{fig:rshiny}
 \end{figure}
 
 
 \noindent 
-For performing numerical simulations, creating synthetic datasets is pivotal for the analysis. SimStudy is an open source package in the R programming language. This was leveraged in this work as the method for producing datasets of various structures. Given this work is aimed at model performance for binary classification, the response variable 'y' is a function of only the explanatory variables 'x' included in the model equation (Eq. 1) and displayed in the tool in Figure~\ref{fig:dataset}.  Figure~\ref{fig:dataset} is a screenshot of the first tab in the center content of the tool.  It displays the equation as well as the first 10 rows of the dataset with all columns of 'EV', 'N', and the response 'y'. The binary response variables take on the value of either a 1 or 0; thus the formula represents the log of odd or probability of the response being a 1 or 0. As previously stated, the explanatory variable 'EV' is related to the binary response, while the noise variables 'N' are not. The parameter estimates explain the relationship between independent variables 'X' and the dependent variable 'Y', and the 'Y' scale is known as the logit, or log of odds. For each simulation case study explored in the work, the default parameter estimate, beta, is set to a uniform 0.50 and the input features, both noise and explanatory variables, are all continuous and normally distributed. 
+For performing numerical simulations, creating synthetic datasets is pivotal for the analysis. SimStudy is an open source package in the R programming language. This was leveraged in this work as the method for producing datasets of various structures. To compare model performance for binary classification, we needed a response variable, which we will call 'y', which is a function of only the explanatory variables 'x' included in the model equation (Eq. 1) and displayed in the tool in Figure~\ref{fig:dataset}.  Figure~\ref{fig:dataset} is a screenshot of the first tab in the center content of the tool.  It displays the equation as well as the first 10 rows of the dataset with all columns of 'EV', 'N', and the response 'y'. The explanatory variable 'EV' is related to the binary response, while the noise variables 'N' are not. The binary response variables take on the value of either a 1 or 0; thus the formula represents the log of odd which is the probability of the response being a 1 or 0. The parameter estimates explain the relationship between independent variables 'X' and the dependent variable 'Y', and the 'Y' scale is known as the logit, log of odds. For each simulation case study explored in the work, the default parameter estimate, beta, is set to a uniform 0.50 and the input features, both noise and explanatory variables, are all continuous and normally distributed. 
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.75]{dataset.png}
-\caption{Equation of the response and first 10 rows of the simulated dataset}
+\caption{Equation of the response variable and first 10 rows of the simulated dataset}
 \label{fig:dataset}
 \end{figure}
 
@@ -184,7 +184,7 @@ The rest of the tabs in the tool are for the case studies that we explored in th
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.75]{center.png}
+\includegraphics[scale=0.99]{center.png}
 \caption{Example case study tab}
 \label{fig:center}
 \end{figure}
@@ -192,8 +192,26 @@ The rest of the tabs in the tool are for the case studies that we explored in th
 
 \section{Criteria for Model Comparison}
 \noindent 
-When comparing overall model performance, accuracy, true positive rate, false positive rate, precision, recall, and AUC were considered as the core metrics.
+When comparing overall model performance, accuracy, true positive rate, false positive rate, precision, recall, and AUC were considered as the core metrics.  These are all classification and misclassification metrics.  Accuracy, true, and false positive rates are classic classification metrics while precision, recall, and AUC are functions of true and false positive rates.
 
+\begin{table}[]
+\begin{tabular}{|l|l|}
+\hline
+Accuracy                   & (TP + TN) / (TP + TN + FP + FN)      \\ \hline
+True Positive Rate (TPR)   & TP / (TP + FN)                       \\ \hline
+False Positive Rate (FPR)  & FP / (FP + TN)                       \\ \hline
+Precision                  & TP / (TP + FP)                       \\ \hline
+Recall                     & TP / (TP + FN)                       \\ \hline
+Area Under the Curve (AUC) & Integral area of plotting TPR vs FPR \\ \hline
+\end{tabular}
+\caption{Evaluation metrics for comparison of model performance}
+\label{eval_metrics}
+\end{table}
+
+\noindent 
+Our work consists of four different simulation cases.  Each simulation case uses what the user entered on the left side to generate the dataset but also takes one characteristic and varies it while keeping all else constant. For cases 1 through 3 we used 1000 as the number of observations while case 4 looked at model performance with respect to changes in the number of observations. 
+
+\noindent 
 For each simulation case, the dataset was randomly partitioned into 70\% being utilized to train the model while the remainder 30\% is left out of training the model and used to test the model. To determine how well a model predicts on the training data, we used a few different metrics. The first metric is accuracy, which is the percentage of correct classification. If the data point is actually a success, how often does the model predict success and if it was a failure, how often is a failure predicted. Accuracy is a nice overall average of how well a model can predict and simple to compute.  However, if there is a class imbalance meaning 99\% of my data is a success and only 1\% of the time it is a failure, the model could predict success 100\% of the time and have a very high accuracy of 99\%.  This causes an illusion that a model is performing very well but when implemented and used in the real world it may not be useful. In cases where there is a large class imbalance we may want to look at other evaluation metricssuch as true positive rate and false positive rate.  
 
 
@@ -202,23 +220,24 @@ True positive rate, also known as sensitivity, is calculated as the portion of p
 
 
 \noindent 
-These data points can be graphically represented using the receiver operating characteristic curve or ROC curve.  The ROC curve is a graph with the x axis from 0 to 1 of the false positive rate, and the y axis from 0 to 1 of the true positive rate at various threshold settings.  A perfect predictor would have a false positive rate of 0 and a true positive rate of 1.  When graphed over a series of thresholds, the area under the curve (AUC) can provide a single value for providing insight into how well the model is classifying the labels. For interpretation, the higher the AUC, the better the model performs. The AUC is more descriptive than accuracy because it is a balance of accuracy and false positive rate.
-
+After running the simulated dataset through each model, the results can be graphically represented using the receiver operating characteristic curve or ROC curve as seen in Figure~\ref{fig:roc}.  The ROC curve is a graph with the x axis from 0 to 1 of the false positive rate, and the y axis from 0 to 1 of the true positive rate at various threshold settings.  A perfect predictor would have a false positive rate of 0 and a true positive rate of 1.  When graphed over a series of thresholds, the area under the curve (AUC) can provide a single value for providing insight into how well the model is classifying the labels. For interpretation, the higher the AUC, the better the model performs. The AUC is more descriptive than accuracy because it is a balance of accuracy and false positive rate.
+\begin{figure}
+\centering
+\includegraphics[scale=0.99]{roc.png}
+\caption{Example ROC curve}
+\label{fig:roc}
+\end{figure}
 
 \noindent 
 Both recall and precision are often reported for classification performances.  Recall is the ability to find all relevant instances while precision is the proportion of the data points the model considers relevant that are actually relevant.  Precision is the number of true positives divided by the number of true positives and false positives.  This provides an indication of the ability of a classification model to identify only relevant data.  For example, if running a preliminary test to predict if a patient has a disease or not, precision would be equal to the number of patients who have the disease and were predicted correctly divided by the number of patients who have the disease and were predicted correctly plus the patients incorrectly predicted as having the disease.  Recall is the number of true positives divided by the number of true positives and false negatives. Recall tells us the ability of a model to find all relevant cases within a dataset.  Using the example above, recall would be equal to the number of patients who have the disease and were predicted correctly divided by the number of patients who have the disease and were predicted correctly plus the patients incorrectly predicted as not having the disease. Thus, a high recall is desired to find all patients who actually have the disease and can allow a lower precision if the cost of a follow up check is low.
 
-\section{Ethics}
-\noindent 
-Data science is a rapidly evolving field and along with it's success comes data privacy concerns. With massive amounts of data being collected today more so than ever before, our professional requirement is to conduct responsible and ethical innovation. In doing so, adhering to such ethical practices can continue fostering progress in data science and protect individual and group rights \cite{floridi}. In the case of our work, the data is syntheitcally generated via the analytical tool developed for our analysis. Therefore, there is no liable concerns of the availabiliintegrity, usability, and security of the data. For future work, functionality that will allow users to upload their own dataset to this tool and run an evaluation may be considered. In this event, the authors will not store or publish any of the users' data inside the application. It should be clearly stated that the users should only consider the tool for educational purposes only as this application is still in the development phase. Any decisions drawn from the tool are not endorsed by the authors of this paper. 
-
 \section{Analysis and Results}
 \noindent 
-The analytical tool has four case studies that runs on simulated data based on the user's customized inputs. Figure~\ref{fig:center-content} is an example of what the output of the results looks like.  On each tab of the tool, a table of the evaluation metrics for each model as well as line graphs of those evaluation metrics.  For accuracy, true and false positive rates, a boxplot is displayed of the spread of all values for each simulation run.  For example, if I set the number of simulations to 1000, the table and line chart will show me the average value of all 1000 simulations and the boxplots take into account the  values for each of the 1000 simulations.
+The analytical tool has four case studies that runs on simulated data based on the user's customized inputs. Figure~\ref{fig:center-content} is an example of what the output of the results looks like.  On each tab of the tool, a table of the evaluation metrics for each model as well as line graphs of those evaluation metrics.  For accuracy, true and false positive rates, a boxplot is displayed of the spread of all values for each simulation run.  For example, if we set the number of simulations to 1000, the table and line chart will show me the average value of all 1000 simulations and the boxplots take into account the  values for each of the 1000 simulations.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.75]{center-content.png}
+\includegraphics[scale=0.75]{results_long_2.png}
 \caption{Results of running each model of simulated data in each case study}
 \label{fig:center-content}
 \end{figure}
@@ -313,17 +332,21 @@ One of the interesting findings in this simulation case is random forest and log
 \noindent 
 Additional analysis will need to be performed to determine if these observations are consistent when random forest is trained with a larger number of trees in addition to increasing the number of simulations to have a better understanding of the true accuracies.
 
+\subsection{Summary of Results}
+\noindent 
+In summary, we found that when increasing the variance in the explanatory and noise variables, logistic regression consistently performed with a higher overall accuracy as compared to random forest. However, the true positive rate for random forest was higher than logistic regression and yielded a higher false positive rate for dataset with increasing noise variables. In all simulated case studies, we consistently found that the false positive rate for random forest with 100 trees was statistically different than logistic regression. In general, logistic regression performs better when the number of noise variables is less than or equal to the number of explanatory variables and random forest has a higher true and false positive rate as the number of explanatory variables increases in a dataset.  Logistic regression and random forest are comparable for smaller datasets with less than 1000 observations.
+
+
+\section{Ethics}
+\noindent 
+Data science is a rapidly evolving field and along with it's success comes data privacy concerns. With massive amounts of data being collected today more so than ever before, our professional requirement is to conduct responsible and ethical innovation. In doing so, adhering to such ethical practices can continue fostering progress in data science and protect individual and group rights \cite{floridi}. Our data is synthetically generated via the analytical tool developed for our analysis. Therefore, there is no liable concerns of the availability, integrity, usability, and security of the data. We do not have functionality that will allow users to upload their own dataset to this tool and run an evaluation so we do not store any of the users data. Because data is not currently being stored, security scans will not be performed on the application, but we applied best practices to avoid any known security vulnerabilities. If any issues are reported we will also notify users of potential deficiencies as well as correct these deficiencies if possible. Finally, in the context of the synthetic data generated in the application, there is no legal violations or security concerns.  Our tool should be used for education and simulation purposes only and is a simple calculation tool.  Our tool does not suggest one model over another, the tool will only calculate and display the results.  Because of this, we allow the users to make their own decisions on which model is best for their circumstances. 
+
+
 \section{Conclusions}
 \noindent 
 We are waiting to add hard conclusions here.  Unfortunately, our results are based off of running random forest set at 100 decision trees.  In the next five weeks we will re-run simulations are come to conclusions.
 
-In the meantime, we have the following general conclusions:
-\begin{itemize}
-  \item Logistic regression performs better when the number of noise variables is less than or equal to the number of explanatory variables
-  \item Random forest has a higher true and false positive rate as the number of explanatory variables increases in a dataset
-  \item Logistic regression and random forest are comparable for smaller datasets as in datasets with less than 1000 observations
 
-\end{itemize}
 
 \section{Future Work}
 \noindent 
