@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  11 AUG 2018 12:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  11 AUG 2018 14:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -254,129 +254,130 @@ File: images/decisionboundary2.png Graphic file (type png)
 <use images/decisionboundary2.png>
 Package pdftex.def Info: images/decisionboundary2.png  used on input line 49.
 (pdftex.def)             Requested size: 312.40906pt x 109.5288pt.
+
+Underfull \vbox (badness 8056) has occurred while \output is active []
+
  [3 <./images/decisionboundary.png>]
 Underfull \vbox (badness 2435) has occurred while \output is active []
 
- [4 <./images/decisionboundary2.png>]
-<images/decisiontree.png, id=26, 311.1625pt x 367.3725pt>
+ [4 <./images/decisionboundary2.png>] [5]
+<images/decisiontree.png, id=30, 311.1625pt x 367.3725pt>
 File: images/decisiontree.png Graphic file (type png)
 <use images/decisiontree.png>
-Package pdftex.def Info: images/decisiontree.png  used on input line 78.
+Package pdftex.def Info: images/decisiontree.png  used on input line 82.
 (pdftex.def)             Requested size: 173.56177pt x 204.91437pt.
- [5]
-<images/randomforest.png, id=31, 752.8125pt x 416.55624pt>
+ [6 <./images/decisiontree.png>]
+<images/randomforest.png, id=37, 752.8125pt x 416.55624pt>
 File: images/randomforest.png Graphic file (type png)
 <use images/randomforest.png>
-Package pdftex.def Info: images/randomforest.png  used on input line 98.
+Package pdftex.def Info: images/randomforest.png  used on input line 106.
 (pdftex.def)             Requested size: 312.40906pt x 172.86761pt.
- [6 <./images/decisiontree.png>] [7 <./images/randomforest.png>]
-<images/sigmoid.png, id=44, 294.8616pt x 187.902pt>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7 <./images/randomforest.png>]
+<images/sigmoid.png, id=43, 294.8616pt x 187.902pt>
 File: images/sigmoid.png Graphic file (type png)
 <use images/sigmoid.png>
-Package pdftex.def Info: images/sigmoid.png  used on input line 130.
+Package pdftex.def Info: images/sigmoid.png  used on input line 135.
 (pdftex.def)             Requested size: 294.86087pt x 187.90154pt.
- [8 <./images/sigmoid.png>]
-<images/full-tool.png, id=52, 891.33pt x 865.2325pt>
+ [8]
+<images/full-tool.png, id=51, 891.33pt x 865.2325pt>
 File: images/full-tool.png Graphic file (type png)
 <use images/full-tool.png>
-Package pdftex.def Info: images/full-tool.png  used on input line 161.
+Package pdftex.def Info: images/full-tool.png  used on input line 166.
 (pdftex.def)             Requested size: 295.05711pt x 286.41217pt.
-<images/dataset.png, id=53, 342.078pt x 311.2428pt>
+ [9 <./images/sigmoid.png>] [10 <./images/full-tool.png>]
+<images/dataset.png, id=61, 342.078pt x 311.2428pt>
 File: images/dataset.png Graphic file (type png)
 <use images/dataset.png>
-Package pdftex.def Info: images/dataset.png  used on input line 172.
+Package pdftex.def Info: images/dataset.png  used on input line 177.
 (pdftex.def)             Requested size: 256.55786pt x 233.43152pt.
- [9] [10 <./images/full-tool.png>]
-<images/center.png, id=62, 286.671pt x 343.0416pt>
+ [11 <./images/dataset.png>]
+<images/center.png, id=66, 286.671pt x 343.0416pt>
 File: images/center.png Graphic file (type png)
 <use images/center.png>
-Package pdftex.def Info: images/center.png  used on input line 182.
+Package pdftex.def Info: images/center.png  used on input line 187.
 (pdftex.def)             Requested size: 215.00272pt x 257.28055pt.
-
-[11 <./images/dataset.png>] [12 <./images/center.png>]
+ [12 <./images/center.png>]
 Underfull \vbox (badness 5105) has occurred while \output is active []
 
  [13]
-[14]
-<images/center-content.png, id=78, 485.6544pt x 414.348pt>
+<images/center-content.png, id=75, 485.6544pt x 414.348pt>
 File: images/center-content.png Graphic file (type png)
 <use images/center-content.png>
-Package pdftex.def Info: images/center-content.png  used on input line 233.
+Package pdftex.def Info: images/center-content.png  used on input line 221.
 (pdftex.def)             Requested size: 364.2399pt x 310.76024pt.
 
-Overfull \hbox (17.11636pt too wide) in paragraph at lines 233--234
+Overfull \hbox (17.11636pt too wide) in paragraph at lines 221--222
  [][] 
  []
 
-[15 <./images/center-content.png>]
+[14] [15 <./images/center-content.png>]
 <images/case1.png, id=83, 614.7768pt x 411.4572pt>
 File: images/case1.png Graphic file (type png)
 <use images/case1.png>
-Package pdftex.def Info: images/case1.png  used on input line 248.
+Package pdftex.def Info: images/case1.png  used on input line 236.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
  [16 <./images/case1.png>]
 <images/case1_b.png, id=88, 614.7768pt x 411.4572pt>
 File: images/case1_b.png Graphic file (type png)
 <use images/case1_b.png>
-Package pdftex.def Info: images/case1_b.png  used on input line 261.
+Package pdftex.def Info: images/case1_b.png  used on input line 249.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
- [17 <./images/case1_b.png>]
-<images/case2.png, id=93, 614.7768pt x 411.4572pt>
+<images/case2.png, id=89, 614.7768pt x 411.4572pt>
 File: images/case2.png Graphic file (type png)
 <use images/case2.png>
-Package pdftex.def Info: images/case2.png  used on input line 272.
+Package pdftex.def Info: images/case2.png  used on input line 260.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
+ [17 <./images/case1_b.png>]
 <images/case2_b.png, id=94, 614.7768pt x 411.4572pt>
 File: images/case2_b.png Graphic file (type png)
 <use images/case2_b.png>
-Package pdftex.def Info: images/case2_b.png  used on input line 282.
+Package pdftex.def Info: images/case2_b.png  used on input line 270.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
-
-Underfull \vbox (badness 7081) has occurred while \output is active []
-
- [18 <./images/case2.png>]
-<images/case3.png, id=99, 614.7768pt x 391.7034pt>
+<images/case3.png, id=95, 614.7768pt x 391.7034pt>
 File: images/case3.png Graphic file (type png)
 <use images/case3.png>
-Package pdftex.def Info: images/case3.png  used on input line 293.
+Package pdftex.def Info: images/case3.png  used on input line 281.
 (pdftex.def)             Requested size: 338.12828pt x 215.43753pt.
- [19 <./images/case2_b.png>]
+ [18 <./images/case2.png>] [19 <./images/case2_b.png>]
 <images/case4_acc.png, id=104, 623.4492pt x 334.3692pt>
 File: images/case4_acc.png Graphic file (type png)
 <use images/case4_acc.png>
-Package pdftex.def Info: images/case4_acc.png  used on input line 308.
+Package pdftex.def Info: images/case4_acc.png  used on input line 296.
 (pdftex.def)             Requested size: 342.89812pt x 183.90363pt.
 <images/case4_tpr.png, id=105, 623.931pt x 333.8874pt>
 File: images/case4_tpr.png Graphic file (type png)
 <use images/case4_tpr.png>
-Package pdftex.def Info: images/case4_tpr.png  used on input line 315.
+Package pdftex.def Info: images/case4_tpr.png  used on input line 303.
 (pdftex.def)             Requested size: 343.1631pt x 183.63863pt.
  [20 <./images/case3.png>] [21 <./images/case4_acc.png> <./images/case4_tpr.png
->] [22] [23] (./Report.aux) ) 
+>] [22]
+[23] (./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 1929 strings out of 492649
- 27271 string characters out of 6129622
- 101117 words of memory out of 5000000
- 5803 multiletter control sequences out of 15000+600000
+ 1933 strings out of 492649
+ 27313 string characters out of 6129622
+ 101141 words of memory out of 5000000
+ 5807 multiletter control sequences out of 15000+600000
  5932 words of font info for 22 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,6n,25p,1880b,229s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2018/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmmi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mr9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
-10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7
-.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.p
-fb>
-Output written on Report.pdf (23 pages, 2609432 bytes).
+ 41i,6n,25p,1873b,229s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmbx9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.p
+fb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb>
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
+/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></u
+sr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on Report.pdf (23 pages, 2607980 bytes).
 PDF statistics:
  165 PDF objects out of 1000 (max. 8388607)
  95 compressed objects within 1 object stream
