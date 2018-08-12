@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  11 AUG 2018 19:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  12 AUG 2018 13:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -256,7 +256,7 @@ Package pdftex.def Info: images/decisionboundary2.png  used on input line 57.
 (pdftex.def)             Requested size: 277.69987pt x 97.35922pt.
  [3 <./images/decisionboundary.png>] [4 <./images/decisionboundary2.png>]
 [5]
-<images/decisiontree.png, id=29, 311.1625pt x 367.3725pt>
+<images/decisiontree.png, id=28, 311.1625pt x 367.3725pt>
 File: images/decisiontree.png Graphic file (type png)
 <use images/decisiontree.png>
 Package pdftex.def Info: images/decisiontree.png  used on input line 102.
@@ -275,24 +275,22 @@ Package pdftex.def Info: images/sigmoid.png  used on input line 156.
 (pdftex.def)             Requested size: 294.86087pt x 187.90154pt.
 
 [9 <./images/sigmoid.png>]
-<images/full-tool.png, id=56, 891.33pt x 865.2325pt>
+<images/full-tool.png, id=55, 891.33pt x 865.2325pt>
 File: images/full-tool.png Graphic file (type png)
 <use images/full-tool.png>
 Package pdftex.def Info: images/full-tool.png  used on input line 187.
 (pdftex.def)             Requested size: 329.7663pt x 320.10461pt.
- [10 <./images/full-tool.png>]
-<images/dataset.png, id=61, 342.078pt x 311.2428pt>
+<images/dataset.png, id=56, 342.078pt x 311.2428pt>
 File: images/dataset.png Graphic file (type png)
 <use images/dataset.png>
 Package pdftex.def Info: images/dataset.png  used on input line 198.
 (pdftex.def)             Requested size: 256.55786pt x 233.43152pt.
- [11 <./images/dataset.png>]
-<images/center.png, id=66, 286.671pt x 343.0416pt>
+<images/center.png, id=57, 286.671pt x 343.0416pt>
 File: images/center.png Graphic file (type png)
 <use images/center.png>
 Package pdftex.def Info: images/center.png  used on input line 209.
 (pdftex.def)             Requested size: 283.80515pt x 339.61221pt.
-
+ [10] [11 <./images/full-tool.png>]
 
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `htbp') on input line 219.
@@ -301,7 +299,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 220.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 220.
-[12 <./images/center.png>] [13]
+[12 <./images/dataset.png>] [13 <./images/center.png>]
 <images/roc.png, id=75, 371.9496pt x 305.943pt>
 File: images/roc.png Graphic file (type png)
 <use images/roc.png>
@@ -312,8 +310,8 @@ Overfull \hbox (21.1077pt too wide) in paragraph at lines 250--251
  [][] 
  []
 
-[14 <./images/roc.png>]
-<images/results_long_2.png, id=80, 296.7888pt x 823.878pt>
+[14] [15 <./images/roc.png>]
+<images/results_long_2.png, id=83, 296.7888pt x 823.878pt>
 File: images/results_long_2.png Graphic file (type png)
 <use images/results_long_2.png>
 Package pdftex.def Info: images/results_long_2.png  used on input line 265.
@@ -322,72 +320,70 @@ Package pdftex.def Info: images/results_long_2.png  used on input line 265.
 
 LaTeX Warning: Float too large for page by 91.5187pt on input line 268.
 
-[15] [16 <./images/results_long_2.png>]
-<images/case1.png, id=88, 614.7768pt x 411.4572pt>
+<images/case1.png, id=84, 614.7768pt x 411.4572pt>
 File: images/case1.png Graphic file (type png)
 <use images/case1.png>
 Package pdftex.def Info: images/case1.png  used on input line 280.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
- [17 <./images/case1.png>]
-<images/case1_b.png, id=93, 614.7768pt x 411.4572pt>
+[16] [17 <./images/results_long_2.png>]
+<images/case1_b.png, id=92, 614.7768pt x 411.4572pt>
 File: images/case1_b.png Graphic file (type png)
 <use images/case1_b.png>
 Package pdftex.def Info: images/case1_b.png  used on input line 295.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
-<images/case2.png, id=94, 614.7768pt x 411.4572pt>
+ [18 <./images/case1.png>]
+<images/case2.png, id=97, 614.7768pt x 411.4572pt>
 File: images/case2.png Graphic file (type png)
 <use images/case2.png>
 Package pdftex.def Info: images/case2.png  used on input line 306.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
- [18 <./images/case1_b.png>]
-<images/case2_b.png, id=99, 614.7768pt x 411.4572pt>
+<images/case2_b.png, id=98, 614.7768pt x 411.4572pt>
 File: images/case2_b.png Graphic file (type png)
 <use images/case2_b.png>
 Package pdftex.def Info: images/case2_b.png  used on input line 317.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
-<images/case3.png, id=100, 614.7768pt x 391.7034pt>
+ [19 <./images/case1_b.png>] [20 <./images/case2.png> <./images/case2_b.png>]
+<images/case3.png, id=108, 614.7768pt x 391.7034pt>
 File: images/case3.png Graphic file (type png)
 <use images/case3.png>
 Package pdftex.def Info: images/case3.png  used on input line 328.
 (pdftex.def)             Requested size: 338.12828pt x 215.43753pt.
- [19 <./images/case2.png>] [20 <./images/case2_b.png>]
-<images/case4_acc.png, id=109, 623.4492pt x 334.3692pt>
+ [21 <./images/case3.png>]
+<images/case4_acc.png, id=112, 623.4492pt x 334.3692pt>
 File: images/case4_acc.png Graphic file (type png)
 <use images/case4_acc.png>
 Package pdftex.def Info: images/case4_acc.png  used on input line 344.
 (pdftex.def)             Requested size: 342.89812pt x 183.90363pt.
-<images/case4_tpr.png, id=110, 623.931pt x 333.8874pt>
+<images/case4_tpr.png, id=113, 623.931pt x 333.8874pt>
 File: images/case4_tpr.png Graphic file (type png)
 <use images/case4_tpr.png>
 Package pdftex.def Info: images/case4_tpr.png  used on input line 351.
 (pdftex.def)             Requested size: 343.1631pt x 183.63863pt.
- [21 <./images/case3.png>] [22 <./images/case4_acc.png> <./images/case4_tpr.png
->] [23]
-[24] [25] (./Report.aux) ) 
+ [22 <./images/case4_acc.png>] [23 <./images/case4_tpr.png>] [24]
+[25] (./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 1955 strings out of 492649
- 27566 string characters out of 6129622
- 99160 words of memory out of 5000000
- 5822 multiletter control sequences out of 15000+600000
+ 1956 strings out of 492649
+ 27573 string characters out of 6129622
+ 99163 words of memory out of 5000000
+ 5823 multiletter control sequences out of 15000+600000
  7802 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,7n,25p,1613b,230s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2018/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmbx9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmmi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmr5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9
-.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
-pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pf
-b></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-
-Output written on Report.pdf (25 pages, 2686079 bytes).
+ 41i,7n,25p,1612b,230s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmbx9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
+5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.p
+fb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb>
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
+/usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></u
+sr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on Report.pdf (25 pages, 2686314 bytes).
 PDF statistics:
  174 PDF objects out of 1000 (max. 8388607)
  100 compressed objects within 1 object stream
