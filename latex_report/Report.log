@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 AUG 2018 17:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 AUG 2018 21:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -150,7 +150,7 @@ File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 \Gin@req@height=\dimen125
 \Gin@req@width=\dimen126
 )
-(./Report.aux)
+No file Report.aux.
 \openout1 = `Report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
@@ -165,7 +165,6 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
-
 (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count117
@@ -243,54 +242,134 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [1
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+
+LaTeX Warning: Citation `goodfellow' on page 2 undefined on input line 31.
+
 [2]
-<images/decisionboundary.png, id=14, 493.3632pt x 182.6022pt>
+
+LaTeX Warning: Reference `fig:boundary1' on page 3 undefined on input line 41.
+
+<images/decisionboundary.png, id=15, 493.3632pt x 182.6022pt>
 File: images/decisionboundary.png Graphic file (type png)
 <use images/decisionboundary.png>
 Package pdftex.def Info: images/decisionboundary.png  used on input line 46.
 (pdftex.def)             Requested size: 277.69987pt x 102.78313pt.
-<images/decisionboundary2.png, id=16, 493.3632pt x 172.9662pt>
+
+LaTeX Warning: Reference `fig:boundary1' on page 3 undefined on input line 52.
+
+
+LaTeX Warning: Reference `fig:boundary2' on page 3 undefined on input line 52.
+
+<images/decisionboundary2.png, id=17, 493.3632pt x 172.9662pt>
 File: images/decisionboundary2.png Graphic file (type png)
 <use images/decisionboundary2.png>
 Package pdftex.def Info: images/decisionboundary2.png  used on input line 57.
 (pdftex.def)             Requested size: 277.69987pt x 97.35922pt.
- [3 <./images/decisionboundary.png>] [4 <./images/decisionboundary2.png>]
+
+LaTeX Warning: Citation `chazal' on page 3 undefined on input line 65.
+
+
+LaTeX Warning: Citation `munch' on page 3 undefined on input line 65.
+
+[3 <./images/decisionboundary.png>]
+
+LaTeX Warning: Citation `guerreiro' on page 4 undefined on input line 70.
+
+
+LaTeX Warning: Citation `erdem' on page 4 undefined on input line 74.
+
+[4 <./images/decisionboundary2.png>]
+
+LaTeX Warning: Citation `ruiz' on page 5 undefined on input line 78.
+
+
+LaTeX Warning: Citation `ruiz' on page 5 undefined on input line 78.
+
+
+LaTeX Warning: Citation `wolper' on page 5 undefined on input line 82.
+
+
+LaTeX Warning: Citation `wolper' on page 5 undefined on input line 82.
+
+
+LaTeX Warning: Citation `couronne' on page 5 undefined on input line 88.
+
+
+LaTeX Warning: Citation `breiman' on page 5 undefined on input line 94.
+
 [5]
-<images/decisiontree.png, id=28, 311.1625pt x 367.3725pt>
+
+LaTeX Warning: Reference `fig:tree' on page 6 undefined on input line 98.
+
+<images/decisiontree.png, id=29, 311.1625pt x 367.3725pt>
 File: images/decisiontree.png Graphic file (type png)
 <use images/decisiontree.png>
 Package pdftex.def Info: images/decisiontree.png  used on input line 102.
 (pdftex.def)             Requested size: 173.56177pt x 204.91437pt.
- [6 <./images/decisiontree.png>]
+
+LaTeX Warning: Citation `lior' on page 6 undefined on input line 103.
+
+[6 <./images/decisiontree.png>]
+
+LaTeX Warning: Citation `hastie' on page 7 undefined on input line 122.
+
+
+LaTeX Warning: Reference `fig:rftree' on page 7 undefined on input line 122.
+
+
+LaTeX Warning: Citation `breiman' on page 7 undefined on input line 122.
+
 <images/randomforest.png, id=34, 752.8125pt x 416.55624pt>
 File: images/randomforest.png Graphic file (type png)
 <use images/randomforest.png>
 Package pdftex.def Info: images/randomforest.png  used on input line 127.
 (pdftex.def)             Requested size: 312.40906pt x 172.86761pt.
- [7] [8 <./images/randomforest.png>]
+[7]
+
+LaTeX Warning: Citation `hastie' on page 8 undefined on input line 147.
+
+
+LaTeX Warning: Citation `ng' on page 8 undefined on input line 147.
+
+[8 <./images/randomforest.png>]
 <images/sigmoid.png, id=47, 294.8616pt x 187.902pt>
 File: images/sigmoid.png Graphic file (type png)
 <use images/sigmoid.png>
 Package pdftex.def Info: images/sigmoid.png  used on input line 156.
 (pdftex.def)             Requested size: 294.86087pt x 187.90154pt.
 
+
+LaTeX Warning: Citation `ng' on page 9 undefined on input line 173.
+
 [9 <./images/sigmoid.png>]
+
+LaTeX Warning: Reference `fig:rshiny' on page 10 undefined on input line 183.
+
 <images/full-tool.png, id=55, 891.33pt x 865.2325pt>
 File: images/full-tool.png Graphic file (type png)
 <use images/full-tool.png>
 Package pdftex.def Info: images/full-tool.png  used on input line 187.
 (pdftex.def)             Requested size: 329.7663pt x 320.10461pt.
+
+LaTeX Warning: Reference `fig:dataset' on page 10 undefined on input line 194.
+
+
+LaTeX Warning: Reference `fig:dataset' on page 10 undefined on input line 194.
+
 <images/dataset.png, id=56, 342.078pt x 311.2428pt>
 File: images/dataset.png Graphic file (type png)
 <use images/dataset.png>
 Package pdftex.def Info: images/dataset.png  used on input line 198.
 (pdftex.def)             Requested size: 256.55786pt x 233.43152pt.
+
+LaTeX Warning: Reference `fig:center' on page 10 undefined on input line 205.
+
 <images/center.png, id=57, 286.671pt x 343.0416pt>
 File: images/center.png Graphic file (type png)
 <use images/center.png>
 Package pdftex.def Info: images/center.png  used on input line 209.
 (pdftex.def)             Requested size: 283.80515pt x 339.61221pt.
- [10] [11 <./images/full-tool.png>]
+[10] [11 <./images/full-tool.png>]
 
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `htbp') on input line 219.
@@ -300,6 +379,12 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 220.
 [12 <./images/dataset.png>] [13 <./images/center.png>]
+
+LaTeX Warning: Citation `pedregosa' on page 14 undefined on input line 243.
+
+
+LaTeX Warning: Reference `fig:roc' on page 14 undefined on input line 247.
+
 <images/roc.png, id=75, 371.9496pt x 305.943pt>
 File: images/roc.png Graphic file (type png)
 <use images/roc.png>
@@ -311,44 +396,113 @@ Overfull \hbox (21.1077pt too wide) in paragraph at lines 250--251
  []
 
 [14] [15 <./images/roc.png>]
+
+LaTeX Warning: Reference `fig:center-content' on page 16 undefined on input lin
+e 261.
+
 <images/results_long_2.png, id=83, 296.7888pt x 823.878pt>
 File: images/results_long_2.png Graphic file (type png)
 <use images/results_long_2.png>
 Package pdftex.def Info: images/results_long_2.png  used on input line 265.
 (pdftex.def)             Requested size: 222.59105pt x 617.90698pt.
 
-
 LaTeX Warning: Float too large for page by 91.5187pt on input line 268.
+
+
+LaTeX Warning: Reference `fig:case1results' on page 16 undefined on input line 
+272.
+
+
+LaTeX Warning: Reference `fig:case1results' on page 16 undefined on input line 
+272.
+
+
+LaTeX Warning: Reference `fig:case1results' on page 16 undefined on input line 
+276.
 
 <images/case1.png, id=84, 614.7768pt x 411.4572pt>
 File: images/case1.png Graphic file (type png)
 <use images/case1.png>
 Package pdftex.def Info: images/case1.png  used on input line 280.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
+
+LaTeX Warning: Reference `fig:case1resultsb' on page 16 undefined on input line
+ 287.
+
+
+LaTeX Warning: Reference `fig:case1results' on page 16 undefined on input line 
+287.
+
+
+LaTeX Warning: Reference `fig:case1resultsb' on page 16 undefined on input line
+ 287.
+
+
+LaTeX Warning: Reference `fig:case1resultsb' on page 16 undefined on input line
+ 287.
+
 [16] [17 <./images/results_long_2.png>]
+
+LaTeX Warning: Reference `fig:case1resultsb' on page 18 undefined on input line
+ 291.
+
 <images/case1_b.png, id=92, 614.7768pt x 411.4572pt>
 File: images/case1_b.png Graphic file (type png)
 <use images/case1_b.png>
 Package pdftex.def Info: images/case1_b.png  used on input line 295.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
- [18 <./images/case1.png>]
+
+LaTeX Warning: Reference `fig:case2results' on page 18 undefined on input line 
+302.
+
+
+LaTeX Warning: Reference `fig:case2resultsb' on page 18 undefined on input line
+ 302.
+
+[18 <./images/case1.png>]
 <images/case2.png, id=97, 614.7768pt x 411.4572pt>
 File: images/case2.png Graphic file (type png)
 <use images/case2.png>
 Package pdftex.def Info: images/case2.png  used on input line 306.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
+
+
+LaTeX Warning: Reference `fig:case2results' on page 19 undefined on input line 
+313.
+
+
+LaTeX Warning: Reference `fig:case2resultsb' on page 19 undefined on input line
+ 313.
+
 <images/case2_b.png, id=98, 614.7768pt x 411.4572pt>
 File: images/case2_b.png Graphic file (type png)
 <use images/case2_b.png>
 Package pdftex.def Info: images/case2_b.png  used on input line 317.
 (pdftex.def)             Requested size: 338.12828pt x 226.30214pt.
- [19 <./images/case1_b.png>] [20 <./images/case2.png> <./images/case2_b.png>]
+
+LaTeX Warning: Reference `fig:case3results' on page 19 undefined on input line 
+324.
+
+[19 <./images/case1_b.png>] [20 <./images/case2.png> <./images/case2_b.png>]
 <images/case3.png, id=108, 614.7768pt x 391.7034pt>
 File: images/case3.png Graphic file (type png)
 <use images/case3.png>
 Package pdftex.def Info: images/case3.png  used on input line 328.
 (pdftex.def)             Requested size: 338.12828pt x 215.43753pt.
- [21 <./images/case3.png>]
+
+
+LaTeX Warning: Reference `fig:case3results' on page 21 undefined on input line 
+335.
+
+
+LaTeX Warning: Reference `fig:case4_acc_results' on page 21 undefined on input 
+line 340.
+
+
+LaTeX Warning: Reference `fig:case4_tpr_results' on page 21 undefined on input 
+line 340.
+
+[21 <./images/case3.png>]
 <images/case4_acc.png, id=112, 623.4492pt x 334.3692pt>
 File: images/case4_acc.png Graphic file (type png)
 <use images/case4_acc.png>
@@ -359,32 +513,53 @@ File: images/case4_tpr.png Graphic file (type png)
 <use images/case4_tpr.png>
 Package pdftex.def Info: images/case4_tpr.png  used on input line 351.
 (pdftex.def)             Requested size: 343.1631pt x 183.63863pt.
- [22 <./images/case4_acc.png>] [23 <./images/case4_tpr.png>] [24]
-[25] [26] (./Report.aux) ) 
+
+
+LaTeX Warning: Reference `fig:case4_tpr_results' on page 22 undefined on input 
+line 358.
+
+
+LaTeX Warning: Reference `fig:case4_acc_results' on page 22 undefined on input 
+line 358.
+
+[22 <./images/case4_acc.png>]
+
+LaTeX Warning: Citation `floridi' on page 23 undefined on input line 371.
+
+
+LaTeX Warning: Citation `karin' on page 23 undefined on input line 371.
+
+[23 <./images/case4_tpr.png>] [24] [25] [26] (./Report.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 1956 strings out of 492649
- 27573 string characters out of 6129622
- 99163 words of memory out of 5000000
+ 1954 strings out of 492649
+ 27551 string characters out of 6129622
+ 99935 words of memory out of 5000000
  5823 multiletter control sequences out of 15000+600000
  7802 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,7n,25p,1715b,230s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2018/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmbx9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmmi5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmr5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9
-.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
-pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pf
-b></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-
-Output written on Report.pdf (26 pages, 2688010 bytes).
+ 41i,7n,25p,1612b,230s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
+usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
+sr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
+r/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/
+local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
+cal/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
+l/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/t
+exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texl
+ive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive
+/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/
+2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/20
+18/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on Report.pdf (26 pages, 2689259 bytes).
 PDF statistics:
  178 PDF objects out of 1000 (max. 8388607)
  102 compressed objects within 2 object streams
