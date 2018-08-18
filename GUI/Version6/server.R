@@ -373,7 +373,7 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
                              auc = numeric(), algorithm=character(),num_ev = numeric(),obs = numeric())
   
   # Iterate over number of observations
-  for (nrows in seq(from=100,to=1000,by=100)){
+  for (nrows in seq(from=100,to=10000,by=100)){
     
     df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
     
@@ -458,17 +458,23 @@ get_line_plots_case4 <- function(df,y_axis,ev){
   df<- subset(df, num_ev == ev)
   ggplot(df, aes(x=df[,"obs"],y=df[,y_axis],colour=factor(df$algorithm)),group=factor(df$algorithm)) + 
     ggtitle(paste('Logistic Regression vs Random Forest',': Total EV --',ev)) + 
-    geom_line(size=1.15) + scale_color_manual(values=c("sienna1", "lightseagreen")) + xlab("Observations") + ylab(y_axis) + labs(colour="Algorithms") + 
-    theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) + scale_fill_discrete(name = "Algorithms")
+    geom_line(size=1.0) + scale_color_manual(values=c("sienna1", "lightseagreen")) + xlab("Observations") + ylab(y_axis) + labs(colour="Algorithms") + 
+    theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) + scale_fill_discrete(name = "Algorithms") +
+     coord_cartesian(ylim=c(0,1))
 }
 
 
 get_boxplots <- function(df,x_axis,y_axis) {
   ggplot(df, aes(x=as.factor(df[,x_axis]), y=df[,y_axis], fill=factor(df$algorithm))) + xlab(x_axis) + ylab(y_axis) + geom_boxplot()  + 
-    ggtitle('Logistic Regression vs Random Forest') + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) +
-    scale_fill_discrete(name = "Algorithms")
+    ggtitle(paste("Logistic Regression vs Random Forest:",sapply(y_axis, toupper)))+ theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) +
+    scale_fill_discrete(name = "Algorithms") +  coord_cartesian(ylim=c(0.50,1))
 }
 
+get_histogram <- function(df,x_axis) {
+  ggplot(df, aes(df[,x_axis], fill = df$algorithm)) + geom_histogram(alpha = 0.6) + xlab(x_axis) + ylab("Count") + 
+    ggtitle(paste("Logistic Regression vs Random Forest:",sapply(x_axis, toupper))) + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) +
+    scale_fill_discrete(name = "Algorithms") 
+}
 
 ####################### Varying Variance ####################### 
 server <- function(input, output) {
@@ -569,6 +575,12 @@ server <- function(input, output) {
     get_boxplots(DF_CASE1_RAW,'nvar','auc')
   })
   
+  # CASE1 Histogam
+  output$case1_chart6 <- renderPlot({
+    get_histogram(DF_CASE1_RAW,'tpr')
+  })
+  
+
   
   ####################### Number of noise variables ####################### 
   output$lr_title_num_nvar <- renderText({
@@ -738,25 +750,58 @@ server <- function(input, output) {
     head(DF_CASE4_RAW,10)
   })
   
-  # Print Matrix
+  # Print TTEST
   output$ttest4 <- renderTable({
-    DF_CASE4_RAW <<- lr_rf_num_obs()
-    head(DF_CASE4_RAW ,10)
+    DF_CASE4_RAW_TTEST
   })
   
   # Plot
   output$case4_chart1 <- renderPlot({
     get_line_plots_case4(DF_CASE4_RAW,'acc',1)
   })
+  
   output$case4_chart2 <- renderPlot({
     get_line_plots_case4(DF_CASE4_RAW,'acc',10)
   })
+  
   output$case4_chart3 <- renderPlot({
     get_line_plots_case4(DF_CASE4_RAW,'acc',20)
   })
+  
   output$case4_chart4 <- renderPlot({
     get_line_plots_case4(DF_CASE4_RAW,'acc',50)
   })
   
+  output$case4_chart5 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',1)
+  })
+  
+  output$case4_chart6 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',10)
+  })
+  
+  output$case4_chart7 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',20)
+  })
+  
+  output$case4_chart8 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',50)
+  })
+  
+  output$case4_chart9 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'auc',1)
+  })
+  
+  output$case4_chart10 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'auc',10)
+  })
+  
+  output$case4_chart11 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'auc',20)
+  })
+  
+  output$case4_chart12 <- renderPlot({
+    get_line_plots_case4(DF_CASE4_RAW,'auc',50)
+  })
 
 }

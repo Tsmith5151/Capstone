@@ -122,20 +122,17 @@ get_results_models <- function(model,upper_prob,algorithm){
   perf1 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
   perf1 <- perf1[1,]
 
-  
   # Recal Precision
-  perf <- performance(model, "rec", "prec")
+  perf <- performance(model, "prec", "rec")
   cutoffs <- data.frame(cut=perf@alpha.values[[1]], rec=perf@x.values[[1]],prec=perf@y.values[[1]])
   perf2 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob ))
   perf2 <- perf2[1,]
-  
   
   #Accuracy
   perf <- performance(model, measure = "acc")
   cutoffs <- data.frame(cut=perf@x.values[[1]], acc=perf@y.values[[1]])
   perf3 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
   perf3 <- perf3[1,]
-  
   
   #AUC
   perf <- performance(model, measure = "auc")
@@ -149,8 +146,6 @@ get_results_models <- function(model,upper_prob,algorithm){
   df_iter$algorithm <- algorithm
 
   df_iter <- df_iter[,!names(df_iter) %in% c("cut")]
-  names(df_iter) <- c("fpr","tpr","rec","prec","acc","auc","algorithm")
-  
   return(df_iter)
   
 }
@@ -198,7 +193,7 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
       
       # Get Simulation Results --> LR & RF
       df_lr <- get_results_models(lr_pred,prob_thresh,"Logistic Regression")
-      df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
+      #df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
       
       #Combine Aggregated DataFrames
       df_iter <- rbind(df_lr,df_rf)
@@ -229,7 +224,7 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
   DF_CASE1_RAW <<- df_case1_raw
   
   #Statistical Results
-  DF_CASE1_RAW_TTEST <<- get_ttest_results(DF_CASE1_RAW)
+  DF_CASE1_RAW_TTEST <<- get_ttest_results(df_case1_agg)
   return(df_case1_agg)
 }    
 
@@ -373,7 +368,7 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
                              auc = numeric(), algorithm=character(),num_ev = numeric(),obs = numeric())
   
   # Iterate over number of observations
-  for (nrows in seq(from=100,to=10000,by=100)){
+  for (nrows in seq(from=100,to=2000,by=100)){
     
     df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
     
@@ -440,7 +435,7 @@ simulation_num_noise <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weig
                              auc = numeric(), algorithm=character(),num_ev = numeric(),num_noise = numeric())
   
   # Iterate over number of noise variables
-  for (num_noise in seq(from=10,to=200,by=10)){
+  for (num_noise in seq(from=10,to=200,by=20)){
     
     df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
     
@@ -565,7 +560,9 @@ server <- function(input, output) {
   })
   
   output$cplot <- renderPlot({
-    corrplot(cor(simdata()[,1:length(names(simdata()))-1]), method="shade",type='lower',tl.col = "black", tl.srt = 45)
+    df <- simdata()[,1:length(names(simdata()))-1]
+    ggpairs(df,alpha = 0.4)
+    #corrplot(cor(simdata()[,1:length(names(simdata()))-1]), method="shade",type='lower',tl.col = "black", tl.srt = 45)
   })
   
   # Print Equation
