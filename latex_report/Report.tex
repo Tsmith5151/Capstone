@@ -6,7 +6,7 @@
 \title{\textbf{Random Forest vs Logistic Regression: Binary Classification for Heterogeneous Datasets}}
 \author{Kaitlin Kirasich, Trace Smith, and Bivin Sadler, PhD}
 \institute{Master of Science in Data Science \\ Southern Methodist University \\ Dallas, Texas USA \\
-\email{kkirasich@smu.edu,traces@smu.edu,bsadler@smu.edu}}
+\email{\{kkirasich,traces,bsadler\}@smu.edu}}
 
 \begin{document}
 \maketitle
@@ -19,11 +19,9 @@ Selecting a learning algorithm to implement for a particular application on the 
 
 \section{Introduction}
 
-\noindent 
+
 Datasets are composed of various dimensions and underlying structures. The relative performance of machine learning algorithms on datasets with varying data characteristics is not well documented. Most published work compares overall performance between several models on a single dataset as opposed benchmarking overall model performance for datasets that are comprised of various dimensions, multicollinearity, input feature types (e.g. continuous and categorical), and distributions of numerical variables. The performance of machine learning algorithms also weighs heavily on the algorithm selected for implementation. For instance, if the target variable is not separable in n-dimensional space, either continuous or categorical, then a more complex model may be needed to achieve higher prediction scores. Complex models like decision trees or other non-parametric algorithms can have decision boundaries with high variance and low bias, which can often lead to overfitting if not properly tuned. Overfitting is the result of a model with a high classification score on a training set while generalizing poorly on out of sample datasets. On the other hand, parametric based models like logistic regression are less complex, resulting in a linear decision boundary, but can result in a higher bias. Moreover, this can translate to under fitting as the model fails to adequately learn patterns in the data for accurate predictions if not tuned properly. Balancing the bias vs variance trade-off is driven in large part by the simplicity or complexity in the structure of the dataset in addition to selecting the proper model for implementation.
 
-\paragraph
-\noindent 
 Depending on the structure of the dataset, deciphering which algorithm to deploy in order to achieve the highest performance scores still remains an ad-hoc process. This prompts the questions, under what circumstances does one model begin to outperform another model? For instance, when increasing the number of noise and explanatory variables in a dataset, at what point does the relative model performance begin to deviate between models? To answer these questions, our work consisted of building an analytical tool that simulates various data complexities to directly observe the classification performance of two machine learning algorithms by averaging metrics for 1000 random generations of specified multivariate datasets. For the sake of interoperability and computation time for model training, we considered one parametric and non-parametric machine learning model for binary classification, logistic regression and random forest, respectively.
 
 \paragraph
@@ -217,8 +215,11 @@ When comparing overall model performance, accuracy, true positive rate, false po
 
 \begin{table}[]
 \centering
+\caption{Evaluation metrics for comparison of model performance}
+\label{eval_metrics}
 \begin{tabular}{|l|l|}
 \hline
+{\bf Metric}              & {\bf Formula}                         \\ \hline
 Accuracy                   & (TP + TN) / (TP + TN + FP + FN)      \\ \hline
 True Positive Rate (TPR)   & TP / (TP + FN)                       \\ \hline
 False Positive Rate (FPR)  & FP / (FP + TN)                       \\ \hline
@@ -226,8 +227,6 @@ Precision                  & TP / (TP + FP)                       \\ \hline
 Recall                     & TP / (TP + FN)                       \\ \hline
 Area Under the Curve (AUC) & Integral area of plotting TPR vs FPR \\ \hline
 \end{tabular}
-\caption{Evaluation metrics for comparison of model performance}
-\label{eval_metrics}
 \end{table}
 
 \paragraph
