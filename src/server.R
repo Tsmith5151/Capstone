@@ -122,17 +122,20 @@ get_results_models <- function(model,upper_prob,algorithm){
   perf1 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
   perf1 <- perf1[1,]
 
+  
   # Recal Precision
-  perf <- performance(model, "prec", "rec")
+  perf <- performance(model, "rec", "prec")
   cutoffs <- data.frame(cut=perf@alpha.values[[1]], rec=perf@x.values[[1]],prec=perf@y.values[[1]])
   perf2 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob ))
   perf2 <- perf2[1,]
+  
   
   #Accuracy
   perf <- performance(model, measure = "acc")
   cutoffs <- data.frame(cut=perf@x.values[[1]], acc=perf@y.values[[1]])
   perf3 <- subset(cutoffs[order(cutoffs$cut, decreasing=TRUE),], (cut < upper_prob))
   perf3 <- perf3[1,]
+  
   
   #AUC
   perf <- performance(model, measure = "auc")
@@ -146,6 +149,8 @@ get_results_models <- function(model,upper_prob,algorithm){
   df_iter$algorithm <- algorithm
 
   df_iter <- df_iter[,!names(df_iter) %in% c("cut")]
+  names(df_iter) <- c("fpr","tpr","rec","prec","acc","auc","algorithm")
+  
   return(df_iter)
   
 }
@@ -193,7 +198,7 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
       
       # Get Simulation Results --> LR & RF
       df_lr <- get_results_models(lr_pred,prob_thresh,"Logistic Regression")
-      #df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
+      df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
       
       #Combine Aggregated DataFrames
       df_iter <- rbind(df_lr,df_rf)
@@ -224,7 +229,7 @@ simulation_nvar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,y
   DF_CASE1_RAW <<- df_case1_raw
   
   #Statistical Results
-  DF_CASE1_RAW_TTEST <<- get_ttest_results(df_case1_agg)
+  DF_CASE1_RAW_TTEST <<- get_ttest_results(DF_CASE1_RAW)
   return(df_case1_agg)
 }    
 
@@ -360,7 +365,7 @@ simulation_num_evar <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weigh
 }
 
 
-# CASE 4:  Run Logistic Regression and Random Forest Simulations sweeping num observations and EV Variables
+# CASE 4:  Run Logistic Regression and Random Forest Simulations sweeping num observations and Variables
 simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees,prob_thresh){
   
   # Initialize dataframe used to hold results
@@ -368,7 +373,7 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
                              auc = numeric(), algorithm=character(),num_ev = numeric(),obs = numeric())
   
   # Iterate over number of observations
-  for (nrows in seq(from=100,to=2000,by=100)){
+  for (nrows in seq(from=100,to=10000,by=100)){
     
     df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
     
@@ -427,73 +432,6 @@ simulation_num_obs <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weight
 }
 
 
-# CASE 5:  Run Logistic Regression and Random Forest Simulations sweeping num noise and EV Variables
-simulation_num_noise <- function(n_sim,split,ncat,nrows,noise,ndist,nvar,ev,weights,yint,varselect,ntrees,prob_thresh){
-  
-  # Initialize dataframe used to hold results
-  df_case5_raw <- data.frame(cut = numeric(), fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(), 
-                             auc = numeric(), algorithm=character(),num_ev = numeric(),num_noise = numeric())
-  
-  # Iterate over number of noise variables
-  for (num_noise in seq(from=10,to=200,by=20)){
-    
-    df_agg <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
-    
-    # Number of EV
-    for (num_ev in c(10,20,50,100,150,200)){
-      
-      df_sim_case <- data.frame(fpr = numeric(), tpr = numeric(), rec = numeric(), prec = numeric(), acc = numeric(),algorithm = character(),num_ev = numeric())
-      
-      for (n in 1:n_sim){
-        # Regenerate Data
-        data<-sim_data(nrows,num_noise,ncat,ndist,nvar,num_ev,weights,yint)
-        
-        # Split Train/Testing
-        split_data(data,split)
-        
-        # Do RandomForest
-        rf_pred <- do_randomforest(TRAIN,TEST,ntrees)
-        
-        # Do Logistic Regression
-        lr_pred <- do_logisticregression(TRAIN,TEST,varselect)
-        
-        # Get Simulation Results --> LR & RF
-        df_lr <- get_results_models(lr_pred,prob_thresh,"Logistic Regression")
-        df_rf <- get_results_models(rf_pred,prob_thresh,"RandomForest")
-        
-        #Combine Aggregated DataFrames
-        df_iter <- rbind(df_lr,df_rf)
-        df_iter$num_ev <- num_ev
-        
-        #Append Data
-        df_sim_case <- rbind(df_sim_case,df_iter)
-      }
-      
-      # Aggregate (i.e. Mean of Simulation Results)
-      df_sim_case <- aggregate(df_sim_case, by=list(df_sim_case$algorithm), FUN=mean)
-      df_sim_case <- df_sim_case[, !(colnames(df_sim_case) %in% c("algorithm"))]
-      
-      #Rename 
-      colnames(df_sim_case)[colnames(df_sim_case)=="Group.1"] <- "algorithm"
-      
-      # Add ev number
-      df_sim_case$num_ev <- num_ev
-      df_agg <- rbind(df_agg,df_sim_case)
-    }
-    
-    # Add number of noise variables
-    df_agg$num_noise <- num_noise
-    
-    # Merge Results
-    df_case5_raw <- rbind(df_case5_raw,df_agg)
-  }
-  
-  #Statistical Results
-  DF_CASE5_RAW_TTEST <<- get_ttest_results(df_case5_raw)
-  return(df_case5_raw)
-}
-
-
 ###################### PLOTS ##############################
 
 get_line_plots <- function(lr,rf,xvar,yvar){
@@ -514,13 +452,13 @@ get_line_plots <- function(lr,rf,xvar,yvar){
 }
 
 
-get_line_plots_other <- function(df,x_axis,y_axis,ev){
+get_line_plots_case4 <- function(df,y_axis,ev){
   
   # Filter For Number of Explanatory Variables
   df<- subset(df, num_ev == ev)
-  ggplot(df, aes(x=df[,x_axis],y=df[,y_axis],colour=factor(df$algorithm)),group=factor(df$algorithm)) + 
+  ggplot(df, aes(x=df[,"obs"],y=df[,y_axis],colour=factor(df$algorithm)),group=factor(df$algorithm)) + 
     ggtitle(paste('Logistic Regression vs Random Forest',': Total EV --',ev)) + 
-    geom_line(size=1.0) + scale_color_manual(values=c("sienna1", "lightseagreen")) + xlab(x_axis) + ylab(y_axis) + labs(colour="Algorithms") + 
+    geom_line(size=1.0) + scale_color_manual(values=c("sienna1", "lightseagreen")) + xlab("Observations") + ylab(y_axis) + labs(colour="Algorithms") + 
     theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + theme(plot.title = element_text(size=20)) + scale_fill_discrete(name = "Algorithms") +
      coord_cartesian(ylim=c(0,1))
 }
@@ -560,9 +498,7 @@ server <- function(input, output) {
   })
   
   output$cplot <- renderPlot({
-    df <- simdata()[,1:length(names(simdata()))-1]
-    ggpairs(df,alpha = 0.4)
-    #corrplot(cor(simdata()[,1:length(names(simdata()))-1]), method="shade",type='lower',tl.col = "black", tl.srt = 45)
+    corrplot(cor(simdata()[,1:length(names(simdata()))-1]), method="shade",type='lower',tl.col = "black", tl.srt = 45)
   })
   
   # Print Equation
@@ -821,145 +757,51 @@ server <- function(input, output) {
   
   # Plot
   output$case4_chart1 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'acc',1)
+    get_line_plots_case4(DF_CASE4_RAW,'acc',1)
   })
   
   output$case4_chart2 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'acc',10)
+    get_line_plots_case4(DF_CASE4_RAW,'acc',10)
   })
   
   output$case4_chart3 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'acc',20)
+    get_line_plots_case4(DF_CASE4_RAW,'acc',20)
   })
   
   output$case4_chart4 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'acc',50)
+    get_line_plots_case4(DF_CASE4_RAW,'acc',50)
   })
   
   output$case4_chart5 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'tpr',1)
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',1)
   })
   
   output$case4_chart6 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'tpr',10)
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',10)
   })
   
   output$case4_chart7 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'tpr',20)
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',20)
   })
   
   output$case4_chart8 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'tpr',50)
+    get_line_plots_case4(DF_CASE4_RAW,'tpr',50)
   })
   
   output$case4_chart9 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'auc',1)
+    get_line_plots_case4(DF_CASE4_RAW,'auc',1)
   })
   
   output$case4_chart10 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'auc',10)
+    get_line_plots_case4(DF_CASE4_RAW,'auc',10)
   })
   
   output$case4_chart11 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'auc',20)
+    get_line_plots_case4(DF_CASE4_RAW,'auc',20)
   })
   
   output$case4_chart12 <- renderPlot({
-    get_line_plots_other(DF_CASE4_RAW,"obs",'auc',50)
+    get_line_plots_case4(DF_CASE4_RAW,'auc',50)
   })
-  
-  
-  ####################### Varying Number of NOISE variables ####################### 
-  output$simulation_num_noise <- renderText({
-    paste0( "The table below displays a sample of the results of running logistic regression and random forest with varying number of noise variables")
-  })
-  
-  lr_rf_num_noise <- reactive({
-    withProgress(message = 'Training Logistic Regression and Random Forest Models', value = 0,
-                 run_model <- simulation_num_noise(input$n_sim,
-                                                 input$split,
-                                                 input$cat,
-                                                 input$nrows,
-                                                 input$noise,
-                                                 input$ndist,
-                                                 input$nvar,
-                                                 input$ev,
-                                                 input$weights,
-                                                 input$yint,
-                                                 input$varselect, # Logistic Regression
-                                                 input$ntree, # Random Forest
-                                                 input$prob_thresh
-                 )
-    )
-  })
-  
-  
-  # Print Matrix
-  output$lr_rf_sim_num_noise <- renderTable({
-    DF_CASE5_RAW <<- lr_rf_num_noise()
-    head(DF_CASE5_RAW,10)
-  })
-  
-  # Print TTEST
-  output$ttest5 <- renderTable({
-    DF_CASE5_RAW_TTEST
-  })
-  
-  # Plot
-  output$case5_chart1 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'acc',10)
-  })
-  
-  output$case5_chart2 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'acc',20)
-  })
-  
-  output$case5_chart3 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'acc',50)
-  })
-  
-  output$case5_chart4 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'acc',100)
-  })
-  
-  output$case5_chart5 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'acc',150)
-  })
-  
-  output$case5_chart6 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'acc',200)
-  })
-  
-  output$case5_chart7 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',10)
-  })
-  
-  output$case5_chart8 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',20)
-  })
-  
-  output$case5_chart9 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',50)
-  })
-  
-  output$case5_chart10 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',100)
-  })
-  
-  output$case5_chart11 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'tpr',150)
-  })
-  
-  output$case5_chart12 <- renderPlot({
-    get_line_plots_other(DF_CASE5_RAW,"num_noise",'acc',200)
-  })
-  
-  # CASE5 Histogam
-  output$case5_chart13 <- renderPlot({
-    get_histogram(DF_CASE5_RAW,'tpr')
-  })
-  
-  output$case5_chart14 <- renderPlot({
-    get_histogram(DF_CASE5_RAW,'fpr')
-  })
+
 }
